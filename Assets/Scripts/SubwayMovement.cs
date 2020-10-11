@@ -155,7 +155,7 @@ public class SubwayMovement : MonoBehaviour
     private InstagramController InstagramController;
     private BagsController BagsController;
     private AdsController AdsController;
-
+    private bool atInitailStation = true;
 
     public bool isDoorOpen = false;
     public bool NoPosition = false;
@@ -361,7 +361,7 @@ public class SubwayMovement : MonoBehaviour
 
 
                     //bagfirst保证只运行一次
-                    if (!FinalCameraController.isTutorial && bagFirst && !FinalCameraController.ChapterOneEnd)//结束的时候不能往车上放新的包了
+                    if (bagFirst && !FinalCameraController.ChapterOneEnd)//结束的时候不能往车上放新的包了
                     {
                        
                         for (int i = 0; i < specialNPCPerStation; i++)
@@ -372,7 +372,7 @@ public class SubwayMovement : MonoBehaviour
                             // 2.丢l&f衣服,发post(包含在3里)
                             // 3.更新posture(ad)
                             GenerateBag(currentStation);
-                            LostAndFound.DropLostFoundClothes(currentStation);
+                            if(!atInitailStation) LostAndFound.DropLostFoundClothes(currentStation);
                             AdsController.UpdatePosters();
                             
                             bagFirst = false;
@@ -548,7 +548,7 @@ public class SubwayMovement : MonoBehaviour
 
     public void trainMove()
     {
-
+        atInitailStation = false;
          LocalizedString locString = "Fish/DoYourJob";
         string translation = locString;
         FinalCameraController.fishTalkText.text = translation;

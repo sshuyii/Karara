@@ -215,29 +215,10 @@ public class WasherController : MonoBehaviour
 
                 timer = 0;
                 
-                //for tutorial,衣服洗完了
-                if (FinalCameraController.isTutorial)
-                {
-                    FinalCameraController.TutorialManager.tutorialNumber = 8;
-                }
+
             }
         }
-        
-   
-//        
-//        //any touch cancels cloth UI
-//        else if(TouchController.myInputState != TouchController.InputState.None)
-//        {
-//            if (shut == 1)
-//            {
-//                shut = 0;
-//                //subway.transform.position += offsetTap;
-//                Hide(ClothUI);
-//                //backgroundSR.enabled = false;
-//            }
-//        }
-
-        
+              
 
 
         //@@@

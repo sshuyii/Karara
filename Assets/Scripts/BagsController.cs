@@ -7,7 +7,7 @@ public class BagsController : MonoBehaviour
     public List<GameObject> bagsInCar = new List<GameObject>();
     public List<List<string>> stationBagOwners = new List<List<string>>();
     public GameObject returnNotice;
-    private GameObject returningBag;
+    public GameObject returningBag;
     FinalCameraController FinalCameraController;
 
 
@@ -68,16 +68,39 @@ public class BagsController : MonoBehaviour
     }
 
 
-    public void ShowReturnNotice(GameObject bag)
+    public void ShowReturnNotice(GameObject bag,bool flip)
     {
         returnNotice.SetActive(true);
         returningBag = bag;
         FinalCameraController.alreadyNotice = true;
+
+        if(flip)
+        {
+            foreach (Transform child in returnNotice.transform)
+            {
+                if (child.name == "BG")
+                {
+                    child.localRotation = new Quaternion(0, 180, 0, 0);
+                    return;
+                }
+            }
+        }
+
     }
 
     public void ClickReturnNo() {
         returnNotice.SetActive(false);
         FinalCameraController.alreadyNotice = false;
+
+       
+        foreach (Transform child in returnNotice.transform)
+        {
+            if (child.name == "BG")
+            {
+                child.localRotation = new Quaternion(0, 0, 0, 0);
+                return;
+            }
+        }
 
     }
 

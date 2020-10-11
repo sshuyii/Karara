@@ -57,11 +57,8 @@ public class FinalCameraController : MonoBehaviour
     public Sprite startSprite;
 
     public CanvasGroup Inventory;
-    public GameObject instruction;
-    public UnityEngine.UI.Image instructionContent;
-    public Sprite inventoryInstruction;
-    public Sprite mapInstruction;
-    public Sprite cameraInstruction;
+    public GameObject instruction,instructionContent,inventoryInstruction,mapInstruction,cameraInstruction;
+    private GameObject activeInstruction;
     public InventorySlotMgt inventorySlotMgt;
     public GameObject CheckInstructionButton;
 
@@ -188,7 +185,10 @@ public class FinalCameraController : MonoBehaviour
         //clothCG.SetActive(false);
         //messageCG.SetActive(false);
         Hide(Inventory);
-        
+
+        ChapterOneEnd = false;
+
+
     }
 
 
@@ -441,7 +441,7 @@ public class FinalCameraController : MonoBehaviour
                 ////print("myCameraState = " + myCameraState);
                 lastCameraState = myCameraState;
                 myCameraState = CameraState.Closet;
-                RatingSys.LeaveSubway();
+                //RatingSys.LeaveSubway();
                 transform.position = new Vector3(-25, 0, -10);
                 //print("actually change");
             }
@@ -590,14 +590,10 @@ public class FinalCameraController : MonoBehaviour
         HorizontalScrollSnap.JumpToPreviousPage();
         if (!isTutorial) CheckInstructionButton.SetActive(false);
         Mask.alpha = 1;
-        if(isTutorial)
-        {
-            TutorialManager.scrollControl(true);
-            myCameraState = CameraState.Subway;
-            RatingSys.GoBackToSubway();
 
-        }
-        else if (LevelManager.isInstruction)//换到鱼界面
+
+
+        if (LevelManager.isInstruction)//换到鱼界面
         {
             //print("Final camera controller clicktime = 7");
             //myHSS.GoToScreen(3);
@@ -627,7 +623,7 @@ public class FinalCameraController : MonoBehaviour
                 }
             }
         
-
+        
         //hide everything 
         Hide(Inventory);
         //Show(subwayBackground);
@@ -636,32 +632,9 @@ public class FinalCameraController : MonoBehaviour
         //Hide(NPCPage);
         Hide(SubwayMap);
         //Hide(postpage);
-        
-        //HideAllPersonalPages(); 
-        
-        //for Tutorial
-        if (isTutorial)
-        {
-            if (TutorialManager.tutorialNumber == 14)//从换装界面出来
-            {
-                TutorialManager.scrollControl(true);
-                mySubwayState = SubwayState.Four;
-                //myHSS.GetComponent<HorizontalScrollSnap>().GoToScreen(4);
-                TutorialManager.tutorialNumber = 15;
-             }
-            else if(TutorialManager.tutorialNumber == 15)//从地铁界面出来
-            {
-                mySubwayState = SubwayState.One;
-                //myHSS.GetComponent<HorizontalScrollSnap>().GoToScreen(1);
-                TutorialManager.tutorialNumber = 16;
-            }
-            else if(TutorialManager.tutorialNumber == 16)
-            {
-                mySubwayState = SubwayState.One;
-                //myHSS.GetComponent<HorizontalScrollSnap>().GoToScreen(1);
-                TutorialManager.tutorialNumber = 15;
-            }
-        }
+
+
+        if(InstagramController.waitingForRefresh) InstagramController.RefreshPost();
         
     }
     
@@ -849,20 +822,33 @@ public class FinalCameraController : MonoBehaviour
     // hide inventory
     public void InstructionDismiss() {
         instruction.GetComponentInChildren<ScrollRect>().verticalNormalizedPosition = 1f;
+        activeInstruction.SetActive(false);
         instruction.SetActive(false);
     }
 
     public void InstructionShow()
     {
 
-        if(myCameraState == CameraState.Closet)
-            instructionContent.sprite = inventoryInstruction;
+        if (myCameraState == CameraState.Closet)
+        {
+            inventoryInstruction.SetActive(true);
+            activeInstruction = inventoryInstruction;
+        }
 
         if (myCameraState == CameraState.Map)
-            instructionContent.sprite = mapInstruction;
+        {
+            mapInstruction.SetActive(true);
+            activeInstruction = mapInstruction;
+        }
+            
 
         if(myCameraState == CameraState.Ad)
-            instructionContent.sprite = cameraInstruction;
+        {
+            cameraInstruction.SetActive(true);
+            activeInstruction = cameraInstruction;
+        }
+
+       
         //Debug.Log("showInstruction");
         instruction.SetActive(true);
     }

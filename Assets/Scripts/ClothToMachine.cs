@@ -110,6 +110,11 @@ public class ClothToMachine : MonoBehaviour
 
         if (underMachineNum >= 0) isFinished = AllMachines.FinishedOrNot(underMachineNum);
         if (isFinished) alreadyWashed = true;
+
+        if(timeUp&&alreadyWashed)
+        {
+            ReturnBag2cases();
+        }
        
 
         if(!FinalCameraController.isTutorial && !isNoticePrefab)
@@ -129,21 +134,16 @@ public class ClothToMachine : MonoBehaviour
             if (!timeUp && timer<0)
             {
                 timeUp = true;
+
+                Debug.Log("包包过期！！");
+
                 if (!FinalCameraController.ChapterOneEnd)
                 {
                     if (alreadyWashed) //if this bag is already washed
                     {
                         //一次只能还一个包
                         //如果已经有包在还了，就直接还
-                        if (!AllMachines.isReturning)
-                        {
-                            FinalCameraController.lateReturnComic = true;
-                            StartCoroutine(returnClothYes());
-                        }
-                        else
-                        {
-                            returnClothYesDirectly();
-                        }
+                        ReturnBag2cases();
                     }
                     else if (!isOverdue)
                     {
@@ -161,7 +161,14 @@ public class ClothToMachine : MonoBehaviour
     }
 
 
-   
+   private void ReturnBag2cases()
+   {
+        BagsController.returningBag = this.transform.gameObject;
+        BagsController.ClickReturnYes();
+        FinalCameraController.HorizontalScrollSnap.JumpToPage(1);
+        //todo: fish talk late return;
+    }
+
 
 
     public IEnumerator returnClothYes ()
@@ -392,7 +399,8 @@ public class ClothToMachine : MonoBehaviour
                 }
                 else
                 {
-                    BagsController.ShowReturnNotice(thisBag);
+                    if(underMachineNum ==1) BagsController.ShowReturnNotice(thisBag,true);
+                    else BagsController.ShowReturnNotice(thisBag, false);
                 }
             }
             hitTime++;

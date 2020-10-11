@@ -113,7 +113,9 @@ public class InstagramController : MonoBehaviour
 
     private GameObject currentLargePhoto;
 
-
+    public bool waitingForRefresh;
+    private string storedName;
+    private int storedRating;
 
     // Start is called before the first frame update
     void Start()
@@ -205,7 +207,7 @@ public class InstagramController : MonoBehaviour
         GameObject newPost = Instantiate(PosturePostPrefabNew);
         //set parent(probably a better way to do
         newPost.transform.parent = postParent.transform;
-        newPost.transform.localScale = new Vector3(140,140,1);
+        //newPost.transform.localScale = new Vector3(140,140,1);
  
 
         NPC thisNPC = SpriteLoader.NPCDic[NPCName];
@@ -277,26 +279,46 @@ public class InstagramController : MonoBehaviour
 
     public void RefreshPost(string maxOwner, int rating)
     {
-        //if (maxOwner == "") return;
-        foreach(KeyValuePair<string, NPC> pair in SpriteLoader.NPCDic)
+        storedName = maxOwner;
+        storedRating = rating;
+
+        if (FinalCameraController.myCameraState == FinalCameraController.CameraState.App)
+        {
+            waitingForRefresh = true;
+            return;
+        }
+
+
+        RefreshPost();
+        //暂时默认：不会一直等到两次经过车站才从app退出
+
+    }
+
+
+    public void RefreshPost()
+    {
+        waitingForRefresh = false;
+        foreach (KeyValuePair<string, NPC> pair in SpriteLoader.NPCDic)
         {
             if (pair.Key == "Karara" || pair.Key == "X") continue;
-            if(pair.Key != maxOwner)
+            if (pair.Key != storedName)
             {
                 AddInsPost(pair.Key, pair.Value.PostPic());
             }
             else
             {
-                if(UnityEngine.Random.Range(0f, 5f) < rating)
+                if (UnityEngine.Random.Range(0f, 5f) < storedRating)
                 {
                     AddInsPost(pair.Key, pair.Value.PostPic());
                 }
 
             }
-                
-
         }
     }
+
+
+
+
 
 
     public void CheckOnePicture()

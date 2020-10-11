@@ -131,10 +131,5 @@ public class InventorySlotMgt : MonoBehaviour
     }
 
 
-    public void CloseInventory()
-    {
-        showingFullNotice = false;
-        InventoryFull.SetActive(false);
-    }
 
 }

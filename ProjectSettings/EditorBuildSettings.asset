@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/StartScene.unity
+    guid: 73338dce699344cd7a8c77bd2739db38
+  - enabled: 1
+    path: Assets/Scenes/TutorialScene.unity
+    guid: ea7ea67f6999245a1af101cf32b55022
+  - enabled: 1
+    path: Assets/Scenes/StreetStyle.unity
+    guid: 1ce9957f23d374cb1b32926af6000758
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: de1b4cc94486242199861eba04bfb852,
+      type: 2}
+    com.unity.localization.settings: {fileID: 11400000, guid: 81f39bd843dcd428aa3fe8eb876e2a0d,
+      type: 2}

@@ -254,6 +254,7 @@ public class ScreenshotHandler : MonoBehaviour
     
     private void TakeScreenshot(int width, int height)
     {
+        Debug.Log("width:" + width.ToString());   
         myCamera.targetTexture = RenderTexture.GetTemporary(width, height, 16);
         takeScreenshotOnNextFrame = true;
     }
@@ -277,13 +278,13 @@ public class ScreenshotHandler : MonoBehaviour
 
         //if the background is already used
 
-        if(!AdsController.IsThisAdOk() && !FinalCameraController.isTutorial)
-        {
-            FinalCameraController.Show(Notice);
-            Notice.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "no same background";
-            isTaken = false;
-            return;
-        }
+        //if(!AdsController.IsThisAdOk())
+        //{
+        //    FinalCameraController.Show(Notice);
+        //    Notice.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "no same background";
+        //    isTaken = false;
+        //    return;
+        //}
 
         if (!AdsController.IsThisPoseOk() && !FinalCameraController.isTutorial)
         {
