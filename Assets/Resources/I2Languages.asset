@@ -1,0 +1,145 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0b0c553be8edd4682e9180fdd13e37, type: 3}
+  m_Name: I2Languages
+  m_EditorClassIdentifier: 
+  mSource:
+    UserAgreesToHaveItOnTheScene: 0
+    UserAgreesToHaveItInsideThePluginsFolder: 0
+    GoogleLiveSyncIsUptoDate: 1
+    mTerms:
+    - Term: fonts
+      TermType: 9
+      Description: 
+      Languages:
+      - FZCDXJW
+      - distress SDF
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Fish/Tutorial1
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4F60\u597D"
+      - Hi
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Fish/DoYourJob
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4E13\u5FC3\u6D17\u8863\u670D\uFF01"
+      - Concentrate on your work! Do the laundry!
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Fish/LateReturn
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4E0B\u6B21\u8BB0\u5F97\u6309\u65F6\u8FD8\u8863\u670D\u5440\uFF01"
+      - Return your customers' clothes on time! Such bad memory!
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Fish/SeeBags
+      TermType: 0
+      Description: 
+      Languages:
+      - "Karara\uFF01\u770B\u89C1\u8FD9\u4E9B\u5305\u4E86\u5417\uFF1F\u8BE5\u5DE5\u4F5C\u4E86"
+      - Karara! See the bags? Time for work!
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Notice/NoSameBG
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6BCF\u4E2A\u80CC\u666F\u4EC5\u80FD\u4F7F\u7528\u4E00\u6B21"
+      - No Same Background
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Notice/NoSamePosture
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6BCF\u4E2A\u52A8\u4F5C\u4EC5\u80FD\u4F7F\u7528\u4E00\u6B21"
+      - No Same Posture
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Fish/CloseDoor
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4F60\u5728\u5E72\u561B\u5440\uFF01\u5FEB\u628A\u95E8\u5173\u4E0A\uFF01"
+      - What are you doing? Close the door!
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Fish/GetCloth
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u628A\u8863\u670D\u62FF\u51FA\u6765"
+      - Get cloth
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Fish/OpenDoor
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6253\u5F00\u6D17\u8863\u673A\u7684\u95E8"
+      - Open Door
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Fish/DontOpenDoor
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u522B\u6253\u5F00\u6D17\u8863\u673A"
+      - "Don\u2019t open the door!"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Fish/Dare
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4E0D\u8981\u518D\u62FF\u987E\u5BA2\u7684\u8863\u670D\u5566\uFF01"
+      - "Don\u2019t you dare touch your customer\u2019s cloth!"
+      Flags: 0000
+      Languages_Touch: []
+    CaseInsensitiveTerms: 0
+    OnMissingTranslation: 1
+    mTerm_AppName: 
+    mLanguages:
+    - Name: Chinese (Simplified)
+      Code: zh-CN
+      Flags: 0
+    - Name: English (United States)
+      Code: en-US
+      Flags: 0
+    IgnoreDeviceLanguage: 0
+    _AllowUnloadingLanguages: 0
+    Google_WebServiceURL: 
+    Google_SpreadsheetKey: 
+    Google_SpreadsheetName: 
+    Google_LastUpdatedVersion: 
+    Google_Password: change_this
+    GoogleUpdateFrequency: 3
+    GoogleInEditorCheckFrequency: 2
+    GoogleUpdateSynchronization: 1
+    GoogleUpdateDelay: 0
+    Assets:
+    - {fileID: 11400000, guid: 7f5d1df738e3e4c87920f885c02f93d0, type: 2}
+    - {fileID: 11400000, guid: 808852c4038d9493999dc3ffa60ca395, type: 2}
+    - {fileID: 11400000, guid: 985d1cf184148482e8bd23a0296f9774, type: 2}
+    - {fileID: 11400000, guid: e76b8f038e39d4f3696fbceb84af4038, type: 2}
+    Spreadsheet_LocalFileName: /Users/haoranyun/Documents/text.csv
+    Spreadsheet_LocalCSVSeparator: ','
+    Spreadsheet_LocalCSVEncoding: utf-8
+    Spreadsheet_SpecializationAsRows: 1
