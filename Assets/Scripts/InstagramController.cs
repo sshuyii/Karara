@@ -218,6 +218,8 @@ public class InstagramController : MonoBehaviour
         newPost.transform.Find("Post").gameObject.GetComponent<Image>().sprite = postImg;
         //move to the first of the list
         //postList.Insert(0, newPost);
+        
+
 
         newPost.transform.SetAsFirstSibling();
         
@@ -297,6 +299,7 @@ public class InstagramController : MonoBehaviour
 
     public void RefreshPost()
     {
+        redDot.SetActive(true);
         waitingForRefresh = false;
         foreach (KeyValuePair<string, NPC> pair in SpriteLoader.NPCDic)
         {
@@ -317,7 +320,7 @@ public class InstagramController : MonoBehaviour
     }
 
 
-
+   
 
 
 

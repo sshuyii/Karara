@@ -65,6 +65,10 @@ public class ClothToMachine : MonoBehaviour
     private BagsController BagsController;
     bool isFinished = false;
 
+
+    private AudioManager AudioManager;
+
+
     void Start()
     {
         //find the horizontal scroll snap script
@@ -75,7 +79,10 @@ public class ClothToMachine : MonoBehaviour
         myImage = GetComponent<Image>();
 //        secondImage = GetComponentInChildren<Image>();
         hitTime = 0;
-        
+
+
+        AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
+
         ClothInMachineController = GameObject.Find("---ClothInMachineController");
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
         SubwayMovement = GameObject.Find("---StationController").GetComponent<SubwayMovement>();

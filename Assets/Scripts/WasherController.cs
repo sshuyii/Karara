@@ -62,6 +62,7 @@ public class WasherController : MonoBehaviour
     private TouchController TouchController;
 
     public string currentCustomer;
+    private AudioManager AudioManager;
     
     // Start is called before the first frame update
     void Start()
@@ -73,7 +74,7 @@ public class WasherController : MonoBehaviour
         
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
         SpriteLoader = GameObject.Find("---SpriteLoader").GetComponent<SpriteLoader>();
-
+        AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
 
 
         washingSound = AllMachines.gameObject.GetComponent<AudioSource>();

@@ -81,7 +81,8 @@ public class FinalCameraController : MonoBehaviour
         NPCPage,
         SavingPage,
         Post,
-        Album
+        Album,
+        AlbumDetail
     }
 
     public AppState lastAppState;
@@ -480,7 +481,7 @@ public class FinalCameraController : MonoBehaviour
        {
             Hide(albumCG);
             Hide(albumBackground);
-            lastCameraState = CameraState.Subway;
+            lastCameraState = CameraState.App;
             ChangeToSubway();
             //}
         }
@@ -499,12 +500,20 @@ public class FinalCameraController : MonoBehaviour
            }
            else
            {
-               lastCameraState = CameraState.Subway;
+               lastCameraState = CameraState.App;
                ChangeToSubway();
            }
 
 
        }
+
+       else if(myAppState == AppState.AlbumDetail)
+        {
+            Hide(albumDetailCG);
+            Hide(albumBackground);
+            lastCameraState = CameraState.Subway;
+            ChangeToSubway();
+        }
        else if(myAppState == AppState.RetroPage || myAppState == AppState.KararaPage || myAppState == AppState.DesignerPage || myAppState == AppState.NPCPage)
        {
            Show(frontPage);
@@ -640,11 +649,13 @@ public class FinalCameraController : MonoBehaviour
     
     public void ChangeToApp()
     {
+
+        
         Hide(fishShoutCG);
         CheckInstructionButton.SetActive(false);
         ScrollToTop(mainpageScrollRect);
 
-
+        InstagramController.redDot.SetActive(false);
 
 
         //reset the order of all posts
@@ -655,7 +666,7 @@ public class FinalCameraController : MonoBehaviour
         //go to main page top     
         //cancel all dialogues
         //print("click ChangeToAPP");
-        
+
         //cancel red dot
         //InstagramController.redDot.SetActive(false);
 
@@ -703,6 +714,7 @@ public class FinalCameraController : MonoBehaviour
     {
         Hide(albumBackground);
         Hide(albumCG);
+        Hide(albumDetailCG);
         Show(appBackground);
         Show(frontPage);
         myAppState = AppState.Mainpage;

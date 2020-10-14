@@ -72,7 +72,7 @@ public class ScreenshotHandler : MonoBehaviour
 
     AdsController AdsController;
 
-
+    private AudioManager AudioManager;
 
     private bool isTaken;
 
@@ -82,8 +82,8 @@ public class ScreenshotHandler : MonoBehaviour
         instance = this;
         //myCamera = gameObject.GetComponent<Camera>();
         shutterSound = GetComponent<AudioSource>();
-        
-        
+
+        AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
         ScreenCapDirectory = Application.persistentDataPath;
         FinalCameraController = GetComponent<FinalCameraController>();
         //CalculateInventory = GameObject.Find("---InventoryController").GetComponent<CalculateInventory>();
@@ -269,7 +269,10 @@ public class ScreenshotHandler : MonoBehaviour
         }
 
         isTaken = true;
-        shutterSound.Play();
+        //shutterSound.Play();
+        AudioManager.PlayAudio(AudioType.Photo_Shutter);
+
+
         //hide notice bubble
         if(!FinalCameraController.isTutorial)
         {

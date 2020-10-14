@@ -142,8 +142,9 @@ public class TouchController : MonoBehaviour
                     isSwiping = false;
                 }
 
-                if(isSwiping)
+                if(isSwiping && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
                 {
+                    //跟随手指滑动
                     cameraMovement.swipping = true;
                     Vector3 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
                     Vector3 oldPos = FinalCameraController.transform.position;
@@ -175,22 +176,7 @@ public class TouchController : MonoBehaviour
             else if (touch.phase == TouchPhase.Ended) //check if the finger is removed from the screen
             {
                 
-//                if(FinalCameraController.isTutorial && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
-//                {
-//                    if(FinalCameraController.TutorialManager.tutorialNumber != 6 && FinalCameraController.TutorialManager.tutorialNumber != 7)
-//                    {
-//                        FinalCameraController.TutorialManager.tutorialDialogueState =
-//                            TutorialManager.DialogueState.fish;
-//                    }                
-//                }
 
-                if (FinalCameraController.isTutorial && FinalCameraController.mySubwayState != FinalCameraController.SubwayState.One &&
-                    FinalCameraController.TutorialManager.tutorialNumber == 1)
-                {
-                    FinalCameraController.Show(FinalCameraController.TutorialManager.GestureCG);
-                    FinalCameraController.TutorialManager.screamImage.enabled = true;
-                    FinalCameraController.TutorialManager.DoFishDialogue(true);
-                }
 
 
                 lp = touch.position;  //last touch position. Ommitted if you use list

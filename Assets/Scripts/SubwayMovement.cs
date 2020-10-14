@@ -160,6 +160,8 @@ public class SubwayMovement : MonoBehaviour
     public bool isDoorOpen = false;
     public bool NoPosition = false;
 
+    private AudioManager AudioManager;
+
     // Start is called before the first frame update
     void Start() 
     {
@@ -167,6 +169,9 @@ public class SubwayMovement : MonoBehaviour
         InstagramController = GameObject.Find("---InstagramController").GetComponent<InstagramController>();
         BagsController = GameObject.Find("---BagsController").GetComponent<BagsController>();
         AdsController = GameObject.Find("---AdsController").GetComponent<AdsController>();
+        AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
+
+
 
         if (!FinalCameraController.isTutorial)
         {
@@ -339,7 +344,8 @@ public class SubwayMovement : MonoBehaviour
                     
                     if(doorSoundPlay)
                     {
-                        doorSound.Play();
+                        //doorSound.Play();
+                        AudioManager.PlayAudio(AudioType.Subway_OpenDoor);
                         doorSoundPlay = false;
                     }        
                     
@@ -390,7 +396,8 @@ public class SubwayMovement : MonoBehaviour
             {
                 if(!doorSoundPlay)
                 {
-                    doorSound.Play();
+                    //doorSound.Play();
+                    AudioManager.PlayAudio(AudioType.Subway_OpenDoor);
                     doorSoundPlay = true;
                 }
 
