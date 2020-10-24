@@ -55,6 +55,7 @@ public class TouchController : MonoBehaviour
 
     private LostAndFound LostAndFound;
     private AdsController AdsController;
+    private AudioManager AudioManager;
 
     void Start()
     {
@@ -65,6 +66,7 @@ public class TouchController : MonoBehaviour
         {
             LostAndFound = GameObject.Find("Lost&Found_basket").GetComponent<LostAndFound>();
             AdsController = GameObject.Find("---AdsController").GetComponent<AdsController>();
+            AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
         }
             
 
@@ -83,8 +85,10 @@ public class TouchController : MonoBehaviour
 
         // @@@
 
-        if (EventSystem.current.currentSelectedGameObject != null) { 
-            return; }
+        if (EventSystem.current.currentSelectedGameObject != null) {
+            //AudioManager.PlayAudio(AudioType.UI_Dialogue);
+            return;
+        }
             
         if(Input.touchCount == 0) {
             myInputState  = InputState.None;
@@ -261,18 +265,23 @@ public class TouchController : MonoBehaviour
         Debug.Log("checkTap");
         if ( hit.collider!=null ){
 
+            
+
             string hitObject = hit.transform.gameObject.name;
             switch(hitObject){
 
                 case "FishBoss":
+                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     FinalCameraController.BossTalk();
                 break;
 
                 case "PlayerBodySubway":
+                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     FinalCameraController.ChangeToCloth();
                     break;
 
                 case "SettingButton":
+                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     FinalCameraController.clickSetting();
                     break;
                 
@@ -283,10 +292,12 @@ public class TouchController : MonoBehaviour
                 //    FinalCameraController.ChangeToCloth();
                     //break;
                 case "subwayMap":
+                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     FinalCameraController.ChangeToMap();
                     break;
 
                 case "Lost&Found_basket":
+                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     LostAndFound.clickLostFound();
                     break;
             }
@@ -321,6 +332,7 @@ public class TouchController : MonoBehaviour
             DoInventory doIvt = hit.transform.gameObject.GetComponent<DoInventory>();
             if (doIvt != null)
             {
+                AudioManager.PlayAudio(AudioType.UI_Dialogue);
                 RaycastHitResult[0] = "doIvt";
                 RaycastHitResult[1] = doIvt.slotNum.ToString();
                 //Debug.Log("do inventory!");
@@ -330,6 +342,7 @@ public class TouchController : MonoBehaviour
             WasherController wc = hit.transform.gameObject.GetComponentInParent<WasherController>();
             if (wc != null)
             {
+                AudioManager.PlayAudio(AudioType.UI_Dialogue);
                 RaycastHitResult[0] = "washer";
                 RaycastHitResult[1] = wc.number.ToString();
                 return RaycastHitResult;

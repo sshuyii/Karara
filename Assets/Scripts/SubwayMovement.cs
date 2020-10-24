@@ -345,7 +345,8 @@ public class SubwayMovement : MonoBehaviour
                     if(doorSoundPlay)
                     {
                         //doorSound.Play();
-                        AudioManager.PlayAudio(AudioType.Subway_OpenDoor);
+                        //AudioManager.PlayAudio(AudioType.Subway_OpenDoor);
+                        StartCoroutine(AudioManager.PlayAudioInStation(stayTime));
                         doorSoundPlay = false;
                     }        
                     
@@ -397,7 +398,8 @@ public class SubwayMovement : MonoBehaviour
                 if(!doorSoundPlay)
                 {
                     //doorSound.Play();
-                    AudioManager.PlayAudio(AudioType.Subway_OpenDoor);
+                    //AudioManager.PlayAudio(AudioType.Subway_CloseDoor);
+                    StartCoroutine(AudioManager.PlayAudioOutStation(moveTime));
                     doorSoundPlay = true;
                 }
 

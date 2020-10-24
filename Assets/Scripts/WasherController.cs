@@ -202,13 +202,18 @@ public class WasherController : MonoBehaviour
             if (timer > AllMachines.washTime)
             {
                 //Debug.Log("this machine finished!");
+
+                AudioManager.PlayAudio(AudioType.Machine_Finished);
+
+
                 myMachineState = AllMachines.MachineState.finished;
                 //本来在这里 generatecloth
                 
 
                 myAnimator.SetBool("isWashing", false);
                 lightAnimator.SetBool("isWashing", false);
-                washingSound.Stop();
+                AudioManager.PauseAudio(AudioType.Machine_Washing);
+                //washingSound.Stop();
                 //@@@
                 // Show(Occupied);
                 Occupied.SetActive(true);
@@ -317,19 +322,15 @@ public class WasherController : MonoBehaviour
             }
             else if (myMachineState == AllMachines.MachineState.full)
             {
-                
-                washingSound.Play();
-                ClickStart();
+
+            //washingSound.Play();
+            AudioManager.PlayAudio(AudioType.Machine_OnOff);
+            AudioManager.PlayAudio(AudioType.Machine_Washing);
+            ClickStart();
             }
             else if (myMachineState == AllMachines.MachineState.finished)
             {
-                if (FinalCameraController.isTutorial)
-                {
-                    if(FinalCameraController.TutorialManager.tutorialNumber > 11)
-                    {
-                        return;
-                    }                
-                }
+                
                 if(pressOK)
                 {
                     //Debug.Log("machine " + number.ToString() + " clickMachine()");

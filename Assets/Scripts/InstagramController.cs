@@ -117,6 +117,9 @@ public class InstagramController : MonoBehaviour
     private string storedName;
     private int storedRating;
 
+    private AudioManager AudioManager;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -133,7 +136,7 @@ public class InstagramController : MonoBehaviour
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
         SpriteLoader = GameObject.Find("---SpriteLoader").GetComponent<SpriteLoader>();
         AdsController = GameObject.Find("---AdsController").GetComponent<AdsController>();
-
+        AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
 
 
         PosturePostImageList = originalPosture.GetComponentsInChildren<SpriteRenderer>();
@@ -236,6 +239,7 @@ public class InstagramController : MonoBehaviour
         newObject.transform.parent = albumContent.transform;
         newObject.transform.localScale = new Vector3(5, 5, 0);
         newObject.GetComponent<Button>().onClick.AddListener(CheckOnePicture);
+        newObject.GetComponent<Button>().onClick.AddListener(AudioManager.UIButtonClicked);
         newObject.transform.name = countTakenPhotos.ToString();
         Debug.Log("这个的名字" + newObject.transform.name);
 
@@ -301,6 +305,9 @@ public class InstagramController : MonoBehaviour
     {
         redDot.SetActive(true);
         waitingForRefresh = false;
+
+        AudioManager.PlayAudio(AudioType.App_Ring);
+
         foreach (KeyValuePair<string, NPC> pair in SpriteLoader.NPCDic)
         {
             if (pair.Key == "Karara" || pair.Key == "X") continue;

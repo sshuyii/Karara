@@ -4,8 +4,18 @@ using UnityEngine;
 
 public enum AudioType
 {
-    Subway_Moving,
-    Subway_Stop,
+    Subway_PreMoving_1, // subnoi_c_1
+    Subway_PreMoving_2,
+    Subway_PreMoving_3,
+    Subway_PreMoving_4,
+    Subway_Staying_1,  // subnoi_o_1
+    Subway_Staying_2,
+    Subway_Staying_3,
+    Subway_Staying_4,
+    Subway_Moving_1, // subway_noise_1
+    Subway_Moving_2,
+    Subway_Arriving_1, //sub_stop_1
+    Subway_Arriving_2,
     Subway_OpenDoor,
     Subway_CloseDoor,
     Photo_Pose,
@@ -16,8 +26,6 @@ public enum AudioType
     Machine_CloseDoor,
     Machine_OpenDoor,
     Bag_Phase1,
-    Bag_Phase2,
-    Bag_Return,
     Cloth_Return,
     App_Ring,
     UI_Dialogue,

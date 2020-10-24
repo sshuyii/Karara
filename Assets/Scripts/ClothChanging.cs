@@ -79,7 +79,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     private float timer = -1f;
     private float totalTime = -1f;
 
-
+    private AudioManager AudioManager;
     void Start()
     {
         
@@ -92,8 +92,8 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         SpriteLoader = GameObject.Find("---SpriteLoader").GetComponent<SpriteLoader>();
         AdsController = GameObject.Find("---AdsController").GetComponent<AdsController>();
         InventorySlotMgt = GameObject.Find("---InventoryController").GetComponent<InventorySlotMgt>();
+        //AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
 
-        
         startPos = transform.position;
 
 
@@ -155,6 +155,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     }
     public void OnPointerDown(PointerEventData eventData)
 	{
+        //AudioManager.PlayAudio(AudioType.UI_Dialogue);
 		pointerDown = true;
 	}
 

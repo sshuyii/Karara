@@ -180,6 +180,7 @@ public class ClothToMachine : MonoBehaviour
 
     public IEnumerator returnClothYes ()
     {
+        AudioManager.PlayAudio(AudioType.Cloth_Return);
         AllMachines.isReturning = true;
         FinalCameraController.ChangeToSubway();
 
@@ -249,6 +250,7 @@ public class ClothToMachine : MonoBehaviour
 
         //包消失
 
+        AudioManager.PlayAudio(AudioType.Cloth_Return);
         FinalCameraController.alreadyNotice = false;
 
         FinalCameraController.returnMachineNum = underMachineNum;
@@ -279,13 +281,6 @@ public class ClothToMachine : MonoBehaviour
 
         Destroy(this);
 
-
-    if (FinalCameraController.isTutorial && FinalCameraController.TutorialManager.tutorialNumber == 16)
-     {
-                        //do something
-     }
-
-
        
     }
 
@@ -314,9 +309,12 @@ public class ClothToMachine : MonoBehaviour
 
         if (hitTime == 0)
         {
-            myAudio.pitch = 0.5f;
+            //myAudio.pitch = 0.5f;
 
-            myAudio.Play();
+
+            AudioManager.AdjustPitch(AudioType.Bag_Phase1, 0.5f);
+            AudioManager.PlayAudio(AudioType.Bag_Phase1);
+            
 
             //for tutorial
             if (FinalCameraController.isTutorial)
@@ -373,7 +371,10 @@ public class ClothToMachine : MonoBehaviour
         {
             //Debug.Log("second bag hit ");
             myAudio.pitch = 0.6f;
-            myAudio.Play();
+            AudioManager.AdjustPitch(AudioType.Bag_Phase1, 0.6f);
+            //myAudio.Play();
+
+            AudioManager.PlayAudio(AudioType.Bag_Phase1);
 
             //Debug.Log("tag: " + this.tag);
             myImage.sprite = SpriteLoader.NPCDic[this.tag].openBag;
@@ -394,8 +395,9 @@ public class ClothToMachine : MonoBehaviour
         //return clothes
         else if (hitTime > 1)
         {
+            AudioManager.PlayAudio(AudioType.Bag_Phase1);
             //Debug.Log("third bag hit ");
-             isFinished = AllMachines.FinishedOrNot(underMachineNum);
+            isFinished = AllMachines.FinishedOrNot(underMachineNum);
             if (isFinished && !FinalCameraController.alreadyNotice)
             {
                 AllMachines.currentBag = this.gameObject;
