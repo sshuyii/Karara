@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using I2.Loc;
 public class SubwayMovement : MonoBehaviour
 {
+    
     private FinalCameraController FinalCameraController;
 
     public AudioSource doorSound;
@@ -78,7 +79,7 @@ public class SubwayMovement : MonoBehaviour
     public float stayTime;
     public float pauseTime;
     public bool pauseBeforeMove = false;
-    private float pauseTimer;
+    private float timerPause = 0f;
 
 
     //a list of buttons in detail background
@@ -163,6 +164,12 @@ public class SubwayMovement : MonoBehaviour
 
     public bool isDoorOpen = false;
     public bool NoPosition = false;
+    public bool OpeningProcess = false;
+    public bool ClosingProcess = false;
+
+    public GameObject Banner;
+    public UnityEngine.UI.Text remainingTime;
+
 
     private AudioManager AudioManager;
 
@@ -235,7 +242,7 @@ public class SubwayMovement : MonoBehaviour
         }
 
 
-        
+        trainStop();
     }
 
 
@@ -266,7 +273,7 @@ public class SubwayMovement : MonoBehaviour
         // 转完两圈就terminate
         if (isTerminated) return;
 
-
+        
 
 
 
@@ -289,185 +296,108 @@ public class SubwayMovement : MonoBehaviour
         //        //print("FinalCameraController.AllStationClothList.Count  =" + FinalCameraController.AllStationClothList.Count);
         //正式游戏
 
-        // no timer before statrt game
         if (LevelManager.clicktime < 7) return;
 
         if (!pauseBeforeMove)
         {
             timer += Time.deltaTime;// special timer for statin 0
             timerS2S += Time.deltaTime;
-            if(!isMoving) timerStay += Time.deltaTime;
+            if (!isMoving) timerStay += Time.deltaTime;
         }
-        else pauseTime += Time.deltaTime;
+        else timerPause += Time.deltaTime;
 
+
+        if(timerStay > stayTime - 10f&& Banner.active == false)
+        {
+            Banner.SetActive(true);
+        }
+        else if(Banner.active)
+        {
+            int leftT =  (int) (stayTime - timerStay);
+            remainingTime.text =
+                 "Train will departure in " + leftT.ToString() + " seconds";
+        }
 
         if (timerStay > stayTime)
         {
-            trainMove();
+            trainPause();
             timerStay = 0;
         }
 
-
-        if(!isMoving)
+        if (timerS2S > stayTime + moveTime)
         {
-            // open door
-            
+            trainStop();
+            timerS2S = 0;
         }
 
 
-        if (LevelManager.clicktime > 6)
+        if (timerPause > pauseTime)
         {
-            //instead of InvokeRepeating
-            //timerStay记录在站内应该停留多长时间
-            if (!isMoving)
+            trainMove();
+            timerPause = 0;
+        }
+
+
+
+
+        if (OpeningProcess)
+
+        {
+
+
+            if (left1.position.x > left1Pos - doorWidth)
             {
-                timerStay += Time.deltaTime;
+                left1.position -= new Vector3(doorMovement, 0, 0);
             }
-            if (timerStay > stayTime)
-            {
-                trainMove();
-                timerStay = 0;
-            }
-
-            //如果停在一站+走完下一站，现在马上要进入新的一站了
-            timerS2S += Time.deltaTime;
-            if (timerS2S > stayTime + moveTime)
-            {
-                trainStop();
-                timerS2S = 0;
-            }
-
-            //train needs 1 minute on its way
-            //this timer is specifically used for station0
-            timer += Time.deltaTime;
-
-            if (!FinalCameraController.isTutorial)
-            {
-
-                //start the timer once the train's in station
-                if (!isMoving)
-                {
-                    stationTimer -= Time.deltaTime;
-                    NumberRecalculate(stationTimer, CountDownTimer);
-                }
-                else
-                {
-                    CountDownTimer.text = "";
-                    stationTimer = stayTime;
-                }
-            }
-
-            //decide which station is highlighted on screen
-            if (isMoving == false)
-            {
-                Debug.Log("timer" + timerS2S);
-                Debug.Log("open door ");
-                if (roundNum == 2)
-                {
-                    //第一章结束
-                    FinalCameraController.ChapterOneEnd = true;
-                    isTerminated = true;
-                }
-
-
-                //open doors
-
-                if (left1.position.x > left1Pos - doorWidth)
-                {
-                    Debug.Log("open door!!! ");
-                    if (doorSoundPlay)
-                    {
-                        //doorSound.Play();
-                        //AudioManager.PlayAudio(AudioType.Subway_OpenDoor);
-                        StartCoroutine(AudioManager.PlayAudioInStation(stayTime));
-                        doorSoundPlay = false;
-                    }        
-                    
-                    left1.position -= new Vector3(doorMovement, 0,0);
-                    //print("opening left door");
-                }
-                else
-                {
-                    //left1.position = new Vector3(left1Pos - doorWidth, left1.position.y,0);
-                }
-
-                if (right1.position.x < right1Pos + doorWidth)
-                {
-                    right1.position += new Vector3(doorMovement, 0,0);
-                }
-                else
-                {
-                    right1.position = new Vector3(right1Pos + doorWidth, right1.position.y,0);
-
-
-                    //bagfirst保证只运行一次
-                    if (bagFirst && !FinalCameraController.ChapterOneEnd)//结束的时候不能往车上放新的包了
-                    {
-                       
-                        for (int i = 0; i < specialNPCPerStation; i++)
-                        {
-
-                            // 门完全开之后：
-                            // 1.产生包
-                            // 2.丢l&f衣服,发post(包含在3里)
-                            // 3.更新posture(ad)
-                            GenerateBag(currentStation);
-                            if(!atInitailStation) LostAndFound.DropLostFoundClothes(currentStation);
-                            AdsController.UpdatePosters();
-                            
-                            bagFirst = false;
-
-                            isDoorOpen = true;
-
-                        }
-                    }
-
-
-                }
-            }//close doors
-            //this actually happens when the train has started moving
             else
             {
-                Debug.Log("timer" + timerS2S);
-                Debug.Log("close door ");
-
-                if (!pauseBeforeMove)
-                {// 开始倒计时
-                    trainPause();
-                    
-                }
-                else
-                {
-                    if (!doorSoundPlay)
-                    {
-                        StartCoroutine(AudioManager.PlayAudioOutStation(moveTime));
-                        doorSoundPlay = true;
-                    }
-                    if (left1.position.x < left1Pos)
-                    {
-                        left1.position += new Vector3(doorMovement, 0, 0);
-                    }
-                    else
-                    {
-                        left1.position = new Vector3(left1Pos, left1.position.y, 0);
-                    }
-
-                    //
-                    if (right1.position.x > right1Pos)
-                    {
-                        right1.position -= new Vector3(doorMovement, 0, 0);
-                    }
-                    else
-                    {
-                        right1.position = new Vector3(right1Pos, right1.position.y, 0);
-                        isDoorOpen = false;
-                    }
-                }
+                left1.position = new Vector3(left1Pos - doorWidth, left1.position.y, 0);
+                OpeningProcess = false;
+            }
 
 
+            if (right1.position.x < right1Pos + doorWidth)
+            {
+                right1.position += new Vector3(doorMovement, 0, 0);
+            }
+            else
+            {
+                right1.position = new Vector3(right1Pos + doorWidth, right1.position.y, 0);
+                OpeningProcess = false;
+            }
+
+            if (OpeningProcess == false)
+            {
+                DoorOpenFinish();
             }
         }
 
+
+        if (ClosingProcess)
+        {
+            if (left1.position.x < left1Pos)
+            {
+                left1.position += new Vector3(doorMovement, 0, 0);
+            }
+            else
+            {
+                left1.position = new Vector3(left1Pos, left1.position.y, 0);
+                ClosingProcess = false;
+            }
+
+            if (right1.position.x > right1Pos)
+            {
+                right1.position -= new Vector3(doorMovement, 0, 0);
+            }
+            else
+            {
+                right1.position = new Vector3(right1Pos, right1.position.y, 0);
+                ClosingProcess = false;
+                isDoorOpen = false;
+            }
+            //no action is needed after door close
+
+        }
 
         if (isDoorOpen && NoPosition)
         {
@@ -476,7 +406,55 @@ public class SubwayMovement : MonoBehaviour
 
     }
 
-   
+    void OpenDoor()
+    {
+        if (roundNum == 2)
+        {
+            //第一章结束
+            FinalCameraController.ChapterOneEnd = true;
+            isTerminated = true;
+        }
+
+        OpeningProcess = true;
+
+        StartCoroutine(AudioManager.PlayAudioInStation(stayTime));
+    
+    }
+
+
+
+    void CloseDoor()
+    {
+        ClosingProcess = true;
+        StartCoroutine(AudioManager.PlayAudioInStation(stayTime));
+
+    }
+
+    void DoorOpenFinish()
+    {
+
+
+        for (int i = 0; i < specialNPCPerStation; i++)
+        {
+
+            // 门完全开之后：
+            // 1.产生包
+            // 2.丢l&f衣服,发post(包含在3里)
+            // 3.更新posture(ad)
+            GenerateBag(currentStation);
+            if (!atInitailStation) LostAndFound.DropLostFoundClothes(currentStation);
+            AdsController.UpdatePosters();
+
+            bagFirst = false;
+
+            isDoorOpen = true;
+
+
+        }
+
+
+    }
+
 
 
 
@@ -499,7 +477,7 @@ public class SubwayMovement : MonoBehaviour
         {
             if (!BagsController.CheckBagsInCar(NameToStationBags[stationNum][i].tag, stationNum))
             {
-                GenerateSpecialBag(stationNum,i);
+                StartCoroutine(GenerateSpecialBag(stationNum,i));
                 allLastRoundBagsInCar = false;
             }
         }
@@ -512,24 +490,29 @@ public class SubwayMovement : MonoBehaviour
         //前提是上一次进来的npc的包不在车里
         if (allLastRoundBagsInCar)
         {
-            if (!NPCIsInCar) GenerateNpcBag(10f);
+            if (!NPCIsInCar) StartCoroutine(GenerateNpcBag(10f));
             return;
         }
         else
         {
-            if (!NPCIsInCar) GenerateNpcBag(8f);
+            if (!NPCIsInCar) StartCoroutine(GenerateNpcBag(8f));
         }
 
         
     }
 
 
-    private void GenerateSpecialBag(int stationNum, int npcNum)
+    private IEnumerator GenerateSpecialBag(int stationNum, int npcNum)
     {
 
         if(bagNum < 3)
         {
             emptyBagPos();
+
+            if (!bagFirst) yield return new WaitForSeconds(2f);
+            if (!bagFirst && !isDoorOpen) yield return null;
+
+
             Button bag = Instantiate(NameToStationBags[stationNum][npcNum], bagPos[firstEmptyPos],
     Quaternion.identity) as Button;
 
@@ -557,7 +540,7 @@ public class SubwayMovement : MonoBehaviour
     }
 
 
-    private void GenerateNpcBag(float probability)
+    private IEnumerator GenerateNpcBag(float probability)
     {
 
         
@@ -565,6 +548,10 @@ public class SubwayMovement : MonoBehaviour
         if (bagNum < 3)
         {
             emptyBagPos();
+
+            if (!bagFirst) yield return new WaitForSeconds(2f);
+            if (!bagFirst && !isDoorOpen) yield return null;
+
             //only generate a new bag if there is an empty position
             //如果同一个tag的包已经在车厢里了，那么就不要放进来这个人的包:noSameBag
             if (UnityEngine.Random.Range(0f, 10f) < probability) //给npc bag 调高一点概率
@@ -598,9 +585,19 @@ public class SubwayMovement : MonoBehaviour
 
     public void trainPause()
     {
+
         pauseBeforeMove = true;
 
+        //if (atInitailStation)
+        //{
+        //    atInitailStation = false;
+        //    timerPause = pauseTime;
+        //}
+        //else
+        //{
 
+
+        //}
     }
 
 
@@ -625,12 +622,15 @@ public class SubwayMovement : MonoBehaviour
         
         isMoving = true;
         bagFirst = true;
+
+        CloseDoor();
     }
 
     public void trainStop()
     {
         isMoving = false;
         bagFirst = true;
+        OpenDoor();
     }
     
     IEnumerator MyCoroutine(float time)
