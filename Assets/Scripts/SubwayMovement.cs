@@ -76,6 +76,10 @@ public class SubwayMovement : MonoBehaviour
 
     public float moveTime;
     public float stayTime;
+    public float pauseTime;
+    public bool pauseBeforeMove = false;
+    private float pauseTimer;
+
 
     //a list of buttons in detail background
     private List<List<Image>> AllDetailList = new List<List<Image>>();
@@ -195,7 +199,8 @@ public class SubwayMovement : MonoBehaviour
             collection.SetActive(false);
         }
 
-        realTimer = (moveTime + stayTime) * 3 - timer;
+        // 不知道 real timer干什么用的
+        realTimer = (moveTime + stayTime + pauseTime) * 3 - timer;
         
         NameToStationBags.Add (bagStation0);
         NameToStationBags.Add(bagStation1);
@@ -238,8 +243,8 @@ public class SubwayMovement : MonoBehaviour
     private Button clothBag2;
     private Button clothBag3;
 
-    public float newTimer1;
-    public float newTimer2;
+    public float timerStay;
+    public float timerS2S; //station to station move + stay
 
 
     void emptyBagPos()
@@ -281,28 +286,55 @@ public class SubwayMovement : MonoBehaviour
         {
             alreadyStation0 = true;
         }
-//        //print("FinalCameraController.AllStationClothList.Count  =" + FinalCameraController.AllStationClothList.Count);
+        //        //print("FinalCameraController.AllStationClothList.Count  =" + FinalCameraController.AllStationClothList.Count);
         //正式游戏
-        if (!FinalCameraController.isTutorial && LevelManager.clicktime > 6)
+
+        // no timer before statrt game
+        if (LevelManager.clicktime < 7) return;
+
+        if (!pauseBeforeMove)
+        {
+            timer += Time.deltaTime;// special timer for statin 0
+            timerS2S += Time.deltaTime;
+            if(!isMoving) timerStay += Time.deltaTime;
+        }
+        else pauseTime += Time.deltaTime;
+
+
+        if (timerStay > stayTime)
+        {
+            trainMove();
+            timerStay = 0;
+        }
+
+
+        if(!isMoving)
+        {
+            // open door
+            
+        }
+
+
+        if (LevelManager.clicktime > 6)
         {
             //instead of InvokeRepeating
-            //newTimer1记录在站内应该停留多长时间
+            //timerStay记录在站内应该停留多长时间
             if (!isMoving)
             {
-                newTimer1 += Time.deltaTime;
+                timerStay += Time.deltaTime;
             }
-            if (newTimer1 > stayTime)
+            if (timerStay > stayTime)
             {
                 trainMove();
-                newTimer1 = 0;
+                timerStay = 0;
             }
 
             //如果停在一站+走完下一站，现在马上要进入新的一站了
-            newTimer2 += Time.deltaTime;
-            if (newTimer2 > stayTime + moveTime)
+            timerS2S += Time.deltaTime;
+            if (timerS2S > stayTime + moveTime)
             {
                 trainStop();
-                newTimer2 = 0;
+                timerS2S = 0;
             }
 
             //train needs 1 minute on its way
@@ -328,7 +360,8 @@ public class SubwayMovement : MonoBehaviour
             //decide which station is highlighted on screen
             if (isMoving == false)
             {
-
+                Debug.Log("timer" + timerS2S);
+                Debug.Log("open door ");
                 if (roundNum == 2)
                 {
                     //第一章结束
@@ -341,8 +374,8 @@ public class SubwayMovement : MonoBehaviour
 
                 if (left1.position.x > left1Pos - doorWidth)
                 {
-                    
-                    if(doorSoundPlay)
+                    Debug.Log("open door!!! ");
+                    if (doorSoundPlay)
                     {
                         //doorSound.Play();
                         //AudioManager.PlayAudio(AudioType.Subway_OpenDoor);
@@ -355,7 +388,7 @@ public class SubwayMovement : MonoBehaviour
                 }
                 else
                 {
-                    left1.position = new Vector3(left1Pos - doorWidth, left1.position.y,0);
+                    //left1.position = new Vector3(left1Pos - doorWidth, left1.position.y,0);
                 }
 
                 if (right1.position.x < right1Pos + doorWidth)
@@ -395,33 +428,42 @@ public class SubwayMovement : MonoBehaviour
             //this actually happens when the train has started moving
             else
             {
-                if(!doorSoundPlay)
-                {
-                    //doorSound.Play();
-                    //AudioManager.PlayAudio(AudioType.Subway_CloseDoor);
-                    StartCoroutine(AudioManager.PlayAudioOutStation(moveTime));
-                    doorSoundPlay = true;
-                }
+                Debug.Log("timer" + timerS2S);
+                Debug.Log("close door ");
 
-                if (left1.position.x < left1Pos)
-                {
-                    left1.position += new Vector3(doorMovement, 0,0);
+                if (!pauseBeforeMove)
+                {// 开始倒计时
+                    trainPause();
+                    
                 }
                 else
                 {
-                    left1.position = new Vector3(left1Pos, left1.position.y,0);
+                    if (!doorSoundPlay)
+                    {
+                        StartCoroutine(AudioManager.PlayAudioOutStation(moveTime));
+                        doorSoundPlay = true;
+                    }
+                    if (left1.position.x < left1Pos)
+                    {
+                        left1.position += new Vector3(doorMovement, 0, 0);
+                    }
+                    else
+                    {
+                        left1.position = new Vector3(left1Pos, left1.position.y, 0);
+                    }
+
+                    //
+                    if (right1.position.x > right1Pos)
+                    {
+                        right1.position -= new Vector3(doorMovement, 0, 0);
+                    }
+                    else
+                    {
+                        right1.position = new Vector3(right1Pos, right1.position.y, 0);
+                        isDoorOpen = false;
+                    }
                 }
 
-//
-                if (right1.position.x > right1Pos)
-                {
-                    right1.position -= new Vector3(doorMovement, 0,0);
-                }
-                else
-                {
-                    right1.position = new Vector3(right1Pos, right1.position.y,0);
-                    isDoorOpen = false;
-                }
 
             }
         }
@@ -491,8 +533,8 @@ public class SubwayMovement : MonoBehaviour
             Button bag = Instantiate(NameToStationBags[stationNum][npcNum], bagPos[firstEmptyPos],
     Quaternion.identity) as Button;
 
-            bag.GetComponent<ClothToMachine>().timer = 4 * stayTime + 3 * moveTime - newTimer1;
-            bag.GetComponent<ClothToMachine>().totalTime = 4 * stayTime + 3 * moveTime - newTimer1;
+            bag.GetComponent<ClothToMachine>().timer = 4 * stayTime + 3 * moveTime - timerStay;
+            bag.GetComponent<ClothToMachine>().totalTime = 4 * stayTime + 3 * moveTime - timerStay;
 
 
 
@@ -529,8 +571,8 @@ public class SubwayMovement : MonoBehaviour
             {
                 Button bag = Instantiate(NPCBag, bagPos[firstEmptyPos],
                     Quaternion.identity) as Button;
-                bag.GetComponent<ClothToMachine>().timer = 4 * stayTime + 3 * moveTime - newTimer1;
-                bag.GetComponent<ClothToMachine>().totalTime = 4 * stayTime + 3 * moveTime - newTimer1;
+                bag.GetComponent<ClothToMachine>().timer = 4 * stayTime + 3 * moveTime - timerStay;
+                bag.GetComponent<ClothToMachine>().totalTime = 4 * stayTime + 3 * moveTime - timerStay;
                 bag.GetComponent<ClothToMachine>().myStation = currentStation;
                 string temp = "X";
                 bag.gameObject.transform.tag = temp;
@@ -553,6 +595,13 @@ public class SubwayMovement : MonoBehaviour
         }
     }
 
+
+    public void trainPause()
+    {
+        pauseBeforeMove = true;
+
+
+    }
 
 
     public void trainMove()

@@ -130,8 +130,8 @@ public class ClockRotate : MonoBehaviour
     public void clickClock()
     {
         SubwayMovement.trainStop();
-        SubwayMovement.newTimer2 = 0;
-        SubwayMovement.newTimer1 = 0;
+        SubwayMovement.timerS2S = 0;
+        SubwayMovement.timerStay = 0;
         selfImage.enabled = false;
         fastForward = false;
         //SubwayMovement.Hide(bubble);

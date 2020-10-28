@@ -15485,6 +15485,8 @@ MonoBehaviour:
   right1: {fileID: 1253810751}
   moveTime: 40
   stayTime: 15
+  pauseTime: 10
+  pauseBeforeMove: 0
   detailList0:
   - {fileID: 0}
   - {fileID: 0}
