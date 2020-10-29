@@ -897,4 +897,12 @@ public class FinalCameraController : MonoBehaviour
             }
         }
     }
+
+    public void GotoPage(int pageNum)
+    {
+
+        HorizontalScrollSnap.currentPage = pageNum;
+
+
+    }
 }

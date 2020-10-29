@@ -48,7 +48,7 @@ public class ClothToMachine : MonoBehaviour
     [SerializeField]
     private GameObject thisBag;
 
-    int underMachineNum = -1;
+    public int underMachineNum = -1;
     private bool timeUp;
 
 
@@ -67,6 +67,8 @@ public class ClothToMachine : MonoBehaviour
 
 
     private AudioManager AudioManager;
+
+    private Animator myAnimator;
 
 
     void Start()
@@ -93,6 +95,7 @@ public class ClothToMachine : MonoBehaviour
 
         AllMachines = ClothInMachineController.GetComponent<AllMachines>();
 
+        myAnimator = this.transform.gameObject.GetComponent<Animator>();
         //todo: generate clothes
         Debug.Log(this.transform.gameObject.tag);
 
@@ -187,7 +190,7 @@ public class ClothToMachine : MonoBehaviour
         if (underMachineNum == 0) cameraMovement.currentPage = 2;
         else cameraMovement.currentPage = 3;
 
-
+        myAnimator.SetTrigger("Disappear");
         yield return new WaitForSeconds(1f);
       
         FinalCameraController.alreadyNotice = false;
@@ -353,7 +356,7 @@ public class ClothToMachine : MonoBehaviour
                 this.gameObject.transform.SetParent(AllMachines.FakeMachines[underMachineNum].gameObject.transform);// @@@
 
                 transform.position =
-                            AllMachines.FakeMachines[underMachineNum].transform.position + new Vector3(0, -2.7f, 0); // @@@
+                            AllMachines.FakeMachines[underMachineNum].transform.position;// @@@
 
                 if (underMachineNum == 0) cameraMovement.currentPage = 2;
                 else cameraMovement.currentPage = 3;
@@ -362,7 +365,7 @@ public class ClothToMachine : MonoBehaviour
 
                 hitTime++;
 
-
+                
 
             }
         }

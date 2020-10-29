@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2947688091004308106}
   - component: {fileID: 8895453811557900614}
   - component: {fileID: 5832708796041711957}
+  - component: {fileID: 7196785865803413790}
   m_Layer: 5
   m_Name: DollyBag
   m_TagString: D
@@ -252,6 +253,25 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &7196785865803413790
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2595100545666431128}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: dec50511d54a1824f9a5adeee5404c92, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6647142925185249259
 GameObject:
   m_ObjectHideFlags: 0

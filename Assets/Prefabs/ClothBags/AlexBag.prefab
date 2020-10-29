@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1911849397198779274}
   - component: {fileID: 5265563705309419590}
   - component: {fileID: 7102735065598732373}
+  - component: {fileID: 4473169827989832493}
   m_Layer: 5
   m_Name: AlexBag
   m_TagString: A
@@ -176,6 +177,7 @@ MonoBehaviour:
   thisBag: {fileID: 1613322638505755032}
   timer: 0
   totalTime: 0
+  myStation: 0
 --- !u!82 &7102735065598732373
 AudioSource:
   m_ObjectHideFlags: 0
@@ -272,6 +274,25 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &4473169827989832493
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1613322638505755032}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7c717b8e764b9ed4881be32b68d7afc1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7953197596603782891
 GameObject:
   m_ObjectHideFlags: 0

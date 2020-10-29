@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6997263475060913921}
   - component: {fileID: 7860955271271582978}
   - component: {fileID: 983900169594382361}
+  - component: {fileID: 4477957918452206376}
   m_Layer: 5
   m_Name: Tutorial
   m_TagString: Tutorial
@@ -228,3 +229,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &4477957918452206376
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7060612506242793232}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b8c8cd7cb6b967e42b6fd680a98f4cf0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

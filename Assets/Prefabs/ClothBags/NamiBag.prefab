@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 307228934063611808}
   - component: {fileID: -2893503689842035604}
   - component: {fileID: 804593252385197907}
+  - component: {fileID: 1952138660465869807}
   m_Layer: 5
   m_Name: NamiBag
   m_TagString: C
@@ -155,6 +156,7 @@ MonoBehaviour:
   thisBag: {fileID: 623910827685965234}
   timer: 0
   totalTime: 0
+  myStation: 0
 --- !u!82 &804593252385197907
 AudioSource:
   m_ObjectHideFlags: 0
@@ -251,6 +253,25 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &1952138660465869807
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623910827685965234}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6290dd94bb0f66c418694bb5cd65b206, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4129085255013366448
 GameObject:
   m_ObjectHideFlags: 0

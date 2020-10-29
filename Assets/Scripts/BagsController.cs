@@ -127,4 +127,35 @@ public class BagsController : MonoBehaviour
 
         return new float[2] { -1,-1};
     }
+
+
+
+    public void DropAllBagsInScreen3()
+    {
+        for(int i = 0; i < bagsInCar.Count; i++)
+        {
+            ClothToMachine ctm = bagsInCar[i].GetComponent<ClothToMachine>();
+            if(ctm.underMachineNum == 1|| ctm.underMachineNum == 2)
+            {
+                Debug.Log("bags in 3 returning");
+                returningBag = bagsInCar[i];
+                ClickReturnYes();
+            }
+        }
+    }
+
+
+    public void DropAllBagsInScreen2()
+    {
+        for (int i = 0; i < bagsInCar.Count; i++)
+        {
+            ClothToMachine ctm = bagsInCar[i].GetComponent<ClothToMachine>();
+            if (ctm.underMachineNum == 0)
+            {
+                Debug.Log("bags in 2 returning");
+                returningBag = bagsInCar[i];
+                ClickReturnYes();
+            }
+        }
+    }
 }

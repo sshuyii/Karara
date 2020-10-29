@@ -169,6 +169,8 @@ public class SubwayMovement : MonoBehaviour
 
     public GameObject Banner;
     public UnityEngine.UI.Text remainingTime;
+    public GameObject BlackScreen;
+
 
 
     private AudioManager AudioManager;
@@ -304,7 +306,10 @@ public class SubwayMovement : MonoBehaviour
             timerS2S += Time.deltaTime;
             if (!isMoving) timerStay += Time.deltaTime;
         }
-        else timerPause += Time.deltaTime;
+        else
+        {
+            timerPause += Time.deltaTime;
+        }
 
 
         if(timerStay > stayTime - 10f&& Banner.active == false)
@@ -314,13 +319,13 @@ public class SubwayMovement : MonoBehaviour
         else if(Banner.active)
         {
             int leftT =  (int) (stayTime - timerStay);
-            remainingTime.text =
-                 "Train will departure in " + leftT.ToString() + " seconds";
+            //remainingTime.text =
+            //     "Train will departure in " + leftT.ToString() + " seconds";
         }
 
         if (timerStay > stayTime)
         {
-            trainPause();
+            StartCoroutine(trainPause());
             timerStay = 0;
         }
 
@@ -583,10 +588,49 @@ public class SubwayMovement : MonoBehaviour
     }
 
 
-    public void trainPause()
+    public IEnumerator trainPause()
     {
 
+        if (atInitailStation)
+        {
+            atInitailStation = false;
+            timerPause = pauseTime;
+            yield return null;
+        }
+
+        Banner.SetActive(false);
         pauseBeforeMove = true;
+
+        Show(FinalCameraController.disableInputCG);
+        BlackScreen.SetActive(true);
+        FinalCameraController.ChangeToSubway();
+        FinalCameraController.GotoPage(4);
+
+        yield return new WaitForSeconds(1f);
+        BlackScreen.SetActive(false);
+        LostAndFound.clickLostFound();
+        
+
+        yield return new WaitForSeconds(3f);
+
+        //show lost and found 
+        FinalCameraController.GotoPage(3);
+        BagsController.DropAllBagsInScreen3();
+        yield return new WaitForSeconds(3f);
+
+        // bag disappear
+        FinalCameraController.GotoPage(2);
+        BagsController.DropAllBagsInScreen2();
+        yield return new WaitForSeconds(3f);
+
+        // bag disappear
+        FinalCameraController.GotoPage(1);
+ 
+        yield return new WaitForSeconds(3f);
+
+
+        timerPause = pauseTime;
+        Hide(FinalCameraController.disableInputCG);
 
         //if (atInitailStation)
         //{
@@ -693,6 +737,6 @@ public class SubwayMovement : MonoBehaviour
     }
 
 
-   
+    
 
 }
