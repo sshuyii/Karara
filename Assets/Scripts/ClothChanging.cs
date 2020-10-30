@@ -60,6 +60,8 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     [SerializeField]
     private Button buttonPrefab;
     [SerializeField]
+    private GameObject returnBG;
+    [SerializeField]
     private bool isWorkCloth;
     
 
@@ -127,7 +129,9 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
                 longPress = true;
 
                 //Debug.Log("LongPress");
-                if (!isWorkCloth) InventorySlotMgt.castLongPress();
+                //if (!isWorkCloth) InventorySlotMgt.castLongPress();
+                //新功能
+                if (!isWorkCloth) showReturnConfirm();
                 //if(!isWorkCloth) showReturnConfirm();
                 Reset();
 			}
@@ -136,7 +140,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 
 
-        if(isOccupied)
+        if(isOccupied && !SubwayMovement.pauseBeforeMove)
         {
             myFillAmount -= 1 / (3 * (SubwayMovement.stayTime + SubwayMovement.moveTime) + SubwayMovement.stayTime) *
                 Time.deltaTime;
@@ -173,12 +177,19 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
     public void hideReturnConfirm()
     {
+        //cancelReturnButton.SetActive(false);
+        returnBG.SetActive(false);
         returnConfirmButton.gameObject.SetActive(false);
     }
     public void showReturnConfirm()
     {
 
-        if(isOccupied && !isWorkCloth)returnConfirmButton.gameObject.SetActive(true);
+        if (isOccupied && !isWorkCloth)
+        {
+            //cancelReturnButton.SetActive(true);
+            returnBG.SetActive(true);
+            returnConfirmButton.gameObject.SetActive(true);
+        }
 
     }
 
@@ -190,6 +201,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     public void ReturnCloth()
     {
         returnConfirmButton.gameObject.SetActive(false);
+        returnBG.SetActive(false);
         longPress = false;
         //todo: long press but later chose not to return?
 

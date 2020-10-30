@@ -49,7 +49,7 @@ public class ClothToMachine : MonoBehaviour
     private GameObject thisBag;
 
     public int underMachineNum = -1;
-    private bool timeUp;
+    public bool timeUp;
 
 
     public float timer;
@@ -63,7 +63,7 @@ public class ClothToMachine : MonoBehaviour
     private List<string> clothesInBag = new List<string>();
 
     private BagsController BagsController;
-    bool isFinished = false;
+    public bool isFinished = false;
 
 
     private AudioManager AudioManager;
@@ -121,9 +121,9 @@ public class ClothToMachine : MonoBehaviour
         if (underMachineNum >= 0) isFinished = AllMachines.FinishedOrNot(underMachineNum);
         if (isFinished) alreadyWashed = true;
 
-        if(timeUp&&alreadyWashed)
+        if(isOverdue&&alreadyWashed)
         {
-            ReturnBag2cases();
+            StartCoroutine(ReturnBag2cases());
         }
        
 
@@ -134,7 +134,7 @@ public class ClothToMachine : MonoBehaviour
 
 
         
-        if(!isNotice)
+        if(!isNotice && !SubwayMovement.pauseBeforeMove)
         {
             timer -= Time.deltaTime;
             //remainTime = (SubwayMovement.moveTime + SubwayMovement.stayTime) * 3 - timer;
@@ -153,7 +153,7 @@ public class ClothToMachine : MonoBehaviour
                     {
                         //一次只能还一个包
                         //如果已经有包在还了，就直接还
-                        ReturnBag2cases();
+                        //ReturnBag2cases();
                     }
                     else if (!isOverdue)
                     {
@@ -171,12 +171,19 @@ public class ClothToMachine : MonoBehaviour
     }
 
 
-   private void ReturnBag2cases()
+   private IEnumerator ReturnBag2cases()
    {
+        if(underMachineNum == 0) FinalCameraController.HorizontalScrollSnap.JumpToPage(2);
+        else FinalCameraController.HorizontalScrollSnap.JumpToPage(3);
+
         BagsController.returningBag = this.transform.gameObject;
         BagsController.ClickReturnYes();
+
+        yield return new WaitForSeconds(1f);
         FinalCameraController.HorizontalScrollSnap.JumpToPage(1);
         //todo: fish talk late return;
+        FinalCameraController.fishTalkText.text = "Return your customers' clothes on time! Such bad memory!";
+
     }
 
 
@@ -186,44 +193,26 @@ public class ClothToMachine : MonoBehaviour
         AudioManager.PlayAudio(AudioType.Cloth_Return);
         AllMachines.isReturning = true;
         FinalCameraController.ChangeToSubway();
-
-        if (underMachineNum == 0) cameraMovement.currentPage = 2;
-        else cameraMovement.currentPage = 3;
-
-        myAnimator.SetTrigger("Disappear");
-        yield return new WaitForSeconds(1f);
-      
         FinalCameraController.alreadyNotice = false;
 
+        
+
+        myAnimator.SetTrigger("Disappear");
         FinalCameraController.returnMachineNum = underMachineNum;
         AllMachines.ClearMahine(underMachineNum);
+        SpriteLoader.NPCDic[tag].usedIdx.Clear();
+
+        yield return new WaitForSeconds(0.9f);
 
 
-        if(!FinalCameraController.isTutorial)
-        {
-            SpriteLoader.NPCDic[tag].usedIdx.Clear();
-        }
-
-        //先播放一个包不见的动画
-        //todo: yun disappear animation
-        //thisBag.GetComponent<Image>().sprite = CalculateInventory.disappear;
-
-        yield return new WaitForSeconds(0.2f);
-
-        //thisBag.GetComponent<Image>().sprite = CalculateInventory.transparent;
-
-        yield return new WaitForSeconds(0.5f);
-
-
-        cameraMovement.currentPage = 1;
-
-        yield return new WaitForSeconds(0.2f);
-
-
-        FinalCameraController.fishTalk.SetActive(false);
-        FinalCameraController.fishTalkText.text = "Return your customers' clothes on time! Such bad memory!";
-        FinalCameraController.lateReturnComic = false;
-
+        //if (SubwayMovement.pauseBeforeMove == false)
+        //{
+        //    cameraMovement.currentPage = 1;
+        //    yield return new WaitForSeconds(0.2f);
+        //    FinalCameraController.fishTalk.SetActive(false);
+        //    FinalCameraController.fishTalkText.text = "Return your customers' clothes on time! Such bad memory!";
+        //    FinalCameraController.lateReturnComic = false;
+        //}
 
         Debug.Log("add star!!!");
 
@@ -236,14 +225,8 @@ public class ClothToMachine : MonoBehaviour
 
         BagsController.RemoveBag(thisBag);
         Destroy(thisBag);
-
-        //todo:subway movement remove bags in car
-
-
         AllMachines.isReturning = false;
-
         Destroy(this);
-
         
     }
 
@@ -259,10 +242,7 @@ public class ClothToMachine : MonoBehaviour
         FinalCameraController.returnMachineNum = underMachineNum;
         AllMachines.ClearMahine(underMachineNum);
 
-        if (!FinalCameraController.isTutorial)
-        {
-            SpriteLoader.NPCDic[tag].usedIdx.Clear();
-        }
+        SpriteLoader.NPCDic[tag].usedIdx.Clear();
 
 
         Debug.Log("add star!!!");
@@ -319,32 +299,7 @@ public class ClothToMachine : MonoBehaviour
             AudioManager.PlayAudio(AudioType.Bag_Phase1);
             
 
-            //for tutorial
-            if (FinalCameraController.isTutorial)
-            {
-
-                AllMachines.SetMachineAsBagUnder(0, owner.name,clothesInBag);
-
-
-                this.gameObject.transform.SetParent(AllMachines.FakeMachines[0].gameObject.transform);// @@@
-
-                transform.position =
-                    AllMachines.FakeMachines[0].transform.position + new Vector3(0, -2.7f, 0); // @@@
-
-
-                cameraMovement.currentPage = 2;
-
-                FinalCameraController.TutorialManager.KararaStandingImage.enabled = false;
-                FinalCameraController.TutorialManager.tutorialNumber = 3;
-
-                FinalCameraController.TutorialManager.stopDisappear = false;
-
-                hitTime++;
-
-
-            }
-            else
-            {
+    
                 //Debug.Log(transform.position);
                 SubwayMovement.bagNum -= 1;
 
@@ -353,10 +308,9 @@ public class ClothToMachine : MonoBehaviour
 
 
 
-                this.gameObject.transform.SetParent(AllMachines.FakeMachines[underMachineNum].gameObject.transform);// @@@
+                //this.gameObject.transform.SetParent(AllMachines.FakeMachines[underMachineNum].gameObject.transform);// @@@
 
-                transform.position =
-                            AllMachines.FakeMachines[underMachineNum].transform.position;// @@@
+                transform.localPosition =  SubwayMovement.bagPos[underMachineNum+3]; // @@@
 
                 if (underMachineNum == 0) cameraMovement.currentPage = 2;
                 else cameraMovement.currentPage = 3;
@@ -367,7 +321,7 @@ public class ClothToMachine : MonoBehaviour
 
                 
 
-            }
+            
         }
 
         else if (hitTime == 1)

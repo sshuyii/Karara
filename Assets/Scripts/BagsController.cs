@@ -105,7 +105,7 @@ public class BagsController : MonoBehaviour
     }
 
     public void ClickReturnYes() {
-        returningBag.GetComponent<ClothToMachine>().returnClothYesDirectly();
+        StartCoroutine(returningBag.GetComponent<ClothToMachine>().returnClothYes());
         bagsInCar.Remove(returningBag);
         FinalCameraController.alreadyNotice = false;
 
@@ -135,8 +135,9 @@ public class BagsController : MonoBehaviour
         for(int i = 0; i < bagsInCar.Count; i++)
         {
             ClothToMachine ctm = bagsInCar[i].GetComponent<ClothToMachine>();
-            if(ctm.underMachineNum == 1|| ctm.underMachineNum == 2)
+            if(ctm.underMachineNum == 1|| ctm.underMachineNum == 2 && ctm.isFinished && ctm.timeUp)
             {
+                if (!ctm.isFinished) continue;
                 Debug.Log("bags in 3 returning");
                 returningBag = bagsInCar[i];
                 ClickReturnYes();
@@ -150,7 +151,7 @@ public class BagsController : MonoBehaviour
         for (int i = 0; i < bagsInCar.Count; i++)
         {
             ClothToMachine ctm = bagsInCar[i].GetComponent<ClothToMachine>();
-            if (ctm.underMachineNum == 0)
+            if (ctm.underMachineNum == 0 && ctm.isFinished && ctm.timeUp)
             {
                 Debug.Log("bags in 2 returning");
                 returningBag = bagsInCar[i];

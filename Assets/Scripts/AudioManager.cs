@@ -45,17 +45,20 @@ public class AudioManager : MonoBehaviour
         foreach(AudioTrack track in m_Tracks)
         {
 
-            Debug.Log("this audio track has " + track.audio.Length);
+            //Debug.Log("this audio track has " + track.audio.Length);
 
             foreach (AudioObject audio in track.audio)
             {
                 if (!m_AudioTable.ContainsKey(audio.m_type))
                 {
+                    //Debug.Log("the audio type" + audio.m_type);
                     m_AudioTable.Add(audio.m_type, track);
                 }
             }
             
         }
+
+        //Debug.Log("the audio type" + m_AudioTable.Count);
 
     }
 
@@ -69,6 +72,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlayAudio(AudioType _type)
     {
+        //Debug.Log("the audio type" + _type);
         AudioTrack m_track = m_AudioTable[_type];
         if (m_track.source.isPlaying) m_track.source.Stop();
 

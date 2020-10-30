@@ -51,7 +51,7 @@ public class ClockRotate : MonoBehaviour
         selfImage = GetComponent<Image>();
         selfImage.enabled = false;
         
-        if (!isFast)
+        if (!isFast&&!SubwayMovement.pauseBeforeMove)
         {
             //now the timer is placed on the bag
             //zRotation = 360 / (3 *(SubwayMovement.stayTime + SubwayMovement.moveTime));

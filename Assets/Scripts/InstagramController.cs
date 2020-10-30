@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using Image = UnityEngine.UI.Image;
 using Button = UnityEngine.UI.Button;
 
+
 public class InstagramController : MonoBehaviour
 {
     public List<GameObject> postList = new List<GameObject>();
@@ -118,7 +119,7 @@ public class InstagramController : MonoBehaviour
     private int storedRating;
 
     private AudioManager AudioManager;
-
+    public Button sendButton;
 
     // Start is called before the first frame update
     void Start()

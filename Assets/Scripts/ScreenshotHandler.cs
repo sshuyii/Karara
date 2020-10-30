@@ -75,7 +75,8 @@ public class ScreenshotHandler : MonoBehaviour
     private AudioManager AudioManager;
 
     private bool isTaken;
-
+    public bool notAllowSend;
+    
     void Start()
     {
         //height = width;
@@ -280,21 +281,23 @@ public class ScreenshotHandler : MonoBehaviour
         }
 
         //if the background is already used
-
-        //if(!AdsController.IsThisAdOk())
-        //{
-        //    FinalCameraController.Show(Notice);
-        //    Notice.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "no same background";
-        //    isTaken = false;
-        //    return;
-        //}
+        InstagramController.sendButton.interactable = true;
+        if (!AdsController.IsThisAdOk())
+        {
+            InstagramController.sendButton.interactable = false;
+            //FinalCameraController.Show(Notice);
+            //Notice.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "no same background";
+            //isTaken = false;
+            //return;
+        }
 
         if (!AdsController.IsThisPoseOk() && !FinalCameraController.isTutorial)
         {
-            FinalCameraController.Show(Notice);
-            Notice.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "no same pose";
-            isTaken = false;
-            return;
+            InstagramController.sendButton.interactable = false;
+            //FinalCameraController.Show(Notice);
+            //Notice.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "no same pose";
+            //isTaken = false;
+            //return;
         }
 
 

@@ -26,6 +26,10 @@ public class LostAndFound : MonoBehaviour
     private RatingSystem RatingSys;
     private InstagramController InstagramController;
 
+
+    private int dropNumThisStation = 0;
+    public GameObject dropNumText;
+    
     
 
     // Start is called before the first frame update
@@ -97,8 +101,25 @@ public class LostAndFound : MonoBehaviour
             }
         }
 
+        dropNumThisStation = dropNum;
         totalCount -= dropNum;
         InstagramController.RefreshPost(maxOwner, RatingSys.rating);
         
+    }
+
+
+    public IEnumerator AnimationDropNUm()
+    {
+        totalCount += dropNumThisStation;
+        dropNumText.SetActive(true);
+        dropNumText.GetComponent<TextMeshPro>().text = "- "+dropNumThisStation.ToString();
+        clickLostFound();
+        yield return new WaitForSeconds(1f);
+        totalCount -= dropNumThisStation;
+        lostFoundNum.text = totalCount.ToString();
+        yield return new WaitForSeconds(1f);
+        dropNumText.SetActive(false);
+        clickLostFound();
+
     }
 }

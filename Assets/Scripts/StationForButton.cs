@@ -488,6 +488,23 @@ public class StationForButton : MonoBehaviour
         
     }
 
+    public int GetMatchResult()
+    {
+        int res = 0;
+
+
+        //for(int i = 0; i < 3; i++)
+        //{
+        //    for(int j = 0; j < 4; j++)
+        //    {
+        //        int idx = matchedNPCIdx[i][j];
+        //        string thisTabOwner = BagsController.stationBagOwners[i][j];
+        //        if (NPCNames[idx] == thisTabOwner) res++;
+        //    }
+        //}
+        return res;
+    }
+
 
     //public void ProfileDetail_old()
     //{

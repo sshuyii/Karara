@@ -79,7 +79,7 @@ public class SubwayMovement : MonoBehaviour
     public float stayTime;
     public float pauseTime;
     public bool pauseBeforeMove = false;
-    private float timerPause = 0f;
+    
 
 
     //a list of buttons in detail background
@@ -170,10 +170,13 @@ public class SubwayMovement : MonoBehaviour
     public GameObject Banner;
     public UnityEngine.UI.Text remainingTime;
     public GameObject BlackScreen;
+    public GameObject MatchNumText;
+
 
 
 
     private AudioManager AudioManager;
+    public StationForButton StationForButton;
 
     // Start is called before the first frame update
     void Start() 
@@ -183,7 +186,7 @@ public class SubwayMovement : MonoBehaviour
         BagsController = GameObject.Find("---BagsController").GetComponent<BagsController>();
         AdsController = GameObject.Find("---AdsController").GetComponent<AdsController>();
         AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
-
+        
 
 
         if (!FinalCameraController.isTutorial)
@@ -248,12 +251,18 @@ public class SubwayMovement : MonoBehaviour
     }
 
 
+    public IEnumerator DelayTrainStop()
+    {
+        yield return new WaitForSeconds(1f);
+    }
+
     private Button clothBag1;
     private Button clothBag2;
     private Button clothBag3;
 
     public float timerStay;
     public float timerS2S; //station to station move + stay
+    public float timerPause = 0f;
 
 
     void emptyBagPos()
@@ -300,9 +309,10 @@ public class SubwayMovement : MonoBehaviour
 
         if (LevelManager.clicktime < 7) return;
 
+
+
         if (!pauseBeforeMove)
         {
-            timer += Time.deltaTime;// special timer for statin 0
             timerS2S += Time.deltaTime;
             if (!isMoving) timerStay += Time.deltaTime;
         }
@@ -311,23 +321,27 @@ public class SubwayMovement : MonoBehaviour
             timerPause += Time.deltaTime;
         }
 
-
-        if(timerStay > stayTime - 10f&& Banner.active == false)
+        // banner shows 10s before moving
+        if (timerStay > stayTime - 10f && Banner.active == false && roundNum > 0)
         {
             Banner.SetActive(true);
         }
-        else if(Banner.active)
+        else if (Banner.active)
         {
-            int leftT =  (int) (stayTime - timerStay);
-            //remainingTime.text =
-            //     "Train will departure in " + leftT.ToString() + " seconds";
+            int leftT = (int)(stayTime - timerStay);
         }
+
 
         if (timerStay > stayTime)
         {
-            StartCoroutine(trainPause());
-            timerStay = 0;
+            timerStay = 0f;
+            if (roundNum > 0) StartCoroutine(trainPause());
+            else
+            {
+                trainMove();
+            }
         }
+
 
         if (timerS2S > stayTime + moveTime)
         {
@@ -336,11 +350,6 @@ public class SubwayMovement : MonoBehaviour
         }
 
 
-        if (timerPause > pauseTime)
-        {
-            trainMove();
-            timerPause = 0;
-        }
 
 
 
@@ -413,17 +422,18 @@ public class SubwayMovement : MonoBehaviour
 
     void OpenDoor()
     {
-        if (roundNum == 2)
-        {
-            //第一章结束
-            FinalCameraController.ChapterOneEnd = true;
-            isTerminated = true;
-        }
+        //没有章节结束
+        //if (roundNum == 2)
+        //{
+        //    //第一章结束
+        //    FinalCameraController.ChapterOneEnd = true;
+        //    isTerminated = true;
+        //}
 
         OpeningProcess = true;
 
         StartCoroutine(AudioManager.PlayAudioInStation(stayTime));
-    
+
     }
 
 
@@ -431,7 +441,7 @@ public class SubwayMovement : MonoBehaviour
     void CloseDoor()
     {
         ClosingProcess = true;
-        StartCoroutine(AudioManager.PlayAudioInStation(stayTime));
+        StartCoroutine(AudioManager.PlayAudioOutStation(moveTime));
 
     }
 
@@ -447,7 +457,7 @@ public class SubwayMovement : MonoBehaviour
             // 2.丢l&f衣服,发post(包含在3里)
             // 3.更新posture(ad)
             GenerateBag(currentStation);
-            if (!atInitailStation) LostAndFound.DropLostFoundClothes(currentStation);
+            if (roundNum>0) LostAndFound.DropLostFoundClothes(currentStation);
             AdsController.UpdatePosters();
 
             bagFirst = false;
@@ -482,7 +492,7 @@ public class SubwayMovement : MonoBehaviour
         {
             if (!BagsController.CheckBagsInCar(NameToStationBags[stationNum][i].tag, stationNum))
             {
-                StartCoroutine(GenerateSpecialBag(stationNum,i));
+                GenerateSpecialBag(stationNum,i);
                 allLastRoundBagsInCar = false;
             }
         }
@@ -495,27 +505,35 @@ public class SubwayMovement : MonoBehaviour
         //前提是上一次进来的npc的包不在车里
         if (allLastRoundBagsInCar)
         {
-            if (!NPCIsInCar) StartCoroutine(GenerateNpcBag(10f));
+            if (!NPCIsInCar) GenerateNpcBag(10f);
             return;
         }
         else
         {
-            if (!NPCIsInCar) StartCoroutine(GenerateNpcBag(8f));
+            if (!NPCIsInCar) GenerateNpcBag(8f);
         }
 
         
     }
 
 
-    private IEnumerator GenerateSpecialBag(int stationNum, int npcNum)
+    private void GenerateSpecialBag(int stationNum, int npcNum)
     {
+        if (bagNum == 3)
+        {
+            NoPosition = true;
+            //yield return null;
+            return;
+        }
 
-        if(bagNum < 3)
+
+        if (bagNum < 3)
         {
             emptyBagPos();
 
-            if (!bagFirst) yield return new WaitForSeconds(2f);
-            if (!bagFirst && !isDoorOpen) yield return null;
+            //yield return new WaitForSeconds(0.1f);
+            //if (!bagFirst) yield return new WaitForSeconds(2f);
+            //if (!bagFirst && !isDoorOpen) yield return null;
 
 
             Button bag = Instantiate(NameToStationBags[stationNum][npcNum], bagPos[firstEmptyPos],
@@ -545,17 +563,23 @@ public class SubwayMovement : MonoBehaviour
     }
 
 
-    private IEnumerator GenerateNpcBag(float probability)
+    private void GenerateNpcBag(float probability)
     {
 
-        
+        if (bagNum == 3)
+        {
+            NoPosition = true;
+            //yield return null;
+            return;
+        }
         //如果现在车里不够三个包
         if (bagNum < 3)
         {
             emptyBagPos();
 
-            if (!bagFirst) yield return new WaitForSeconds(2f);
-            if (!bagFirst && !isDoorOpen) yield return null;
+            //yield return new WaitForSeconds(0.1f);
+            //if (!bagFirst) yield return new WaitForSeconds(2f);
+            //if (!bagFirst && !isDoorOpen) yield return null;
 
             //only generate a new bag if there is an empty position
             //如果同一个tag的包已经在车厢里了，那么就不要放进来这个人的包:noSameBag
@@ -590,16 +614,10 @@ public class SubwayMovement : MonoBehaviour
 
     public IEnumerator trainPause()
     {
-
-        if (atInitailStation)
-        {
-            atInitailStation = false;
-            timerPause = pauseTime;
-            yield return null;
-        }
-
+        Debug.Log("pause!!!!!");
         Banner.SetActive(false);
         pauseBeforeMove = true;
+        Debug.Log("pause!!!!!");
 
         Show(FinalCameraController.disableInputCG);
         BlackScreen.SetActive(true);
@@ -608,46 +626,53 @@ public class SubwayMovement : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
         BlackScreen.SetActive(false);
-        LostAndFound.clickLostFound();
-        
+        StartCoroutine(LostAndFound.AnimationDropNUm());
 
-        yield return new WaitForSeconds(3f);
 
-        //show lost and found 
+        yield return new WaitForSeconds(2f);
+
+
         FinalCameraController.GotoPage(3);
         BagsController.DropAllBagsInScreen3();
+
         yield return new WaitForSeconds(3f);
 
-        // bag disappear
+
+
         FinalCameraController.GotoPage(2);
         BagsController.DropAllBagsInScreen2();
+
         yield return new WaitForSeconds(3f);
 
-        // bag disappear
+
         FinalCameraController.GotoPage(1);
- 
-        yield return new WaitForSeconds(3f);
+        FinalCameraController.fishTalkText.text = GenerateFishTalkForPause();
+        yield return new WaitForSeconds(1f);
 
+        //BlackScreen.SetActive(true);
+        MatchNumText.SetActive(true);
+        MatchNumText.GetComponent<TextMeshProUGUI>().text =
+            StationForButton.GetMatchResult().ToString();
 
-        timerPause = pauseTime;
+        yield return new WaitForSeconds(2f);
+        //BlackScreen.SetActive(false);
+        MatchNumText.SetActive(false);
+
         Hide(FinalCameraController.disableInputCG);
 
-        //if (atInitailStation)
-        //{
-        //    atInitailStation = false;
-        //    timerPause = pauseTime;
-        //}
-        //else
-        //{
+        timerPause = 0;
+        timerStay = 0;
+        //加起来的时间一定要小于timestay
+        pauseBeforeMove = false;
+        trainMove();
 
 
-        //}
     }
 
 
     public void trainMove()
     {
-        atInitailStation = false;
+        //atInitailStation = false;
          LocalizedString locString = "Fish/DoYourJob";
         string translation = locString;
         FinalCameraController.fishTalkText.text = translation;
@@ -669,6 +694,10 @@ public class SubwayMovement : MonoBehaviour
 
         CloseDoor();
     }
+
+
+
+
 
     public void trainStop()
     {
@@ -722,6 +751,22 @@ public class SubwayMovement : MonoBehaviour
         }
     }
     
+    private string GenerateFishTalkForPause()
+    {
+        string[] strList = new string[] { "You did a great job!", "Pretty Good!", "Emmm... You need to work harder" ," "};
+
+        string str = "!";
+        int idx = bagNum;// bags under frount desk
+
+
+       if(idx < strList.Length) str = strList[bagNum];
+
+        
+        
+
+        return str;
+
+    }
 
 
     public void Hide(CanvasGroup UIGroup) {
