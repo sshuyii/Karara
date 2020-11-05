@@ -170,7 +170,7 @@ public class SubwayMovement : MonoBehaviour
     public GameObject Banner;
     public UnityEngine.UI.Text remainingTime;
     public GameObject BlackScreen;
-    public GameObject MatchNumText;
+    public GameObject MatchState;
 
 
 
@@ -276,7 +276,9 @@ public class SubwayMovement : MonoBehaviour
                 break;
             }
            
-        }   
+        }
+
+        timerStay = 0;
     }
     // Update is called once per frame
     void Update()
@@ -322,8 +324,10 @@ public class SubwayMovement : MonoBehaviour
         }
 
         // banner shows 10s before moving
-        if (timerStay > stayTime - 10f && Banner.active == false && roundNum > 0)
+        //test
+        if (timerStay > stayTime - 10f && Banner.active == false)//test
         {
+            Debug.Log(timerStay + " " + (stayTime - 10f));
             Banner.SetActive(true);
         }
         else if (Banner.active)
@@ -335,11 +339,15 @@ public class SubwayMovement : MonoBehaviour
         if (timerStay > stayTime)
         {
             timerStay = 0f;
-            if (roundNum > 0) StartCoroutine(trainPause());
+            if (!atInitailStation) StartCoroutine(trainPause());//test
             else
             {
+                Banner.SetActive(false);
+                atInitailStation = false;
                 trainMove();
             }
+
+           
         }
 
 
@@ -458,7 +466,7 @@ public class SubwayMovement : MonoBehaviour
             // 3.更新posture(ad)
             GenerateBag(currentStation);
             if (roundNum>0) LostAndFound.DropLostFoundClothes(currentStation);
-            AdsController.UpdatePosters();
+            
 
             bagFirst = false;
 
@@ -614,49 +622,63 @@ public class SubwayMovement : MonoBehaviour
 
     public IEnumerator trainPause()
     {
-        Debug.Log("pause!!!!!");
+   
+        FinalCameraController.CloseAllUI();
         Banner.SetActive(false);
         pauseBeforeMove = true;
-        Debug.Log("pause!!!!!");
+
 
         Show(FinalCameraController.disableInputCG);
         BlackScreen.SetActive(true);
         FinalCameraController.ChangeToSubway();
-        FinalCameraController.GotoPage(4);
+        FinalCameraController.CameraMovement.JumpToPage(4);
 
         yield return new WaitForSeconds(1f);
         BlackScreen.SetActive(false);
-        StartCoroutine(LostAndFound.AnimationDropNUm());
+
+        if(roundNum > 0)
+        {
+            //黑屏结束之后
+            FinalCameraController.ChangeCameraSpeed(0.01f);
+            FinalCameraController.GotoPage(1);
+
+            StartCoroutine(LostAndFound.AnimationDropNUm());
+            AdsController.UpdatePosters();
+
+            int rbn = 0;
+            for (int i = 2; i >-1; i--)
+            {
+                yield return new WaitForSeconds(2.5f);
+                rbn = BagsController.DropAllBagsInWasher(i);
+            }
+
+            //default speed
+            FinalCameraController.ChangeCameraSpeed(-1f);
+            FinalCameraController.GotoPage(1);
+
+            FinalCameraController.fishTalkText.text = GenerateFishTalkForPause();
+        }
+        else
+        {
+            AdsController.UpdatePosters();
+            yield return new WaitForSeconds(1f);
+            FinalCameraController.ChangeCameraSpeed(3f);
+            FinalCameraController.GotoPage(1);
+        }
 
 
-        yield return new WaitForSeconds(2f);
 
+        if(roundNum > 0 && currentStation == 0)
+        {
+            //MatchState.SetActive(true);
+            //MatchState.GetComponent<TextMeshProUGUI>().text =
+            //    StationForButton.GetMatchResult().ToString();
+            //yield return new WaitForSeconds(2f);
+            //MatchState.SetActive(false);
+        }
 
-        FinalCameraController.GotoPage(3);
-        BagsController.DropAllBagsInScreen3();
+ 
 
-        yield return new WaitForSeconds(3f);
-
-
-
-        FinalCameraController.GotoPage(2);
-        BagsController.DropAllBagsInScreen2();
-
-        yield return new WaitForSeconds(3f);
-
-
-        FinalCameraController.GotoPage(1);
-        FinalCameraController.fishTalkText.text = GenerateFishTalkForPause();
-        yield return new WaitForSeconds(1f);
-
-        //BlackScreen.SetActive(true);
-        MatchNumText.SetActive(true);
-        MatchNumText.GetComponent<TextMeshProUGUI>().text =
-            StationForButton.GetMatchResult().ToString();
-
-        yield return new WaitForSeconds(2f);
-        //BlackScreen.SetActive(false);
-        MatchNumText.SetActive(false);
 
         Hide(FinalCameraController.disableInputCG);
 
@@ -673,7 +695,7 @@ public class SubwayMovement : MonoBehaviour
     public void trainMove()
     {
         //atInitailStation = false;
-         LocalizedString locString = "Fish/DoYourJob";
+        LocalizedString locString = "Fish/DoYourJob";
         string translation = locString;
         FinalCameraController.fishTalkText.text = translation;
 

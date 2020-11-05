@@ -320,7 +320,7 @@ public class ScreenshotHandler : MonoBehaviour
         }
 
 
-        AdsController.UseAdAndPose();
+        //AdsController.UseAdAndPose();
         
            
 

@@ -15,7 +15,7 @@ public class CameraMovement : MonoBehaviour
 
     private Transform target;
 
-    private float smoothSpeed = 0.125f;
+    public float smoothSpeed = 100f;
     private Vector3 offset;
     
     public Vector3[] positions;
@@ -30,6 +30,14 @@ public class CameraMovement : MonoBehaviour
 
     public bool swipping = false;
 
+    public float movingDist = 0.00001f;
+    public float movingTimer = 0f;
+    public float T_total = 0;
+
+    private float pageDist;
+
+    public float defaultSpeed = 100f;
+    private bool going = false;
 
     void Start()
     {
@@ -40,38 +48,14 @@ public class CameraMovement : MonoBehaviour
 
         if (FinalCameraController == null) currentPage = 4;
         else currentPage = 1;
+        smoothSpeed = 10f;
 
-        
+        pageDist = Mathf.Abs(positions[0].x - positions[1].x);
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        if (swipping) return;
-
-
-        Vector3 currentPos = Vector3.zero;
-
-        if (atInventory) return;
-
-        if (currentPage > -1 && currentPage < positions.Length)
-        {
-            
-
-            currentPos = positions[currentPage];
-            float diff = currentPos.x - transform.position.x;
-            
-
-            if (FinalCameraController != null && FinalCameraController.myCameraState == FinalCameraController.CameraState.Map) return;
-            if (FinalCameraController != null && FinalCameraController.myCameraState == FinalCameraController.CameraState.Closet) return;
-            if (Mathf.Abs(diff) < 0.3f)
-            {
-                transform.position = currentPos;
-            }
-
-            transform.position = Vector3.Lerp(transform.position, currentPos, 0.1f + Time.deltaTime);
-        }
 
         if (currentPage < 1)
         {
@@ -102,13 +86,60 @@ public class CameraMovement : MonoBehaviour
         transform.position = currentPos;
     }
 
+    public void Go2Page(int page)
+    {
 
-    //public IEnumerator JumpToPage(int pageNum)
-    //{
-    //    yield return new WaitForSeconds(1f);
+        currentPage = page;
+        Vector3 target = positions[currentPage];
+        movingDist = Mathf.Abs(target.x - transform.position.x);
+        movingTimer = 0f;
 
-    //    Vector3 currentPos = positions[currentPage];
-    //    transform.position = currentPos;
-    //}
+        T_total = movingDist / smoothSpeed;
+
+        going = true;
+        //StartCoroutine(Going());
+
+    }
+
+    private void FixedUpdate()
+    {
+        if (!going || swipping ||atInventory) return;
+
+        Vector3 target = positions[currentPage];
+        movingTimer += Time.deltaTime;
+        float frac = movingTimer / T_total;
+        transform.position = Vector3.Lerp(transform.position, target, frac);
+
+        if (Vector3.Distance(target, transform.position) < 0.1 * pageDist)
+        {
+            transform.position = target;
+            smoothSpeed = defaultSpeed;
+        }
+    }
+
+
+
+
+    IEnumerator Going()
+    {
+
+        Vector3 target = positions[currentPage];
+        while (movingTimer < 0.7 * T_total)
+        {
+            movingTimer += Time.deltaTime;
+            float frac = movingTimer / T_total;
+            transform.position = Vector3.Lerp(transform.position, target, frac);
+
+            if (Vector3.Distance(target, transform.position) < 0.1 * pageDist) break;
+
+            yield return null;
+        }
+
+        transform.position = target;
+        smoothSpeed = defaultSpeed;
+    }
+
+
+  
 
 }

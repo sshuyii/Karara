@@ -137,43 +137,16 @@ public class TouchController : MonoBehaviour
                 lp = touch.position;
 //                //print("lp = " + lp);
 
-                if (Mathf.Abs(lp.y - fp.y) > dragDistance/4 || Mathf.Abs(lp.x - fp.x) > dragDistance/4)
+                if(FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
                 {
-                    isSwiping = true;
-                }
-                else
-                { 
-                    isSwiping = false;
-                }
-
-                if(isSwiping && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
-                {
-                    //跟随手指滑动
                     cameraMovement.swipping = true;
-                    Vector3 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
                     Vector3 oldPos = FinalCameraController.transform.position;
-                    float changeX = touchPos.x - oldPos.x;
-                    Vector3 newCamPos = new Vector3(oldPos.x - 0.1f * changeX, oldPos.y, oldPos.z);
-                    FinalCameraController.transform.position = newCamPos;
+                    Vector3 newPos = new Vector3(oldPos.x - touch.deltaPosition.x * 0.005f, oldPos.y, oldPos.z);
+                    FinalCameraController.transform.position = newPos;
+
                 }
 
 
-                if (Mathf.Abs(lp.x - fp.x) > dragDistance || Mathf.Abs(lp.y - fp.y) > dragDistance)
-                {
-                    
-                }
-                else
-                {
-                    //it is a long tap
-                    if (Time.time - startTime > 0.8f)
-                    {
-                        isLongTap = true;
-                    }
-                    else
-                    {
-                        isLongTap = false;
-                    }
-                }
 
 
             }
@@ -217,7 +190,7 @@ public class TouchController : MonoBehaviour
                             leftSwipe = false;
                             myInputState = InputState.RightSwipe;
                             if(FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway){
-                                cameraMovement.currentPage += -1;
+                                cameraMovement.Go2Page(cameraMovement.currentPage - 1);
                             }
                         }
                         else
@@ -228,7 +201,8 @@ public class TouchController : MonoBehaviour
                             myInputState = InputState.LeftSwipe;
 
                             if(FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway){
-                                cameraMovement.currentPage += 1;
+                                cameraMovement.Go2Page(cameraMovement.currentPage + 1);
+                                //cameraMovement.currentPage += 1;
                             }
                         }
                     }

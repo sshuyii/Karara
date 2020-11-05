@@ -208,15 +208,15 @@ public class InstagramController : MonoBehaviour
 
     public void AddInsPost(string NPCName, Sprite postImg)
     {
-        GameObject newPost = Instantiate(PosturePostPrefabNew);
+        GameObject newPost = Instantiate(PosturePostPrefabNew, postParent.transform);
         //set parent(probably a better way to do
-        newPost.transform.parent = postParent.transform;
+        //newPost.transform.parent = postParent.transform;
         //newPost.transform.localScale = new Vector3(140,140,1);
  
 
         NPC thisNPC = SpriteLoader.NPCDic[NPCName];
-        var profile = newPost.transform.Find("Profile").gameObject.GetComponent<Image>();
-        var profileName = profile.gameObject.GetComponentInChildren<Text>();
+        var profile = newPost.transform.Find("ProfilePhoto").gameObject.GetComponent<Image>();
+        var profileName = newPost.transform.Find("ProfileName").gameObject.GetComponent<TextMeshProUGUI>();
         profile.sprite = thisNPC.profile;
         profileName.text = thisNPC.name;
         newPost.transform.Find("Post").gameObject.GetComponent<Image>().sprite = postImg;
@@ -235,12 +235,10 @@ public class InstagramController : MonoBehaviour
 
         
 
-        GameObject newObject = Instantiate(savedPhotoPrefab);
-        newObject.GetComponent<Image>().sprite = PicInSavePage.sprite;
-        newObject.transform.parent = albumContent.transform;
-        newObject.transform.localScale = new Vector3(5, 5, 0);
-        newObject.GetComponent<Button>().onClick.AddListener(CheckOnePicture);
-        newObject.GetComponent<Button>().onClick.AddListener(AudioManager.UIButtonClicked);
+        GameObject newObject = Instantiate(savedPhotoPrefab,albumContent.transform);
+        newObject.transform.Find("Photo").gameObject.GetComponent<Image>().sprite = PicInSavePage.sprite;
+        newObject.GetComponentInChildren<Button>().onClick.AddListener(CheckOnePicture);
+        newObject.GetComponentInChildren<Button>().onClick.AddListener(AudioManager.UIButtonClicked);
         newObject.transform.name = countTakenPhotos.ToString();
         Debug.Log("这个的名字" + newObject.transform.name);
 
@@ -251,6 +249,7 @@ public class InstagramController : MonoBehaviour
         FinalCameraController.MainPageToAlbum();
     }
 
+   
 
     public void SetSavePage(Sprite photo)
     {
@@ -264,10 +263,12 @@ public class InstagramController : MonoBehaviour
         //AddPost
         AllTakenPhotos.Add(PicInSavePage.sprite);
         countTakenPhotos++;
-        AddInsPost("Karara", AllTakenPhotos[AllTakenPhotos.Count - 1]);
+        AddInsPost("Karara", PicInSavePage.sprite);
         AddFollower();
         FinalCameraController.ChangeToApp();
-        
+
+        AdsController.UseAdAndPose();
+
     }
 
     public void AddFollower()
@@ -325,6 +326,7 @@ public class InstagramController : MonoBehaviour
 
             }
         }
+
     }
 
 

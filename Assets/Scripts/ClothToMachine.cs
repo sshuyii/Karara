@@ -141,7 +141,7 @@ public class ClothToMachine : MonoBehaviour
             //remainTime = totalTime - timer;
             myImage.fillAmount = timer / totalTime;
 
-            if (!timeUp && timer<0)
+            if (!timeUp && timer< 2f)
             {
                 timeUp = true;
 
@@ -173,17 +173,17 @@ public class ClothToMachine : MonoBehaviour
 
    private IEnumerator ReturnBag2cases()
    {
-        if(underMachineNum == 0) FinalCameraController.HorizontalScrollSnap.JumpToPage(2);
-        else FinalCameraController.HorizontalScrollSnap.JumpToPage(3);
+        //todo: overdue bag 洗完，右上角有鱼老板提示
+        //if (underMachineNum == 0) FinalCameraController.CameraMovement.JumpToPage(2);
+        //else FinalCameraController.CameraMovement.JumpToPage(3);
 
         BagsController.returningBag = this.transform.gameObject;
         BagsController.ClickReturnYes();
 
-        yield return new WaitForSeconds(1f);
-        FinalCameraController.HorizontalScrollSnap.JumpToPage(1);
-        //todo: fish talk late return;
         FinalCameraController.fishTalkText.text = "Return your customers' clothes on time! Such bad memory!";
+        FinalCameraController.FishBossNotification.ShowBubble();
 
+        yield return null;
     }
 
 
@@ -312,8 +312,8 @@ public class ClothToMachine : MonoBehaviour
 
                 transform.localPosition =  SubwayMovement.bagPos[underMachineNum+3]; // @@@
 
-                if (underMachineNum == 0) cameraMovement.currentPage = 2;
-                else cameraMovement.currentPage = 3;
+                if (underMachineNum == 0) cameraMovement.Go2Page(2);
+                else cameraMovement.Go2Page(3);
 
                 SubwayMovement.bagPosAvailable[myBagPosition] = false;
 

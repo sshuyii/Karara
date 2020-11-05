@@ -130,33 +130,42 @@ public class BagsController : MonoBehaviour
 
 
 
-    public void DropAllBagsInScreen3()
+    public int DropAllBagsInScreen3()
     {
+        int returnedBagNum = 0;
         for(int i = 0; i < bagsInCar.Count; i++)
         {
             ClothToMachine ctm = bagsInCar[i].GetComponent<ClothToMachine>();
             if(ctm.underMachineNum == 1|| ctm.underMachineNum == 2 && ctm.isFinished && ctm.timeUp)
             {
-                if (!ctm.isFinished) continue;
+                
+                returnedBagNum++;
                 Debug.Log("bags in 3 returning");
                 returningBag = bagsInCar[i];
                 ClickReturnYes();
             }
         }
+        return returnedBagNum;
     }
 
 
-    public void DropAllBagsInScreen2()
+    public int DropAllBagsInWasher(int washer)
     {
+        
+        int returnedBagNum = 0;
         for (int i = 0; i < bagsInCar.Count; i++)
         {
             ClothToMachine ctm = bagsInCar[i].GetComponent<ClothToMachine>();
-            if (ctm.underMachineNum == 0 && ctm.isFinished && ctm.timeUp)
+            Debug.Log("bag owner "+ctm.transform.gameObject.tag + ctm.underMachineNum);
+
+            if (ctm.underMachineNum == washer && ctm.isFinished && ctm.timeUp)
             {
+                returnedBagNum++;
                 Debug.Log("bags in 2 returning");
                 returningBag = bagsInCar[i];
                 ClickReturnYes();
             }
         }
+        return returnedBagNum;
     }
 }
