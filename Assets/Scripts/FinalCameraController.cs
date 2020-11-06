@@ -64,6 +64,7 @@ public class FinalCameraController : MonoBehaviour
     public GameObject setting;
 
     public ScrollRect mainpageScrollRect,albumScrollRect;
+    public bool enableScroll = true;
 
 
 
@@ -220,7 +221,9 @@ public class FinalCameraController : MonoBehaviour
         //public CanvasGroup disableInputCG, ChapterOneEndComic, Mask, TakePhoto, fishShoutCG,
         //    ChapterOneFailCG, Inventory, SubwayMap, inventory, appBackground, albumBackground, albumCG, albumDetailCG, frontPage, SavingPage;
 
-  
+        inventorySlotMgt.CloseAllUI();
+
+
         Hide(TakePhoto);
         Hide(fishShoutCG);
         Hide(SubwayMap);
@@ -297,6 +300,7 @@ public class FinalCameraController : MonoBehaviour
         if (myCameraState == CameraState.Subway && !isSwipping)
         {
             CheckScreenNum();
+            
             if(transform.position.x < 5 && transform.position.x >-5 && FishBossNotification.FishBossUI.active)
             {
                 FishBossNotification.HideFish();
@@ -308,6 +312,10 @@ public class FinalCameraController : MonoBehaviour
 
 
             //Show(subwayBackground);
+        }
+        else if (myCameraState !=CameraState.Subway && FishBossNotification.FishBossUI.active)
+        {
+            FishBossNotification.HideFish();
         }
 
 

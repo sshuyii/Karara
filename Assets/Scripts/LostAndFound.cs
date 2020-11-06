@@ -69,7 +69,7 @@ public class LostAndFound : MonoBehaviour
 
     public void AddClothToList(Cloth cloth, NPC owner)
     {
-
+        Debug.Log("call drop cloth in l&F script");
         totalCount++;
         if (totalCount > 0) LostFoundClothInScene.SetActive(true);
 
@@ -111,10 +111,14 @@ public class LostAndFound : MonoBehaviour
     public IEnumerator AnimationDropNUm()
     {
         totalCount += dropNumThisStation;
+        lostFoundNum.text = totalCount.ToString();
         dropNumText.SetActive(true);
-        dropNumText.GetComponent<TextMeshPro>().text = "- "+dropNumThisStation.ToString();
+        if(dropNumThisStation > 0)dropNumText.GetComponent<TextMeshPro>().text = "- "+dropNumThisStation.ToString();
         clickLostFound();
+
         yield return new WaitForSeconds(1f);
+
+
         totalCount -= dropNumThisStation;
         lostFoundNum.text = totalCount.ToString();
         yield return new WaitForSeconds(1f);

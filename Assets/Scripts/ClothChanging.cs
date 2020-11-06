@@ -60,7 +60,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     [SerializeField]
     private Button buttonPrefab;
     [SerializeField]
-    private GameObject returnBG;
+    private GameObject returnBG,dropClothImage;
     [SerializeField]
     private bool isWorkCloth;
     
@@ -183,6 +183,14 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     }
     public void showReturnConfirm()
     {
+        if(timer < 0)
+        {
+            dropClothImage.GetComponent<Image>().sprite = InventorySlotMgt.dropToLandFImg;
+        }
+        else
+        {
+            dropClothImage.GetComponent<Image>().sprite = InventorySlotMgt.dropToMachineImg;
+        }
 
         if (isOccupied && !isWorkCloth)
         {
@@ -213,9 +221,16 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
         Debug.Log(this.tag);
         bool bagFoundInCar = AllMachines.PutClothBackToMachine(this.tag, originSlotNum);
+        
 
-        if (!bagFoundInCar) DropToLostAndFound();
-        DropToLostAndFound();
+        if(timer < 0)
+        {
+            
+            DropToLostAndFound();
+            Debug.Log("put l f");
+        }
+
+        
 
 
         takeOffCloth();
@@ -232,8 +247,6 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         Cloth thisCloth = SpriteLoader.ClothDic[currentSprite.name];
         NPC owner = SpriteLoader.NPCDic[thisCloth.owner];
         LostAndFound.AddClothToList(thisCloth, owner);
-        //takeOffCloth();
-        //AfterTakeOff();
        
     }
 

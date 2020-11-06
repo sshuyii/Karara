@@ -44,6 +44,7 @@ public class InventorySlotMgt : MonoBehaviour
 
 
     public bool isWorkingCloth = true;
+    public Sprite dropToMachineImg, dropToLandFImg;
 
 
     // Start is called before the first frame update
@@ -130,6 +131,15 @@ public class InventorySlotMgt : MonoBehaviour
         InventoryFull.SetActive(false);
     }
 
+    public void CloseAllUI()
+    {
+        showingFullNotice = false;
+        InventoryFull.SetActive(false);
+        for (int i = 0; i < slots.Length; i++)
+        {
+            slots[i].GetComponentInChildren<ClothChanging>().hideReturnConfirm();
+        }
 
+    }
 
 }

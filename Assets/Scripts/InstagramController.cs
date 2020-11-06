@@ -105,11 +105,19 @@ public class InstagramController : MonoBehaviour
 
     private int endStationPre;
 
-    int fansNum = 3;
+    public int fansNum = 3;
+    public int targetFansNum = 30;
+
+    [SerializeField]
+    private Text followerNumMatchUI, targetFollowerNumMatchUI;
+    [SerializeField]
+    private Image progress;
+    
+
 
     [SerializeField]
     private GameObject albumContent, savedPhotoPrefab,savedPhotoLarge, firstPost;
-
+    
 
 
     private GameObject currentLargePhoto;
@@ -119,7 +127,15 @@ public class InstagramController : MonoBehaviour
     private int storedRating;
 
     private AudioManager AudioManager;
-    public Button sendButton;
+
+    [SerializeField]
+    private Button sendButton;
+
+    [SerializeField]
+    private Image Explanation;
+    [SerializeField]
+    private Sprite repeatBG, repeatPosture;
+
 
     // Start is called before the first frame update
     void Start()
@@ -278,11 +294,19 @@ public class InstagramController : MonoBehaviour
         fansNum += AdsController.GetNewFollowerNum();
 
         Debug.Log("总粉丝 " + fansNum);
-        //fansNum += 3;
+
         followerNum_UI.SetText(fansNum.ToString());
+
+
         Debug.Log("总粉丝 " + followerNum_UI.text);
     }
 
+    public void ShowMatchResultFollower()
+    {
+        progress.fillAmount = (float)fansNum / (float)targetFansNum;
+        followerNumMatchUI.text = fansNum.ToString();
+        targetFollowerNumMatchUI.text = targetFansNum.ToString();
+    }
 
 
     public void RefreshPost(string maxOwner, int rating)
@@ -350,4 +374,32 @@ public class InstagramController : MonoBehaviour
         Destroy(currentLargePhoto);
         FinalCameraController.LargePictureToAlbum();
     }
+
+
+    public void RepeatPostureOrBG(int conditon )
+    {
+        
+        if (conditon == 1)
+        {
+            Explanation.sprite = repeatPosture;
+            sendButton.interactable = false;
+
+        }
+        else if (conditon ==2)
+        {
+            Explanation.sprite = repeatBG;
+            sendButton.interactable = false;
+        }
+        else
+        {
+            sendButton.interactable = true;
+            Explanation.sprite = transparent;
+        }
+
+
+
+
+
+    }
+
 }
