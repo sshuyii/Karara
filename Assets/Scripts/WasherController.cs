@@ -433,6 +433,7 @@ public class WasherController : MonoBehaviour
     }
 
     IEnumerator ShowClothUI(){
+        Debug.Log("show cloth ui");
         ClothUI.SetActive(true);
         yield return new WaitForSeconds(0.5f);
         ClothUI.GetComponent<Animator>().SetTrigger("AfterPop");

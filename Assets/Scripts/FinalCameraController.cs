@@ -20,17 +20,11 @@ public class FinalCameraController : MonoBehaviour
     public LevelManager LevelManager;
     private InstagramController InstagramController;
 
-    public CanvasGroup disableInputCG;
-    public CanvasGroup ChapterOneEndComic;
+    public CanvasGroup disableInputCG, ChapterOneEndComic, Mask, TakePhoto, fishShoutCG,
+        ChapterOneFailCG, Inventory, SubwayMap,inventory, appBackground, albumBackground, albumCG, albumDetailCG, frontPage, SavingPage;
     public int entryTime = 1;
-    public CanvasGroup TakePhoto;
-    public GameObject Posture;
     public bool ChapterOneEnd;
-    public CanvasGroup Mask;
-    
-    public CanvasGroup fishShoutCG;
 
-    public CanvasGroup ChapterOneFailCG;
     public bool machineOpen;
 
     public bool chapterOneSucceed;
@@ -47,31 +41,33 @@ public class FinalCameraController : MonoBehaviour
     public GameObject fishTalk;
     public TextMeshPro fishTalkText;
     private bool isfishTalking = false;
-    public CameraMovement HorizontalScrollSnap;
-    
-    //public HorizontalScrollSnap myHSS;
+
+    [HideInInspector]
+    public CameraMovement CameraMovement;
+
+    //public CameraMovement myHSS;
 
     //a dictionary of all the clothes that comes from station 0 and are currently in the machines 
     public Dictionary<string, List<Sprite>> AllStationClothList = new Dictionary<string, List<Sprite>>();
-    
+
     public Sprite startSprite;
 
-    public CanvasGroup Inventory;
-    public GameObject instruction,instructionContent,inventoryInstruction,mapInstruction,cameraInstruction;
+
+    public GameObject instruction, instructionContent, inventoryInstruction, mapInstruction, cameraInstruction, Posture,
+        phone,CheckInstructionButton;
     private GameObject activeInstruction;
     public InventorySlotMgt inventorySlotMgt;
-    public GameObject CheckInstructionButton;
 
 
 
     public bool lateReturnComic;
     public GameObject setting;
 
-    public ScrollRect mainpageScrollRect;
+    public ScrollRect mainpageScrollRect,albumScrollRect;
 
-    public CanvasGroup SubwayMap;
-  
-    
+
+
+
     public enum AppState
     {
         Mainpage,
@@ -95,7 +91,7 @@ public class FinalCameraController : MonoBehaviour
         App,
         Ad
     }
-    
+
     public enum SubwayState
     {
         One,
@@ -106,14 +102,16 @@ public class FinalCameraController : MonoBehaviour
     }
 
     public SubwayState mySubwayState;
-    
+
     //if notice UI is on display, this is true
+    [HideInInspector]
     public bool alreadyNotice = false;
+    [HideInInspector]
     public bool alreadyClothUI = false;
     public GameObject currentClothUI;
-    
-    
-    
+
+
+
     //public GameObject generatedNotice;
 
 
@@ -125,15 +123,7 @@ public class FinalCameraController : MonoBehaviour
     public CameraState myCameraState;
     public AppState myAppState;
     private Vector3 movement;
-    public CanvasGroup inventory;
-    //public CanvasGroup basicUI;
 
-    public CanvasGroup appBackground;
-    public CanvasGroup albumBackground;
-    public CanvasGroup albumCG,albumDetailCG;
-    public CanvasGroup frontPage;
-    public CanvasGroup SavingPage;
-    //public CanvasGroup subwayBackground;
 
 
     public List<CanvasGroup> pageList = new List<CanvasGroup>();
@@ -143,28 +133,28 @@ public class FinalCameraController : MonoBehaviour
     private bool InventoryInstructionShown = false;
     private bool AdInstructionShown = false;
 
-
+    public FishBossNotification FishBossNotification;
 
     // Start is called before the first frame update
     void Start()
     {
-        
-        if(!isTutorial)
+
+        if (!isTutorial)
         {
             setting.SetActive(false);
             instruction.SetActive(false);
         }
-//        myCameraState = CameraState.Subway;
+        //        myCameraState = CameraState.Subway;
         myAppState = AppState.Mainpage;
 
-        HorizontalScrollSnap = transform.gameObject.GetComponent<CameraMovement>();
+        CameraMovement = transform.gameObject.GetComponent<CameraMovement>();
 
-        //myHSS = GameObject.Find("Horizontal Scroll Snap").GetComponent<HorizontalScrollSnap>();
+        //myHSS = GameObject.Find("Horizontal Scroll Snap").GetComponent<CameraMovement>();
         //subwayScrollRect = GameObject.Find("Horizontal Scroll Snap").GetComponent<ScrollRect>();
         InstagramController = GameObject.Find("---InstagramController").GetComponent<InstagramController>();
         RatingSys = GameObject.Find("FloatingUI").GetComponent<RatingSystem>();
         inventorySlotMgt = GameObject.Find("---InventoryController").GetComponent<InventorySlotMgt>();
-
+        FishBossNotification = GameObject.Find("FishBossUI").GetComponent<FishBossNotification>();
         //pageList.Add(RetroPage);
         //pageList.Add(KararaPage);
         //pageList.Add(DesignerPage);
@@ -179,7 +169,7 @@ public class FinalCameraController : MonoBehaviour
         //Hide(Posture);
         Posture.SetActive(false);
 
-       
+
 
         fishTalkText = fishTalk.gameObject.GetComponentInChildren<TextMeshPro>();
         //hide the UIs when click Karara
@@ -189,15 +179,19 @@ public class FinalCameraController : MonoBehaviour
 
         ChapterOneEnd = false;
 
-
+        alreadyClothUI = false;
     }
 
 
     public void CancelAllUI(bool clickMachine)
     {
         //print("cancelallui");
+
+        
+
+
         if (!isTutorial)
-        { 
+        {
             //touch anywhere on screen, close Karara UI
             // Hide(clothCG);
             //clothCG.SetActive(false);
@@ -205,7 +199,7 @@ public class FinalCameraController : MonoBehaviour
             Hide(fishShoutCG);
             isShown = false;
             //close fish talking
-//            Hide(fishTalk);
+            //            Hide(fishTalk);
             if (alreadyNotice)
             {
                 //generatedNotice.SetActive(false);
@@ -213,23 +207,49 @@ public class FinalCameraController : MonoBehaviour
             }
 
             AllMachines.CloseAllMachines(clickMachine);
-           
+
         }
-     
+
     }
+
+
+    public void CloseAllUI()
+    {
+
+        //    //
+        //public CanvasGroup disableInputCG, ChapterOneEndComic, Mask, TakePhoto, fishShoutCG,
+        //    ChapterOneFailCG, Inventory, SubwayMap, inventory, appBackground, albumBackground, albumCG, albumDetailCG, frontPage, SavingPage;
+
+  
+        Hide(TakePhoto);
+        Hide(fishShoutCG);
+        Hide(SubwayMap);
+        Hide(Inventory);
+        Hide(frontPage);
+        Hide(appBackground);
+        Hide(albumBackground);
+        Hide(albumCG);
+        Hide(albumDetailCG);
+        Hide(frontPage);
+        Hide(SavingPage);
+    }
+
+
+
+
     // Update is called once per frame
     void Update()
     {
 
         ChapterEndChecker();
 
- 
+
         //hide shout
-        if(!isTutorial && LevelManager.isInstruction)
+        if (!isTutorial && LevelManager.isInstruction)
         {
             if (mySubwayState == SubwayState.One)
             {
-            
+
                 Hide(fishShoutCG);
             }
             else
@@ -237,42 +257,27 @@ public class FinalCameraController : MonoBehaviour
                 //Debug.Log("show shout2");
                 Show(fishShoutCG);
             }
-        }        
-        
-        
-        
+        }
+
+
+
         //disable swipe before player click the poster
         if (isTutorial)
         {
-            if(TutorialManager.tutorialNumber == 0 && mySubwayState == SubwayState.Four)
+            if (TutorialManager.tutorialNumber == 0 && mySubwayState == SubwayState.Four)
             {
                 //myHSS.GoToScreen(4);
                 //myHSS.enabled = false;
-            }        
-            else if(TutorialManager.tutorialNumber == 2 && mySubwayState == SubwayState.One)
+            }
+            else if (TutorialManager.tutorialNumber == 2 && mySubwayState == SubwayState.One)
             {
                 //myHSS.GoToScreen(1);
                 //myHSS.enabled = false;
             }
         }
-        
 
-        
-//        if (lateReturnComic)
-//        {
-////            GoSubwayPart();
-////            lateReturnImage.enabled = true;
-////            ChangeToSubway();
-////            myHSS.GoToScreen(1);
-////            Show(fishTalk);
-////            fishTalkText.text = "Return your customers' clothes in time! How can you have such bad memory!";
-////            lateReturnComic = false;
 
-//        }
-//        else
-//        {
-//        }
-        
+
         if (TouchController.isSwiping == true)
         {
             isSwipping = true;
@@ -286,16 +291,26 @@ public class FinalCameraController : MonoBehaviour
         {
             CancelAllUI(false);
         }
-            
-        ////print(HorizontalScrollSnap.CurrentPage);
+
+        ////print(CameraMovement.CurrentPage);
         //change camera state to page number
-        if(myCameraState == CameraState.Subway && !isSwipping)
+        if (myCameraState == CameraState.Subway && !isSwipping)
         {
             CheckScreenNum();
+            if(transform.position.x < 5 && transform.position.x >-5 && FishBossNotification.FishBossUI.active)
+            {
+                FishBossNotification.HideFish();
+            }
+            else if(transform.position.x > 5&&!FishBossNotification.FishBossUI.active)
+            {
+                FishBossNotification.ShowFish();
+            }
+
+
             //Show(subwayBackground);
         }
-        
-        
+
+
         //if changing clothes, don't show some UIs
         if (myCameraState == CameraState.Map || myCameraState == CameraState.App || myCameraState == CameraState.Ad)
         {
@@ -313,7 +328,7 @@ public class FinalCameraController : MonoBehaviour
             }
         }
 
-        else if(myCameraState == CameraState.Closet)
+        else if (myCameraState == CameraState.Closet)
         {
             Show(inventory);
             //Hide(basicUI);
@@ -321,20 +336,20 @@ public class FinalCameraController : MonoBehaviour
             Hide(appBackground);
 
         }
-        
+
         else
         {
             Hide(inventory);
             //Show(basicUI);
             Hide(appBackground);
         }
-        
+
         //如果没到达30fo
         if (chapterOneFail)
         {
             StartCoroutine(ChapterOneFailComic());
-            PlayerPrefs.SetInt("ongoingChapter",1);
-            PlayerPrefs.SetInt("skipInstruction",0);
+            PlayerPrefs.SetInt("ongoingChapter", 1);
+            PlayerPrefs.SetInt("skipInstruction", 0);
             PlayerPrefs.Save();
         }
     }
@@ -343,9 +358,9 @@ public class FinalCameraController : MonoBehaviour
     {
         DisableInput(true);
         yield return new WaitForSeconds(1f);
-        
+
         ChangeToSubway();
-        HorizontalScrollSnap.currentPage = 1;
+        CameraMovement.Go2Page(1);
 
 
         Show(ChapterOneFailCG);
@@ -354,7 +369,7 @@ public class FinalCameraController : MonoBehaviour
     public void BossTalk()
     {
         CancelAllUI(false);
-        if(isfishTalking == false)
+        if (isfishTalking == false)
         {
             // Show(fishTalk);
             fishTalk.SetActive(true);
@@ -368,11 +383,12 @@ public class FinalCameraController : MonoBehaviour
             isfishTalking = false;
         }
     }
-    
+
     void CheckScreenNum()
     {
 
-        switch (HorizontalScrollSnap.currentPage) {
+        switch (CameraMovement.currentPage)
+        {
             case 1:
                 mySubwayState = SubwayState.One;
                 break;
@@ -406,197 +422,124 @@ public class FinalCameraController : MonoBehaviour
             CancelAllUI(false);//进行完了isshown一定是false?
 
             Debug.Log("show cloth CG");
-            // Show(clothCG);
-            //clothCG.SetActive(true);
-            //messageCG.SetActive(true);
             isShown = true;
         }
         else
         {
-            // Hide(clothCG);
-            //clothCG.SetActive(false);
-            //messageCG.SetActive(false);
             isShown = false;
         }
     }
-    
+
     public void ChangeToCloth()
     {
-        HorizontalScrollSnap.previousPage = HorizontalScrollSnap.currentPage;
+        myCameraState = CameraState.Closet;
+        CameraMovement.atInventory = true;
+        phone.SetActive(false);
+        CameraMovement.previousPage = CameraMovement.currentPage;
         Show(Inventory);
         Hide(fishShoutCG);
         Mask.alpha = 0;
         if (!isTutorial) CheckInstructionButton.SetActive(true);
 
 
-        
-        if(alreadyClothUI == false)
+
+        if (alreadyClothUI == false)
         {
-            //Hide(subwayBackground);
-
-            //print("alreadyCLoth = false" + isSwipping);
-           
-
             if (isSwipping == false)
             {
-                ////print("myCameraState = " + myCameraState);
                 lastCameraState = myCameraState;
-                myCameraState = CameraState.Closet;
-                //RatingSys.LeaveSubway();
                 transform.position = new Vector3(-25, 0, -10);
-                //print("actually change");
             }
 
             if (!InventoryInstructionShown)
             {
 
                 StartCoroutine(WaitingInstruction());
-                
+
             }
         }
         else
         {
-            //generatedNotice.SetActive(false);
-            // Hide(currentClothUI);
             currentClothUI.SetActive(false);
             alreadyClothUI = false;
         }
 
-      
+
     }
 
     public void clickLateComic()
     {
-//        lateReturnComic = false;
-//        lateReturnImage.enabled = false;
+        //        lateReturnComic = false;
+        //        lateReturnImage.enabled = false;
         // Hide(fishTalk);
         fishTalk.SetActive(false);
-  
+
         //print("clickLateComic");
     }
-    
+
     public void AppBackButton()
     {
-       if (myAppState == AppState.Album)
-       {
+        if (myAppState == AppState.Album)
+        {
             Hide(albumCG);
             Hide(albumBackground);
             lastCameraState = CameraState.App;
             ChangeToSubway();
             //}
         }
-       else if (myAppState == AppState.Mainpage)
-       {
-           if (ChapterOneEnd)//第一章结束，出现漫画？如果点了一下之后进入第二章
-           {
-               if(chapterOneSucceed)
-               {
-                   Show(ChapterOneEndComic); //漫画
-                   PlayerPrefs.SetInt("ongoingChapter",2);
-                   PlayerPrefs.SetInt("skipInstruction",1);
-                   PlayerPrefs.Save();
-               }
-              
-           }
-           else
-           {
-               lastCameraState = CameraState.App;
-               ChangeToSubway();
-           }
+        else if (myAppState == AppState.Mainpage)
+        {
+            if (ChapterOneEnd)//第一章结束，出现漫画？如果点了一下之后进入第二章
+            {
+                if (chapterOneSucceed)
+                {
+                    Show(ChapterOneEndComic); //漫画
+                    PlayerPrefs.SetInt("ongoingChapter", 2);
+                    PlayerPrefs.SetInt("skipInstruction", 1);
+                    PlayerPrefs.Save();
+                }
+
+            }
+            else
+            {
+                lastCameraState = CameraState.App;
+                ChangeToSubway();
+            }
 
 
-       }
+        }
 
-       else if(myAppState == AppState.AlbumDetail)
+        else if (myAppState == AppState.AlbumDetail)
         {
             Hide(albumDetailCG);
             Hide(albumBackground);
             lastCameraState = CameraState.Subway;
             ChangeToSubway();
         }
-       else if(myAppState == AppState.RetroPage || myAppState == AppState.KararaPage || myAppState == AppState.DesignerPage || myAppState == AppState.NPCPage)
-       {
-           Show(frontPage);
-           //HideAllPersonalPages();
-           //Hide(postpage);
-           //Hide(NPCPage);
+        else if (myAppState == AppState.RetroPage || myAppState == AppState.KararaPage || myAppState == AppState.DesignerPage || myAppState == AppState.NPCPage)
+        {
+            Show(frontPage);
 
-           myAppState = AppState.Mainpage;
-           resetPostOrder();
-
-       }
+            myAppState = AppState.Mainpage;
+        }
     }
 
 
-    public void resetPostOrder()
+
+
+
+    IEnumerator ScrollToTop(ScrollRect scrollRect)
     {
-
-
-        
-
-
-
-
-
-        //print("resetttttttposterOrder");
-
-        List<int> temp = new List<int>();
-
-        Dictionary<int, GameObject> tempDic = new Dictionary<int, GameObject>();
-        Dictionary<GameObject, int> tempDic1 = new Dictionary<GameObject, int>();
-
-        
-        //reset the order of all posts
-        for (int i = 0; i < InstagramController.postList.Count; i++)
-        {
-            //temp.Add(InstagramController.postList[i].GetComponent<EntryTime>().time);
-            //tempDic.Add(InstagramController.postList[i].GetComponent<EntryTime>().time, InstagramController.postList[i]);
-
-        }   
-        //时间是不会重复的，每个npc的个位数都不一样
-        
-        temp.Sort();
-        temp.Reverse();
-        
-        for (int i = 0; i < InstagramController.postList.Count; i++)
-        {
-            tempDic1.Add(tempDic[temp[i]], i);
-
-        }  
-        //需要一个list，按顺序放着所有的gameobject
-        
-        
-        
-        for (int i = 0; i < InstagramController.postList.Count; i++)
-        {
-            //order是gameobject在list中排的位置
-            //InstagramController.postList[i].GetComponent<EntryTime>().order = tempDic1[InstagramController.postList[i]];
-
-            //InstagramController.postList[i].transform.SetSiblingIndex(InstagramController.postList[i].GetComponent<EntryTime>().order);
-        }           
-        
-//        for (int i = 0; i < InstagramController.postList.Count; i++)
-//        {
-//            InstagramController.postList[i].transform.SetSiblingIndex(-InstagramController.postList[i].GetComponent<EntryTime>().time);
-//        }           
-        
-        //清空所有内容
-        temp.Clear();
-        tempDic.Clear();
-        tempDic1.Clear();
-        
+        yield return null;
+        scrollRect.normalizedPosition= new Vector2(0, 1);
+        Debug.Log("scroll" + scrollRect.normalizedPosition);
     }
-    
-    
-    
-    public static void ScrollToTop(ScrollRect scrollRect)
-    {
-        scrollRect.normalizedPosition = new Vector2(0, 1);
-    }
-    
+
     public void ChangeToSubway()
     {
-        HorizontalScrollSnap.JumpToPreviousPage();
+        phone.SetActive(true);
+        CameraMovement.atInventory = false;
+        CameraMovement.JumpToPreviousPage();
         if (!isTutorial) CheckInstructionButton.SetActive(false);
         Mask.alpha = 1;
 
@@ -612,27 +555,27 @@ public class FinalCameraController : MonoBehaviour
             Show(fishShoutCG);
         }
 
-            Hide(TakePhoto);
-            Posture.SetActive(false);
-            //transform.position = new Vector3(0, 0, -10);
-            if (myCameraState == CameraState.Closet || myCameraState == CameraState.Map ||
-                myCameraState == CameraState.App || myCameraState == CameraState.Ad)
+        Hide(TakePhoto);
+        Posture.SetActive(false);
+        //transform.position = new Vector3(0, 0, -10);
+        if (myCameraState == CameraState.Closet || myCameraState == CameraState.Map ||
+            myCameraState == CameraState.App || myCameraState == CameraState.Ad)
+        {
+            if (lastCameraState != CameraState.Closet && lastCameraState != CameraState.Map &&
+                lastCameraState != CameraState.App && myCameraState != CameraState.Ad)
             {
-                if (lastCameraState != CameraState.Closet && lastCameraState != CameraState.Map &&
-                    lastCameraState != CameraState.App && myCameraState != CameraState.Ad)
-                {
-                    myCameraState = lastCameraState;
-                    RatingSys.GoBackToSubway();
+                myCameraState = lastCameraState;
+                RatingSys.GoBackToSubway();
                 //todo: kind of connfused
-                }
-                else
-                {
-                    myCameraState = CameraState.Subway;
-                    RatingSys.GoBackToSubway();
-                }
             }
-        
-        
+            else
+            {
+                myCameraState = CameraState.Subway;
+                RatingSys.GoBackToSubway();
+            }
+        }
+
+
         //hide everything 
         Hide(Inventory);
         //Show(subwayBackground);
@@ -643,41 +586,33 @@ public class FinalCameraController : MonoBehaviour
         //Hide(postpage);
 
 
-        if(InstagramController.waitingForRefresh) InstagramController.RefreshPost();
-        
+        if (InstagramController.waitingForRefresh) InstagramController.RefreshPost();
+
     }
-    
+
     public void ChangeToApp()
     {
 
-        
+
+        phone.SetActive(false);
         Hide(fishShoutCG);
         CheckInstructionButton.SetActive(false);
-        ScrollToTop(mainpageScrollRect);
+        Debug.Log("change to app0");
+        StartCoroutine(ScrollToTop(mainpageScrollRect));
+        StartCoroutine(ScrollToTop(albumScrollRect));
+
 
         InstagramController.redDot.SetActive(false);
 
-
-        //reset the order of all posts
-
-        //todo: yun 这里有问题
-        //resetPostOrder();
-
-        //go to main page top     
-        //cancel all dialogues
-        //print("click ChangeToAPP");
-
-        //cancel red dot
-        //InstagramController.redDot.SetActive(false);
 
         Hide(SavingPage);
         Hide(TakePhoto);
 
         Debug.Log("change to app");
 
-       if(alreadyClothUI == false)        
+        if (alreadyClothUI == false)
         {
-           
+
             if (isSwipping == false)
             {
                 //transform.position = new Vector3(0, 0, -10);
@@ -702,6 +637,7 @@ public class FinalCameraController : MonoBehaviour
 
     public void MainPageToAlbum()
     {
+        StartCoroutine(ScrollToTop(albumScrollRect));
         Show(albumBackground);
         Show(albumCG);
         Hide(appBackground);
@@ -712,6 +648,7 @@ public class FinalCameraController : MonoBehaviour
 
     public void AlbumToMainPage()
     {
+        StartCoroutine(ScrollToTop(mainpageScrollRect));
         Hide(albumBackground);
         Hide(albumCG);
         Hide(albumDetailCG);
@@ -740,23 +677,24 @@ public class FinalCameraController : MonoBehaviour
         myCameraState = CameraState.App;
         myAppState = AppState.SavingPage;
         Show(SavingPage);
-        
+
 
     }
-    
+
     public void ChangeToMap()
     {
         //print("mappppppp");
         if (!isTutorial) CheckInstructionButton.SetActive(true);
 
-        if (alreadyClothUI == false)        {
+        if (alreadyClothUI == false)
+        {
             //Hide(subwayBackground);
             if (isSwipping == false)
             {
                 lastCameraState = myCameraState;
                 myCameraState = CameraState.Map;
                 RatingSys.LeaveSubway();
-                //transform.position = new Vector3(0, 13, -10);
+                phone.SetActive(false);
                 Show(SubwayMap);
             }
         }
@@ -767,39 +705,43 @@ public class FinalCameraController : MonoBehaviour
             currentClothUI.SetActive(false);
             alreadyClothUI = false;
         }
-        
+
     }
 
 
 
 
-    public void Hide(CanvasGroup UIGroup) {
+    public void Hide(CanvasGroup UIGroup)
+    {
         UIGroup.alpha = 0f; //this makes everything transparent
         UIGroup.blocksRaycasts = false; //this prevents the UI element to receive input events
         UIGroup.interactable = false;
     }
-    
-    public void Show(CanvasGroup UIGroup) {
+
+    public void Show(CanvasGroup UIGroup)
+    {
         UIGroup.alpha = 1f;
         UIGroup.blocksRaycasts = true;
         UIGroup.interactable = true;
     }
-    
+
     public void GoAdvertisement()
     {
         //Hide(subwayBackground);
         myCameraState = CameraState.Ad;
-        if (!AdInstructionShown) {
+        if (!AdInstructionShown)
+        {
             InstructionShow();
             AdInstructionShown = true;
         }
         Show(TakePhoto);
+        phone.SetActive(false);
         Posture.SetActive(true);
         lastCameraState = myCameraState;
         //transform.position = new Vector3(24, 0, -10);
         RatingSys.LeaveSubway();
     }
-    
+
 
 
     public void HideAllPersonalPages()
@@ -812,7 +754,7 @@ public class FinalCameraController : MonoBehaviour
 
     private bool isSetting;
     public void clickSetting()
-    { 
+    {
         CancelAllUI(false);
         if (isSetting)
         {
@@ -832,7 +774,8 @@ public class FinalCameraController : MonoBehaviour
     }
 
     // hide inventory
-    public void InstructionDismiss() {
+    public void InstructionDismiss()
+    {
         instruction.GetComponentInChildren<ScrollRect>().verticalNormalizedPosition = 1f;
         activeInstruction.SetActive(false);
         instruction.SetActive(false);
@@ -840,7 +783,8 @@ public class FinalCameraController : MonoBehaviour
 
     public void InstructionShow()
     {
-
+        
+        instruction.GetComponentInChildren<ScrollRect>().enabled = true;
         if (myCameraState == CameraState.Closet)
         {
             inventoryInstruction.SetActive(true);
@@ -852,20 +796,23 @@ public class FinalCameraController : MonoBehaviour
             mapInstruction.SetActive(true);
             activeInstruction = mapInstruction;
         }
-            
 
-        if(myCameraState == CameraState.Ad)
+
+        if (myCameraState == CameraState.Ad)
         {
             cameraInstruction.SetActive(true);
             activeInstruction = cameraInstruction;
+            instruction.GetComponentInChildren<ScrollRect>().StopMovement();
+            instruction.GetComponentInChildren<ScrollRect>().enabled = false;
         }
 
-       
+
         //Debug.Log("showInstruction");
         instruction.SetActive(true);
     }
 
-    IEnumerator WaitingInstruction() {
+    IEnumerator WaitingInstruction()
+    {
 
         yield return new WaitForSeconds(0.5f);
         InstructionShow();
@@ -901,8 +848,15 @@ public class FinalCameraController : MonoBehaviour
     public void GotoPage(int pageNum)
     {
 
-        HorizontalScrollSnap.currentPage = pageNum;
+        CameraMovement.Go2Page(pageNum);
 
 
+    }
+
+    public void ChangeCameraSpeed(float speed)
+
+    {
+        if (speed < 0) CameraMovement.smoothSpeed = CameraMovement.defaultSpeed;
+        CameraMovement.smoothSpeed = speed;
     }
 }
