@@ -292,36 +292,32 @@ public class ClothToMachine : MonoBehaviour
 
         if (hitTime == 0)
         {
-            //myAudio.pitch = 0.5f;
+            //没有洗衣机就不动啥反应都没有
+
+            underMachineNum = AllMachines.FindSuitableMachine(AllMachines.MachineState.empty);
+            if (underMachineNum < 0) return;
+
 
 
             AudioManager.AdjustPitch(AudioType.Bag_Phase1, 0.5f);
             AudioManager.PlayAudio(AudioType.Bag_Phase1);
-            
 
-    
-                //Debug.Log(transform.position);
-                SubwayMovement.bagNum -= 1;
-
-                underMachineNum = AllMachines.FindSuitableMachine(AllMachines.MachineState.empty);
-                AllMachines.SetMachineAsBagUnder(underMachineNum, owner.name,clothesInBag);
+            SubwayMovement.bagNum -= 1;
+            AllMachines.SetMachineAsBagUnder(underMachineNum, owner.name, clothesInBag);
 
 
 
-                //this.gameObject.transform.SetParent(AllMachines.FakeMachines[underMachineNum].gameObject.transform);// @@@
+            //this.gameObject.transform.SetParent(AllMachines.FakeMachines[underMachineNum].gameObject.transform);// @@@
 
-                transform.localPosition =  SubwayMovement.bagPos[underMachineNum+3]; // @@@
+            transform.localPosition = SubwayMovement.bagPos[underMachineNum + 3]; // @@@
 
-                if (underMachineNum == 0) cameraMovement.Go2Page(2);
-                else cameraMovement.Go2Page(3);
+            if (underMachineNum == 0) cameraMovement.Go2Page(2);
+            else cameraMovement.Go2Page(3);
 
-                SubwayMovement.bagPosAvailable[myBagPosition] = false;
+            SubwayMovement.bagPosAvailable[myBagPosition] = false;
 
-                hitTime++;
+            hitTime++;
 
-                
-
-            
         }
 
         else if (hitTime == 1)

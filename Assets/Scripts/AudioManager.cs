@@ -81,7 +81,7 @@ public class AudioManager : MonoBehaviour
 
         if(m_track.source.clip != null)
         {
-            Debug.Log("play");
+            //Debug.Log("play");
             m_track.source.Play();
         }
     }

@@ -17,6 +17,7 @@ public class NPC
     public Sprite profile;
     public Sprite closeBag;
     public Sprite openBag;
+    public Sprite bagLogo;
     public List<string> myClothes = new List<string>();
     public HashSet<int> usedIdx = new HashSet<int>(); 
 
@@ -36,6 +37,7 @@ public class NPC
 
         openBag = Resources.Load<Sprite>("Images/NPC/"+ name + "/Bag/" + fullName);
         closeBag = Resources.Load<Sprite>("Images/NPC/" + name + "/Bag/Bag" + name );
+        bagLogo = Resources.Load<Sprite>("Images/NPC/" + name + "/Bag/Bag" + name+"_logo");
         profile = Resources.Load<Sprite>("Images/NPC/" + name + "/Profile/NPC_" + name + "_Profile");
 
 

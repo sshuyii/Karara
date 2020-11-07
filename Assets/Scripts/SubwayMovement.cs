@@ -176,7 +176,9 @@ public class SubwayMovement : MonoBehaviour
 
 
     private AudioManager AudioManager;
-    public StationForButton StationForButton;
+
+    [SerializeField]
+    private StationForButton StationForButton;
 
     // Start is called before the first frame update
     void Start() 
@@ -421,10 +423,11 @@ public class SubwayMovement : MonoBehaviour
 
         }
 
-        if (isDoorOpen && NoPosition)
-        {
-            GenerateBag(currentStation);
-        }
+        //todo:门开着就放包暂时ban掉
+        //if (isDoorOpen && NoPosition)
+        //{
+        //    GenerateBag(currentStation);
+        //}
 
     }
 
@@ -624,8 +627,15 @@ public class SubwayMovement : MonoBehaviour
     {
    
         FinalCameraController.CloseAllUI();
+        FinalCameraController.enableScroll = false;
         Banner.SetActive(false);
         pauseBeforeMove = true;
+
+        if(FinalCameraController.alreadyNotice)
+        {
+            BagsController.ClickReturnNo();
+            
+        }
 
 
         Show(FinalCameraController.disableInputCG);
@@ -653,7 +663,10 @@ public class SubwayMovement : MonoBehaviour
             }
 
             //default speed
-            FinalCameraController.ChangeCameraSpeed(-1f);
+            //FinalCameraController.ChangeCameraSpeed(-1f);
+            //FinalCameraController.GotoPage(1);
+            yield return new WaitForSeconds(2f);
+            FinalCameraController.ChangeCameraSpeed(10f);
             FinalCameraController.GotoPage(1);
 
             FinalCameraController.fishTalkText.text = GenerateFishTalkForPause();
@@ -670,25 +683,35 @@ public class SubwayMovement : MonoBehaviour
 
         if(roundNum > 0 && currentStation == 0)
         {
-            //MatchState.SetActive(true);
-            //MatchState.GetComponent<TextMeshProUGUI>().text =
-            //    StationForButton.GetMatchResult().ToString();
-            //yield return new WaitForSeconds(2f);
-            //MatchState.SetActive(false);
+            yield return new WaitForSeconds(3f);
+            InstagramController.ShowMatchResultFollower();
+            StationForButton.DisplayMatchResult(roundNum);
+            //while(StationForButton.confirmed == false)
+            //{
+            //    yield return null;
+            //}
+
         }
+        else {
+            EndTrainPause();
+
+        }
+
 
  
 
+    }
+
+    public void EndTrainPause()
+    {
 
         Hide(FinalCameraController.disableInputCG);
-
+        FinalCameraController.enableScroll = true;
         timerPause = 0;
         timerStay = 0;
         //加起来的时间一定要小于timestay
         pauseBeforeMove = false;
         trainMove();
-
-
     }
 
 

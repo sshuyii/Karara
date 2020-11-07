@@ -89,6 +89,7 @@ public class BagsController : MonoBehaviour
     }
 
     public void ClickReturnNo() {
+
         returnNotice.SetActive(false);
         FinalCameraController.alreadyNotice = false;
 

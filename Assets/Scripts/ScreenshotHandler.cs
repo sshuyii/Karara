@@ -39,6 +39,7 @@ public class ScreenshotHandler : MonoBehaviour
 
     private GameObject toothpastePost;
     public int followerNum;
+    public int targetFollowerNum;
     public TextMeshProUGUI subwayFollower;
     
     private static ScreenshotHandler instance;
@@ -275,32 +276,22 @@ public class ScreenshotHandler : MonoBehaviour
 
 
         //hide notice bubble
+        int repeatCondition = 0;
         if(!FinalCameraController.isTutorial)
         {
             FinalCameraController.Hide(Notice);
         }
-
-        //if the background is already used
-        InstagramController.sendButton.interactable = true;
         if (!AdsController.IsThisAdOk())
         {
-            InstagramController.sendButton.interactable = false;
-            //FinalCameraController.Show(Notice);
-            //Notice.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "no same background";
-            //isTaken = false;
-            //return;
+            repeatCondition = 2;
         }
 
         if (!AdsController.IsThisPoseOk() && !FinalCameraController.isTutorial)
         {
-            InstagramController.sendButton.interactable = false;
-            //FinalCameraController.Show(Notice);
-            //Notice.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "no same pose";
-            //isTaken = false;
-            //return;
+            repeatCondition = 1;
         }
 
-
+        InstagramController.RepeatPostureOrBG(repeatCondition);
 
         TakeScreenshot(width, height);
         
@@ -314,10 +305,10 @@ public class ScreenshotHandler : MonoBehaviour
 
       
         //re-arrange children object, so the latest is displayed as the first
-        for (int i = 0; i < InstagramController.postList.Count; i++)
-        {
-            InstagramController.postList[i].transform.SetSiblingIndex(i);
-        }
+        //for (int i = 0; i < InstagramController.postList.Count; i++)
+        //{
+        //    InstagramController.postList[i].transform.SetSiblingIndex(i);
+        //}
 
 
         //AdsController.UseAdAndPose();

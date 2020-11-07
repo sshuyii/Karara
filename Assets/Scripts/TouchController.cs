@@ -137,7 +137,7 @@ public class TouchController : MonoBehaviour
                 lp = touch.position;
 //                //print("lp = " + lp);
 
-                if(FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
+                if(FinalCameraController.enableScroll && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
                 {
                     cameraMovement.swipping = true;
                     Vector3 oldPos = FinalCameraController.transform.position;
@@ -189,7 +189,7 @@ public class TouchController : MonoBehaviour
                             //Debug.Log("Right Swipe");
                             leftSwipe = false;
                             myInputState = InputState.RightSwipe;
-                            if(FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway){
+                            if(FinalCameraController.enableScroll && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway){
                                 cameraMovement.Go2Page(cameraMovement.currentPage - 1);
                             }
                         }
@@ -200,7 +200,7 @@ public class TouchController : MonoBehaviour
                             
                             myInputState = InputState.LeftSwipe;
 
-                            if(FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway){
+                            if(FinalCameraController.enableScroll && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway){
                                 cameraMovement.Go2Page(cameraMovement.currentPage + 1);
                                 //cameraMovement.currentPage += 1;
                             }
@@ -218,7 +218,7 @@ public class TouchController : MonoBehaviour
                         }
                     }
                 }
-                else
+                else  if(FinalCameraController.enableScroll)
                 {   //It's a tap as the drag distance is less than 20% of the screen height
                     Debug.Log("Tap");
                     myInputState = InputState.Tap;
@@ -233,6 +233,7 @@ public class TouchController : MonoBehaviour
     }
 
     private void checkTap(){
+
         lp.z = 0;
         Vector3 screenPoint = Camera.main.ScreenToWorldPoint(lp);
         hit = Physics2D.Raycast(screenPoint,Vector2.zero);
