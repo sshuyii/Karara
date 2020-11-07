@@ -11398,7 +11398,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1198774075}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.15, y: 5.04, z: 0}
+  m_LocalPosition: {x: 2.39, y: 5.04, z: 1}
   m_LocalScale: {x: 2, y: 2, z: 15}
   m_Children: []
   m_Father: {fileID: 1315521658}
@@ -13338,8 +13338,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1315521657}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.3, y: -4.07, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.9, y: -4.07, z: 0}
   m_LocalScale: {x: 1.7254432, y: 1.7254432, z: 0.6822748}
   m_Children:
   - {fileID: 1198774076}
@@ -15235,6 +15235,7 @@ MonoBehaviour:
   HintPosShutter: {x: 46, y: -560, z: 0}
   HintPosInsBack: {x: 0, y: 0, z: 0}
   ParticlePos1: {x: -80, y: 830, z: 0}
+  KararaAInScreen1Pos: {x: -37, y: -4.07, z: 0}
   initialBody: {fileID: 21300000, guid: daed3160b531442499456279e788109c, type: 3}
   pos0Body: {fileID: 21300000, guid: c69870760a736476aa7dcd7b2d1c4817, type: 3}
   pos0Work: {fileID: 21300000, guid: 5fb882e9d929d419eb6277b2156d5efd, type: 3}
@@ -16216,6 +16217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentPage: 1
+  smoothSpeed: 100
   positions:
   - {x: -5.7, y: 0, z: -20}
   - {x: 0, y: 0, z: -20}
@@ -16226,6 +16228,10 @@ MonoBehaviour:
   atInventory: 0
   previousPage: -1
   swipping: 0
+  movingDist: 0.00001
+  movingTimer: 0
+  T_total: 0
+  defaultSpeed: 100
 --- !u!1 &1613725187
 GameObject:
   m_ObjectHideFlags: 0
