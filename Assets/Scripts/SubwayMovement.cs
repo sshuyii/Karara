@@ -649,7 +649,7 @@ public class SubwayMovement : MonoBehaviour
         if(roundNum > 0)
         {
             //黑屏结束之后
-            FinalCameraController.ChangeCameraSpeed(0.01f);
+            FinalCameraController.ChangeCameraSpeed(0.1f);
             FinalCameraController.GotoPage(1);
 
             StartCoroutine(LostAndFound.AnimationDropNUm());

@@ -50,7 +50,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     [SerializeField]
     private Vector3 HintPosPoster, HintPosCamera, HintPosBag,MachinePos, ClothUIPos,HintPosKarara,HintPosBackButton,
-        HintPosShutter,HintPosInsBack, ParticlePos1;
+        HintPosShutter,HintPosInsBack, ParticlePos1, KararaAInScreen1Pos;
 
     [SerializeField]
     private Sprite initialBody,pos0Body, pos0Work, pos0disco,openBag,fullImg,emptyImg,EmojiOpenDoor, unhappyFace,happyFace,
@@ -873,7 +873,7 @@ public class TutorialManagerNew : MonoBehaviour
 
         FishTalk("say something say something say something ", false);
         yield return new WaitForSeconds(1f);
-
+        
         Particle.transform.localPosition = ParticlePos1;
         Particle.transform.localScale = new Vector3(2, 2, 1);
 
@@ -881,7 +881,10 @@ public class TutorialManagerNew : MonoBehaviour
         {
             child.gameObject.SetActive(true);
         }
-
+        KararaA.transform.localRotation = new Quaternion(0, 180, 0,0);
+        KararaA.transform.localPosition = KararaAInScreen1Pos;
+        KararaA.SetActive(true);
+        Exclamation.transform.localPosition = Exclamation.transform.localPosition;
         Exclamation.SetActive(true);
         Hint2D.SetActive(true);
         ChangeHintPos(Exclamation.transform.position,0);

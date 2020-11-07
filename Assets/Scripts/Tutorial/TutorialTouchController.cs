@@ -152,11 +152,14 @@ public class TutorialTouchController : MonoBehaviour
                 if(isSwiping && TutorialCameraController.allowScroll)
                 {
                     TutorialCameraController.Swipping(true);
-                    Vector3 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
                     Vector3 oldPos = TutorialCameraController.transform.position;
-                    float changeX = touchPos.x - oldPos.x;
-                    Vector3 newCamPos = new Vector3(oldPos.x - 0.1f * changeX, oldPos.y, oldPos.z);
-                    TutorialCameraController.transform.position = newCamPos;
+                    Vector3 newPos = new Vector3(oldPos.x - touch.deltaPosition.x * 0.005f, oldPos.y, oldPos.z);
+                    TutorialCameraController.transform.position = newPos;
+                    //Vector3 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
+                    //Vector3 oldPos = TutorialCameraController.transform.position;
+                    //float changeX = touchPos.x - oldPos.x;
+                    //Vector3 newCamPos = new Vector3(oldPos.x - 0.1f * changeX, oldPos.y, oldPos.z);
+                    //TutorialCameraController.transform.position = newCamPos;
 
                 }
 
@@ -220,8 +223,8 @@ public class TutorialTouchController : MonoBehaviour
                             myInputState = InputState.RightSwipe;
                             if (TutorialCameraController.allowScroll  && TutorialCameraController.myCameraState == TutorialCameraController.CameraState.Subway)
                             {
-
-                                cameraMovement.currentPage += -1;
+                                cameraMovement.Go2Page(cameraMovement.currentPage - 1);
+                                //cameraMovement.currentPage += -1;
                                 //Debug.Log("page " + cameraMovement.currentPage);
                             }
                         }
@@ -234,7 +237,8 @@ public class TutorialTouchController : MonoBehaviour
 
                             if (TutorialCameraController.allowScroll && TutorialCameraController.myCameraState == TutorialCameraController.CameraState.Subway)
                             {
-                                cameraMovement.currentPage += 1;
+                                cameraMovement.Go2Page(cameraMovement.currentPage + 1);
+                                //cameraMovement.currentPage += 1;
                             }
                         }
                     }
