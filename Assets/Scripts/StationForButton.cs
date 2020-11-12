@@ -250,24 +250,11 @@ public class StationForButton : MonoBehaviour
         
         //Debug.Log(" station detail");
 
-        //if in the tutorial, only show disco cloth
-        if (FinalCameraController.isTutorial)
-        {
-            //do somthing
-            return;
 
-        }
+        
 
         // if no bag created in the sation, do not show anything.
-        if (SubwayMovement.bagCounts[stationNum] == 0)
-        {
-            if (isDetailed)
-            {
-                collection.SetActive(false);
-                isDetailed = !isDetailed;
-            }
-            return;
-        }
+       
             
         if (isDetailed && stationNum == currDetailedStation)
         {
@@ -284,8 +271,12 @@ public class StationForButton : MonoBehaviour
                isDetailed = !isDetailed;
             }
 
+
+            
+
             ClearCollectionContent();
             currDetailedStation = stationNum;
+
             
             for (int i = 0; i < BagsController.stationBagOwners[stationNum].Count; i++)
             {
@@ -323,6 +314,9 @@ public class StationForButton : MonoBehaviour
             tabsBG[i].SetActive(false);
             tabs[i].SetActive(false);
         }
+
+
+        if (SubwayMovement.bagCounts[stationNum] == 0) return;
 
         string currentBagOwner = BagsController.stationBagOwners[currDetailedStation][tabIdx];
 
@@ -387,6 +381,13 @@ public class StationForButton : MonoBehaviour
 
     private void showProfileSelectors()
     {
+        //   no bags for this station
+        if (SubwayMovement.bagCounts[stationNum] == 0)
+        {
+            ProfileSelector.SetActive(false);
+            return;
+        }
+        else ProfileSelector.SetActive(true);
 
         int idx = matchedNPCIdx[stationNum][tabNum];
         string thisTabOwner = BagsController.stationBagOwners[stationNum][tabNum];
@@ -440,6 +441,7 @@ public class StationForButton : MonoBehaviour
 
     private void HideProfileWhenCloseStationDetail()
     {
+        
         if (SubwayMovement.isDetailed == false)
         {
             ShowingProfile = false;

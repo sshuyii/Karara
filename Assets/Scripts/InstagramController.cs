@@ -256,7 +256,7 @@ public class InstagramController : MonoBehaviour
         newObject.GetComponentInChildren<Button>().onClick.AddListener(CheckOnePicture);
         newObject.GetComponentInChildren<Button>().onClick.AddListener(AudioManager.UIButtonClicked);
         newObject.transform.name = countTakenPhotos.ToString();
-        Debug.Log("这个的名字" + newObject.transform.name);
+        //Debug.Log("这个的名字" + newObject.transform.name);
 
         AllTakenPhotos.Add(PicInSavePage.sprite);
         countTakenPhotos++;

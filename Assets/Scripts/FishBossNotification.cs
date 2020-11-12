@@ -9,7 +9,8 @@ public class FishBossNotification : MonoBehaviour
     GameObject FishBubble,FishText;
 
     private Animator myAnimator;
-    bool isOut;
+    bool isOut = false;
+    public bool isActive = false;
 
     public GameObject FishBossUI;
 
@@ -36,32 +37,47 @@ public class FishBossNotification : MonoBehaviour
     public void ShowFish()
     {
         FishBossUI.SetActive(true);
+        isActive = true;
+        
+        //auto hide after five seconds;
+        StartCoroutine(AutoHide());
+
     }
 
+    IEnumerator AutoHide()
+    {
+        yield return new WaitForSeconds(30f);
+        isActive = false;
+        HideFish();
+        
+    }
 
 
     public void ClickFishBossUI()
     {
         isOut = !isOut;
+        Debug.Log("clickFish");
         if(isOut)
         {
+            Debug.Log("clickFish out");
             myAnimator.SetTrigger("MovingOut");
         }
         else
         {
-            myAnimator.SetTrigger("MoveIn");
+            Debug.Log("clickFish in");
+            myAnimator.SetTrigger("MovingIn");
             FishBubble.SetActive(false);
         }
 
         StartCoroutine(SetIdle());
     }
+
+
     IEnumerator SetIdle()
     {
-        yield return new WaitForSeconds(1.2f);
+        yield return new WaitForSeconds(2f);
 
         myAnimator.SetTrigger("Idle");
-
-
     }
 
     public void ShowBubble()

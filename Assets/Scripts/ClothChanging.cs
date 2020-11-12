@@ -227,7 +227,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         {
             
             DropToLostAndFound();
-            Debug.Log("put l f");
+            //Debug.Log("put l f");
         }
 
         
@@ -243,7 +243,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
    
     private void DropToLostAndFound(){
         currentSprite = GetComponent<Image>().sprite;
-        Debug.Log("丢掉" +currentSprite.name);
+        //Debug.Log("丢掉" +currentSprite.name);
         Cloth thisCloth = SpriteLoader.ClothDic[currentSprite.name];
         NPC owner = SpriteLoader.NPCDic[thisCloth.owner];
         LostAndFound.AddClothToList(thisCloth, owner);
@@ -312,13 +312,9 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
     {
 
-
+        if (!isOccupied) return;
         if (longPress) return;
-        if (FinalCameraController.isTutorial)
-        {
-            // do something
-            return;
-        }
+
 
 
 
@@ -374,7 +370,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
             InventorySlotMgt.wearingSlots[typeIdx] = this.transform.gameObject;
             InventorySlotMgt.wearingNonDefualtClothes[typeIdx] = true;
-            Debug.Log(thisCloth.name);
+            //Debug.Log(thisCloth.name);
             thisCloth.state = Cloth.ClothState.Wearing;
         }
         else

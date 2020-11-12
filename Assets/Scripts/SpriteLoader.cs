@@ -58,7 +58,11 @@ public class SpriteLoader : MonoBehaviour
         NPCDic.Add("Karara", new NPC());
 
 
-        
+        foreach(KeyValuePair<string,Cloth> pair in ClothDic)
+        {
+            if (pair.Value.spritesInPos.Count != 4) Debug.Log("这有问题！！！！！！！" + pair.Key);
+        }
+
     }
 
 
