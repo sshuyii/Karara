@@ -84,7 +84,7 @@ public class TouchController : MonoBehaviour
 
 
         // @@@
-
+        if (EventSystem.current.IsPointerOverGameObject()) return;
         if (EventSystem.current.currentSelectedGameObject != null) {
             //AudioManager.PlayAudio(AudioType.UI_Dialogue);
             return;
@@ -139,6 +139,7 @@ public class TouchController : MonoBehaviour
 
                 if(FinalCameraController.enableScroll && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
                 {
+                    isSwiping = true;
                     cameraMovement.swipping = true;
                     Vector3 oldPos = FinalCameraController.transform.position;
                     Vector3 newPos = new Vector3(oldPos.x - touch.deltaPosition.x * 0.005f, oldPos.y, oldPos.z);

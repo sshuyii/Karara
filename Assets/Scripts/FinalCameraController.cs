@@ -66,7 +66,7 @@ public class FinalCameraController : MonoBehaviour
     public ScrollRect mainpageScrollRect,albumScrollRect;
     public bool enableScroll = true;
 
-
+    private BagsController BagsController;
 
 
     public enum AppState
@@ -129,7 +129,7 @@ public class FinalCameraController : MonoBehaviour
 
     public List<CanvasGroup> pageList = new List<CanvasGroup>();
 
-    private RatingSystem RatingSys;
+    public RatingSystem RatingSys;
 
     private bool InventoryInstructionShown = false;
     private bool AdInstructionShown = false;
@@ -156,6 +156,8 @@ public class FinalCameraController : MonoBehaviour
         RatingSys = GameObject.Find("FloatingUI").GetComponent<RatingSystem>();
         inventorySlotMgt = GameObject.Find("---InventoryController").GetComponent<InventorySlotMgt>();
         FishBossNotification = GameObject.Find("FishBossUI").GetComponent<FishBossNotification>();
+        BagsController = GameObject.Find("---BagsController").GetComponent<BagsController>();
+        FishBossNotification.HideFish();
         //pageList.Add(RetroPage);
         //pageList.Add(KararaPage);
         //pageList.Add(DesignerPage);
@@ -222,7 +224,9 @@ public class FinalCameraController : MonoBehaviour
         //    ChapterOneFailCG, Inventory, SubwayMap, inventory, appBackground, albumBackground, albumCG, albumDetailCG, frontPage, SavingPage;
 
         inventorySlotMgt.CloseAllUI();
-
+        AllMachines.CloseAllMachines(machineOpen);
+        BagsController.ClickReturnNo();
+        InstructionDismiss();
 
         Hide(TakePhoto);
         Hide(fishShoutCG);
@@ -264,22 +268,6 @@ public class FinalCameraController : MonoBehaviour
 
 
 
-        //disable swipe before player click the poster
-        if (isTutorial)
-        {
-            if (TutorialManager.tutorialNumber == 0 && mySubwayState == SubwayState.Four)
-            {
-                //myHSS.GoToScreen(4);
-                //myHSS.enabled = false;
-            }
-            else if (TutorialManager.tutorialNumber == 2 && mySubwayState == SubwayState.One)
-            {
-                //myHSS.GoToScreen(1);
-                //myHSS.enabled = false;
-            }
-        }
-
-
 
         if (TouchController.isSwiping == true)
         {
@@ -300,23 +288,23 @@ public class FinalCameraController : MonoBehaviour
         if (myCameraState == CameraState.Subway && !isSwipping)
         {
             CheckScreenNum();
-            
-            if(transform.position.x < 5 && transform.position.x >-5 && FishBossNotification.FishBossUI.active)
+
+            if (transform.position.x < 5 && transform.position.x > -5 && FishBossNotification.isActive)
             {
                 FishBossNotification.HideFish();
             }
-            else if(transform.position.x > 5&&!FishBossNotification.FishBossUI.active)
+            else if (transform.position.x > 5 & FishBossNotification.isActive)
             {
                 FishBossNotification.ShowFish();
             }
 
-
             //Show(subwayBackground);
         }
-        else if (myCameraState !=CameraState.Subway && FishBossNotification.FishBossUI.active)
+        else if (myCameraState != CameraState.Subway && FishBossNotification.isActive)
         {
             FishBossNotification.HideFish();
         }
+
 
 
         //if changing clothes, don't show some UIs

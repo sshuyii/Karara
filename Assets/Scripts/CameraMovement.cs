@@ -15,7 +15,7 @@ public class CameraMovement : MonoBehaviour
 
     private Transform target;
 
-    public float smoothSpeed = 100f;
+    public float smoothSpeed = 50f;
     private Vector3 offset;
     
     public Vector3[] positions;
@@ -36,7 +36,7 @@ public class CameraMovement : MonoBehaviour
 
     private float pageDist;
 
-    public float defaultSpeed = 100f;
+    public float defaultSpeed = 50f;
     private bool going = false;
 
     void Start()
@@ -103,6 +103,7 @@ public class CameraMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        
         if (!going || swipping ||atInventory) return;
 
         Vector3 target = positions[currentPage];
@@ -122,7 +123,7 @@ public class CameraMovement : MonoBehaviour
 
     IEnumerator Going()
     {
-
+        
         Vector3 target = positions[currentPage];
         while (movingTimer < 0.7 * T_total)
         {

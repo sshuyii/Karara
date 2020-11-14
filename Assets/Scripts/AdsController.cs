@@ -69,7 +69,6 @@ public class AdsController : MonoBehaviour
         for (int i = 0; i < loadedPics.Length; i++)
         {
             Sprite newPic = (Sprite)loadedPics[i];
-            Debug.Log(newPic.name);
             backgrounds.Add(newPic.name);
             string atbs = "a 1 1 1 1";
             if(!reader.EndOfStream) atbs = reader.ReadLine();
@@ -130,6 +129,7 @@ public class AdsController : MonoBehaviour
 
     public void ChangePosture()
     {
+       
         currentPoseIdx++;
         if (currentPoseIdx >= poses.Count) currentPoseIdx = 0;
         bodyImage.sprite = poses[currentPoseIdx];
@@ -170,7 +170,7 @@ public class AdsController : MonoBehaviour
     {
 
         bool shouldHideEverything = false;
-        for(int i = 0; i < wearingClothes.Length; i ++)
+        for (int i = 0; i < wearingClothes.Length; i ++)
         {
             if (wearingClothes[i].name != "empty")
             {
@@ -179,12 +179,14 @@ public class AdsController : MonoBehaviour
             }
             else
             {
-                //SpriteLoader.defaultClothes[i].spritesInPos[currentPoseIdx]
-                //Debug.Log("你猜！" + SpriteLoader.ClothDic["work"].name);
                 ImagesInPosture[i].sprite = SpriteLoader.defaultClothes[i].spritesInPos[currentPoseIdx];
             }
 
-            if(shouldHideEverything) ImagesInPosture[3].sprite = transparent;
+            if (shouldHideEverything)
+            {
+                ImagesInPosture[3].sprite = transparent;
+            }
+
         }
 
 
@@ -256,9 +258,9 @@ public class AdsController : MonoBehaviour
 
                 num += wearingClothes[i].attributes[j] * AdsDic[currentAd].attributes[j];
 
-                Debug.Log(wearingClothes[i].name + wearingClothes[i].attributes[j]);
-                Debug.Log(AdsDic[currentAd].name + AdsDic[currentAd].attributes[j]);
-                Debug.Log("新增粉丝 " + wearingClothes[i].attributes[j] * AdsDic[currentAd].attributes[j]);
+                //Debug.Log(wearingClothes[i].name + wearingClothes[i].attributes[j]);
+                //Debug.Log(AdsDic[currentAd].name + AdsDic[currentAd].attributes[j]);
+                //Debug.Log("新增粉丝 " + wearingClothes[i].attributes[j] * AdsDic[currentAd].attributes[j]);
             }
         }
         Debug.Log("总共新增粉丝 " + num);

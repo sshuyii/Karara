@@ -97,7 +97,7 @@ public class ClothToMachine : MonoBehaviour
 
         myAnimator = this.transform.gameObject.GetComponent<Animator>();
         //todo: generate clothes
-        Debug.Log(this.transform.gameObject.tag);
+        //Debug.Log(this.transform.gameObject.tag);
 
         owner = SpriteLoader.NPCDic[this.transform.gameObject.tag];
 
@@ -181,7 +181,7 @@ public class ClothToMachine : MonoBehaviour
         BagsController.ClickReturnYes();
 
         FinalCameraController.fishTalkText.text = "Return your customers' clothes on time! Such bad memory!";
-        FinalCameraController.FishBossNotification.ShowBubble();
+        //FinalCameraController.FishBossNotification.ShowBubble();
 
         yield return null;
     }
@@ -328,17 +328,10 @@ public class ClothToMachine : MonoBehaviour
             //myAudio.Play();
 
             AudioManager.PlayAudio(AudioType.Bag_Phase1);
-
-            //Debug.Log("tag: " + this.tag);
             myImage.sprite = SpriteLoader.NPCDic[this.tag].openBag;
 
-
-            //in tutorial
-            if (FinalCameraController.isTutorial)
-            {
-                FinalCameraController.TutorialManager.tutorialNumber = 4;
-            }
-
+            if (timeUp) FinalCameraController.FishBossNotification.ShowFish();
+            //FinalCameraController.FishBossNotification.ShowFish(); //test
 
             AllMachines.SetMachineAsFull(underMachineNum);
             hitTime++;

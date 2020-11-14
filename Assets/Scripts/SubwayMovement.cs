@@ -329,7 +329,7 @@ public class SubwayMovement : MonoBehaviour
         //test
         if (timerStay > stayTime - 10f && Banner.active == false)//test
         {
-            Debug.Log(timerStay + " " + (stayTime - 10f));
+            Debug.Log("比较时间"+timerStay + " " + (stayTime - 10f));
             Banner.SetActive(true);
         }
         else if (Banner.active)
@@ -469,7 +469,7 @@ public class SubwayMovement : MonoBehaviour
             // 3.更新posture(ad)
             GenerateBag(currentStation);
             if (roundNum>0) LostAndFound.DropLostFoundClothes(currentStation);
-            
+            else if(!atInitailStation) InstagramController.RefreshPost("", FinalCameraController.RatingSys.rating);
 
             bagFirst = false;
 
@@ -625,8 +625,8 @@ public class SubwayMovement : MonoBehaviour
 
     public IEnumerator trainPause()
     {
-   
-        FinalCameraController.CloseAllUI();
+        float normalSpeed = 0.3f
+;        FinalCameraController.CloseAllUI();
         FinalCameraController.enableScroll = false;
         Banner.SetActive(false);
         pauseBeforeMove = true;
@@ -649,33 +649,39 @@ public class SubwayMovement : MonoBehaviour
         if(roundNum > 0)
         {
             //黑屏结束之后
-            FinalCameraController.ChangeCameraSpeed(0.1f);
-            FinalCameraController.GotoPage(1);
-
+            yield return new WaitForSeconds(0.5f);
             StartCoroutine(LostAndFound.AnimationDropNUm());
             AdsController.UpdatePosters();
+
+
+            yield return new WaitForSeconds(1f);
+            FinalCameraController.ChangeCameraSpeed(normalSpeed*0.5f);
+            FinalCameraController.GotoPage(1);
+
 
             int rbn = 0;
             for (int i = 2; i >-1; i--)
             {
-                yield return new WaitForSeconds(2.5f);
+                yield return new WaitForSeconds(0.2f);
                 rbn = BagsController.DropAllBagsInWasher(i);
             }
 
             //default speed
             //FinalCameraController.ChangeCameraSpeed(-1f);
-            //FinalCameraController.GotoPage(1);
-            yield return new WaitForSeconds(2f);
-            FinalCameraController.ChangeCameraSpeed(10f);
+
+            yield return new WaitForSeconds(1.5f);
+            FinalCameraController.ChangeCameraSpeed(normalSpeed*3f);
             FinalCameraController.GotoPage(1);
 
             FinalCameraController.fishTalkText.text = GenerateFishTalkForPause();
         }
         else
         {
+            yield return new WaitForSeconds(0.5f);
             AdsController.UpdatePosters();
-            yield return new WaitForSeconds(1f);
-            FinalCameraController.ChangeCameraSpeed(3f);
+
+            yield return new WaitForSeconds(2f);
+            FinalCameraController.ChangeCameraSpeed(normalSpeed);
             FinalCameraController.GotoPage(1);
         }
 
@@ -686,13 +692,10 @@ public class SubwayMovement : MonoBehaviour
             yield return new WaitForSeconds(3f);
             InstagramController.ShowMatchResultFollower();
             StationForButton.DisplayMatchResult(roundNum);
-            //while(StationForButton.confirmed == false)
-            //{
-            //    yield return null;
-            //}
 
         }
         else {
+            yield return new WaitForSeconds(1.5f);
             EndTrainPause();
 
         }
