@@ -37,12 +37,11 @@ public class TutorialManagerNew : MonoBehaviour
     private TutorialCameraController TutorialCameraController;
 
 
-
     [SerializeField]
     TextMeshPro fishText;
 
     [SerializeField]
-    private GameObject Exclamation, Posture, Phone,Hint2D, HintUI, HintScreen,ScrollHint, clothBag,machineFull, machineEmpty,
+    private GameObject Exclamation, Posture, Phone,Hint2D, HintUI, HintScreen,ScrollHint, clothBag,machineFull, machineEmpty, phoneAnimation,
         machineOccupied,ClothUI, KararaC,KararaA,EmojiBubble,InventoryBackButton, Ins, Particle,Shutter,Notice;
 
     [SerializeField]
@@ -53,8 +52,8 @@ public class TutorialManagerNew : MonoBehaviour
         HintPosShutter,HintPosInsBack, ParticlePos1, KararaAInScreen1Pos;
 
     [SerializeField]
-    private Sprite initialBody,pos0Body, pos0Work, pos0disco,openBag,fullImg,emptyImg,EmojiOpenDoor, unhappyFace,happyFace,
-        EmojiCloth, EmojiHappy,openDoor, closeDoor, transparet,cameraBGFull;
+    private Sprite initialBody,pos0Body, pos1Body, pos0Under, pos1Under, pos0Work, pos1Work,openBag,fullImg,emptyImg,EmojiOpenDoor, unhappyFace,happyFace,
+        EmojiCloth, EmojiHappy, EmojiUnhappy, openDoor, closeDoor, transparet,cameraBGFull;
 
     [SerializeField]
     private SpriteRenderer body, everything,machineFront, emoji,KararaFace,MachineDoor;
@@ -318,6 +317,7 @@ public class TutorialManagerNew : MonoBehaviour
             Posture.SetActive(true);
             Show(CameraBackground);
             ChangeHintPos(HintPosCamera, 3);
+            body.sprite = initialBody;
 
         }
         else
@@ -327,13 +327,15 @@ public class TutorialManagerNew : MonoBehaviour
             Show(CameraBackground);
             CameraBackground.GetComponent<Image>().sprite = cameraBGFull;
             HintScreen.SetActive(true);
-            body.sprite = initialBody;
+            body.sprite = pos0Body;
             HintScreen.transform.localPosition = HintPosShutter;
             
         }
 
     }
 
+
+    int clickTime = 0;
 
     public void ClickChangePosture()
     {
@@ -343,11 +345,24 @@ public class TutorialManagerNew : MonoBehaviour
 
         if (AdClick1stTime)
         {
-            body.sprite = pos0Body;
-            everything.sprite = pos0Work;
-            AdClick1stTime = false;
-            Hint2D.SetActive(false);
-            forwardOneStep = true;
+            if(clickTime == 0)
+            {
+                body.sprite = pos0Body;
+                everything.sprite = pos0Under;            }
+            else if(clickTime == 1)
+            {   
+                body.sprite = pos1Body;
+                everything.sprite = pos1Under;
+            }
+            else if(clickTime == 2)
+            {
+                AdClick1stTime = false;
+                Hint2D.SetActive(false);
+                forwardOneStep = true;
+            }
+
+            clickTime ++;
+
         }
         else
         {
@@ -362,7 +377,7 @@ public class TutorialManagerNew : MonoBehaviour
     IEnumerator  BackToSubway()
     {
         KararaA.SetActive(true);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         Hide(CameraBackground);
         Posture.SetActive(false);
     }
@@ -439,12 +454,13 @@ public class TutorialManagerNew : MonoBehaviour
         Debug.Log("change face");
         KararaTalk(EmojiOpenDoor);
         KararaFace.sprite = unhappyFace;
-
+        // KararaTalk(EmojiUnhappy);
 
         yield return new WaitForSeconds(2f);
 
         HintUI.transform.localPosition = MachinePos;
-        KararaFace.sprite = happyFace;
+
+        //KararaFace.sprite = happyFace;//维持不开心表情
 
     }
 
@@ -503,6 +519,10 @@ public class TutorialManagerNew : MonoBehaviour
                 StartCoroutine(StopTimerAndForward());
                 //进入找到手机的部分
                 //forwardOneStep = true;
+
+                //提示手机动画
+                phoneAnimation.SetActive(true);
+
                 break;
             case MachineState.Finish:
                 
@@ -527,7 +547,7 @@ public class TutorialManagerNew : MonoBehaviour
 
         if (isFirstOpen)
         {
-            Debug.Log("isFirstOpen and open machien");
+            Debug.Log("isFirstOpen and open machine");
             deactiveButtons = true;
 
             OpenDoor();
@@ -537,7 +557,7 @@ public class TutorialManagerNew : MonoBehaviour
         }
         else if(inLoop)
         {
-            Debug.Log("in loop and open machien");
+            Debug.Log("in loop and open machine");
             OpenDoor();
 
             Hint2D.SetActive(true);
@@ -574,7 +594,6 @@ public class TutorialManagerNew : MonoBehaviour
 
     void PhoneOccur()
     {
-        Phone.SetActive(true);
         //TutorialCameraController.GotoPage(1);
         Debug.Log("PhoneOccur");
     }
