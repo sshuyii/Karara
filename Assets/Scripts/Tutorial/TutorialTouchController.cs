@@ -185,9 +185,6 @@ public class TutorialTouchController : MonoBehaviour
             }
             else if (touch.phase == TouchPhase.Ended) //check if the finger is removed from the screen
             {
-
-
-
                 lp = touch.position;  //last touch position. Ommitted if you use list
 
                 offsetX = 0;
@@ -282,13 +279,15 @@ public class TutorialTouchController : MonoBehaviour
             switch(hitObject)
             {
                 case "front":
+                    Debug.Log("hit front");
                     TutorialManagerNew.ClickMachine();
                     break;
                 case "full":
+                    Debug.Log("hit front");
                     TutorialManagerNew.ClickMachine();
                     break;
                 case "phone":
-                    if(TutorialManagerNew.stepCounter == 4 || TutorialManagerNew.stepCounter == 5)
+                    if(TutorialManagerNew.stepCounter == 5)
                     {TutorialManagerNew.PickChargingPhone();}
                     break;
                 case "ClothSlot1":

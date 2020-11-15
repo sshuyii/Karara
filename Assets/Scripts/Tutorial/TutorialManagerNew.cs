@@ -14,6 +14,7 @@ using Image = UnityEngine.UI.Image;
 
 
 
+
 public class TutorialManagerNew : MonoBehaviour
 {
 
@@ -25,6 +26,8 @@ public class TutorialManagerNew : MonoBehaviour
     private bool timerStop = false;
     private bool isFirstOpen = true;
     private bool scrollTeaching = false;
+
+    [SerializeField]
     private bool deactiveButtons = false;
     private bool inLoop = false;
     private bool flashing = false;
@@ -41,8 +44,8 @@ public class TutorialManagerNew : MonoBehaviour
     TextMeshPro fishText;
 
     [SerializeField]
-    private GameObject Exclamation, Posture, Phone,Hint2D, HintUI, HintScreen,ScrollHint, clothBag,machineFull, machineEmpty, phoneAnimation,
-        machineOccupied,ClothUI, KararaC,KararaA,EmojiBubble,InventoryBackButton, Ins, Particle,Shutter,Notice;
+    private GameObject Exclamation, Posture, Phone,Hint2D, HintUI, HintScreen,ScrollHint, clothBag,machineFull, machineEmpty, phoneAnimation, changePostureButton,
+        machineOccupied,ClothUI, KararaC,KararaB,KararaA,EmojiBubble,InventoryBackButton, Ins, Particle,Shutter,Notice;
 
     [SerializeField]
     private CanvasGroup CameraBackground,scream, Inventory, Flashlight, FloatingUI,Comic;
@@ -93,6 +96,10 @@ public class TutorialManagerNew : MonoBehaviour
         workAds0 = Resources.Load<Sprite>("Images/Karara/Cloth/Pose/Pose1_1/work");
         workAds1 = Resources.Load<Sprite>("Images/Karara/Cloth/Pose/Pose1_3/work");
 
+        //disable a lot of things when tutorial starts
+        KararaB.SetActive(false);
+        phoneAnimation.SetActive(false);
+
     }
 
     // Update is called once per frame
@@ -114,6 +121,12 @@ public class TutorialManagerNew : MonoBehaviour
                 flashing = false;
             }
 
+        }
+
+        //在screen1永远不显示fish scream
+        if(TutorialCameraController.currentPage == 1)
+        {
+            Hide(scream);
         }
 
 
@@ -183,6 +196,7 @@ public class TutorialManagerNew : MonoBehaviour
                 case 2:
                     StartCoroutine(BackToSubway());
                     StartCoroutine(ScrollTeaching(1));
+                    KararaB.SetActive(true);
                     break;
                 case 3:
                     scrollTeaching = false;
@@ -219,16 +233,23 @@ public class TutorialManagerNew : MonoBehaviour
                     ReadyForPhoto();
                     break;
                 case 13:
+                    //照相界面下面有个黑条，改变姿势的透明图层需要变小一点
+                    RectTransform rt = changePostureButton.GetComponent<RectTransform>();
+                    rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, 20);
+                    rt.sizeDelta = new Vector2 (700, 500);
+
                     ShowCameraBG();
                     break;
                 case 14:
                     GoToIns();
                     break;
                 case 15:
+                    //从ins直接回到screen2
                     StartCoroutine(AfterIns());
                     break;
 
                 case 16:
+                    //
                     ReturnPrep();
                     break;
 
@@ -327,7 +348,8 @@ public class TutorialManagerNew : MonoBehaviour
             Show(CameraBackground);
             CameraBackground.GetComponent<Image>().sprite = cameraBGFull;
             HintScreen.SetActive(true);
-            body.sprite = pos0Body;
+            body.sprite = pos0Work;
+            everything.sprite = null;
             HintScreen.transform.localPosition = HintPosShutter;
             
         }
@@ -335,6 +357,7 @@ public class TutorialManagerNew : MonoBehaviour
     }
 
 
+    [SerializeField]
     int clickTime = 0;
 
     public void ClickChangePosture()
@@ -345,36 +368,53 @@ public class TutorialManagerNew : MonoBehaviour
 
         if (AdClick1stTime)
         {
-            if(clickTime == 0)
+            clickTime ++;
+
+            if(clickTime == 1)
             {
                 body.sprite = pos0Body;
-                everything.sprite = pos0Under;            }
-            else if(clickTime == 1)
+                everything.sprite = pos0Under;            
+            }
+            else if(clickTime == 2)
             {   
                 body.sprite = pos1Body;
                 everything.sprite = pos1Under;
             }
-            else if(clickTime == 2)
+            else if(clickTime == 3)
             {
                 AdClick1stTime = false;
                 Hint2D.SetActive(false);
                 forwardOneStep = true;
+                //reset clickTime for 2nd time
+                clickTime = 0;
             }
-
-            clickTime ++;
-
         }
         else
         {
+            clickTime ++;
+
+            if(clickTime == 1)
+            {
+                body.sprite = pos0Work;
+                // everything.sprite = pos0Work;     
+                isInitialPosture = false;
+       
+            }
+            else if(clickTime == 2)
+            {   
+                body.sprite = pos1Work;
+                // everything.sprite = pos1Work;
+                clickTime = 0;
+                isInitialPosture = true;
+
+            }
+
             Debug.Log("ClickChangePosture 2nd");
-            isInitialPosture = false;
-            body.sprite = pos0Body;
-            everything.sprite = workAds1;
         }
 
     }
 
-    IEnumerator  BackToSubway()
+    IEnumerator BackToSubway()
     {
         KararaA.SetActive(true);
         yield return new WaitForSeconds(0.5f);
@@ -505,6 +545,7 @@ public class TutorialManagerNew : MonoBehaviour
     public void ClickMachine()
     {
         if (deactiveButtons) return;
+        if (stepCounter < 4) return;//确保在没进行到洗衣机的时候洗衣机不能点
 
         switch (myMachineState)
         {
@@ -520,9 +561,6 @@ public class TutorialManagerNew : MonoBehaviour
                 //进入找到手机的部分
                 //forwardOneStep = true;
 
-                //提示手机动画
-                phoneAnimation.SetActive(true);
-
                 break;
             case MachineState.Finish:
                 
@@ -535,7 +573,14 @@ public class TutorialManagerNew : MonoBehaviour
 
     IEnumerator StopTimerAndForward()
     {
-        yield return new WaitForSeconds(3.5f);
+        yield return new WaitForSeconds(.5f);
+
+        //提示手机动画
+        //考虑一下出现手机动画的时机，目前是洗衣机转一会儿之后才出现
+        phoneAnimation.SetActive(true);
+
+        yield return new WaitForSeconds(2.5f);
+
         timerStop = true;
         forwardOneStep = true;
 
@@ -609,9 +654,9 @@ public class TutorialManagerNew : MonoBehaviour
 
     void BackToWashing()
     {
-
-        
         KararaC.SetActive(true);
+        KararaB.SetActive(false);
+
         KararaA.SetActive(false);
 
         timer = 4;
@@ -697,6 +742,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     public void ClickKarara()
     {
+        if(stepCounter < 9) return;
         if (deactiveButtons) return;
         Hint2D.SetActive(false);
         forwardOneStep = true;
@@ -759,7 +805,7 @@ public class TutorialManagerNew : MonoBehaviour
     private void ReadyForPhoto()
     {
         KararaC.SetActive(false);
-        KararaA.SetActive(true);
+        // KararaA.SetActive(true);
 
         Hint2D.SetActive(true);
         ChangeHintPos(HintPosPoster, 0);
@@ -787,7 +833,7 @@ public class TutorialManagerNew : MonoBehaviour
 
         flashing = true;
         
-
+        Debug.Log("click shutter");
         forwardOneStep = true;
         
     }
@@ -822,21 +868,22 @@ public class TutorialManagerNew : MonoBehaviour
     IEnumerator AfterIns()
     {
         // only phone
+        // Show(FloatingUI);
+        // Particle.SetActive(true);
 
-        Show(FloatingUI);
-        Particle.SetActive(true);
+        TutorialCameraController.JumpToPage(2);//从ins回到subway scene直接跳转到包在的页面
+        yield return new WaitForSeconds(0.6f);
 
-        TutorialCameraController.JumpToPage(1);
-        yield return new WaitForSeconds(1f);
+        //show hint arrow
+        ReturnPrep();
 
-        Particle.SetActive(false);
-        //Show(scream);
+        // Particle.SetActive(false);
+        
+        Show(scream);
         //ScrollHint.transform.localRotation = new Quaternion(0, 0, 0, 0);
         //ScrollHint.SetActive(true);
 
-
         FishTalk("Return this bag!", true);
-
     }
 
 
@@ -884,11 +931,14 @@ public class TutorialManagerNew : MonoBehaviour
 
         TutorialCameraController.GotoPage(1);
 
-        Vector3 pos = KararaA.transform.localPosition;
-        pos.x = KararaPosX;
-        KararaA.transform.localPosition = pos;
+        //把kararaA换到screen1
+        // Vector3 pos = KararaA.transform.localPosition;
+        // pos.x = KararaPosX;
+        // KararaA.transform.localPosition = pos;
 
-        
+        //screen1用kararaC
+        KararaB.SetActive(true);
+
 
         FishTalk("say something say something say something ", false);
         yield return new WaitForSeconds(1f);
@@ -900,9 +950,9 @@ public class TutorialManagerNew : MonoBehaviour
         {
             child.gameObject.SetActive(true);
         }
-        KararaA.transform.localRotation = new Quaternion(0, 180, 0,0);
-        KararaA.transform.localPosition = KararaAInScreen1Pos;
-        KararaA.SetActive(true);
+        // KararaA.transform.localRotation = new Quaternion(0, 180, 0,0);
+        // KararaA.transform.localPosition = KararaAInScreen1Pos;
+        // KararaA.SetActive(true);
         Exclamation.transform.localPosition = Exclamation.transform.localPosition;
         Exclamation.SetActive(true);
         Hint2D.SetActive(true);

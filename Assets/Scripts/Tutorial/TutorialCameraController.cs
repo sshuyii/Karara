@@ -21,6 +21,8 @@ public class TutorialCameraController : MonoBehaviour
 
     public int targetPage;
     public CameraState myCameraState;
+
+    public int currentPage;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,11 +30,14 @@ public class TutorialCameraController : MonoBehaviour
         CameraMovement = GameObject.Find("Main Camera").GetComponent<CameraMovement>();
         CameraMovement.currentPage = 4;
 
+        currentPage = CameraMovement.currentPage;
     }
 
     // Update is called once per frame
     void Update()
     {
+        currentPage = CameraMovement.currentPage;
+
         if (allowScroll)
         {
             if(CameraMovement.currentPage == targetPage)
@@ -40,11 +45,9 @@ public class TutorialCameraController : MonoBehaviour
                 //Debug.Log("reach!");
                 reachTarget = true;
             }
-            
-
         }
 
-
+       
     }
 
      public void GotoPage(int pageNum)
