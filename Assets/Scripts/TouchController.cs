@@ -84,13 +84,17 @@ public class TouchController : MonoBehaviour
 
 
         // @@@
-        if (EventSystem.current.IsPointerOverGameObject()) return;
+        if (FinalCameraController.myCameraState!=FinalCameraController.CameraState.Subway&&EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
         if (EventSystem.current.currentSelectedGameObject != null) {
             //AudioManager.PlayAudio(AudioType.UI_Dialogue);
             return;
         }
-            
-        if(Input.touchCount == 0) {
+
+
+        if (Input.touchCount == 0) {
             myInputState  = InputState.None;
             hit = new RaycastHit2D();
             RaycastHitResult = new string[2]{"",""};
@@ -224,6 +228,7 @@ public class TouchController : MonoBehaviour
                     Debug.Log("Tap");
                     myInputState = InputState.Tap;
                     
+
                     checkTap();
                     checkCollider();
                 }
@@ -234,6 +239,7 @@ public class TouchController : MonoBehaviour
     }
 
     private void checkTap(){
+
 
         lp.z = 0;
         Vector3 screenPoint = Camera.main.ScreenToWorldPoint(lp);

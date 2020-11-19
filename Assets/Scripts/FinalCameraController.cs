@@ -40,7 +40,7 @@ public class FinalCameraController : MonoBehaviour
 
     public GameObject fishTalk;
     public TextMeshPro fishTalkText;
-    private bool isfishTalking = false;
+    private bool isfishTalking = true;
 
     [HideInInspector]
     public CameraMovement CameraMovement;
@@ -111,6 +111,8 @@ public class FinalCameraController : MonoBehaviour
     public bool alreadyClothUI = false;
     public GameObject currentClothUI;
 
+    private FishTextManager FishTextManager;
+    FishText currentFT;
 
 
     //public GameObject generatedNotice;
@@ -157,6 +159,7 @@ public class FinalCameraController : MonoBehaviour
         inventorySlotMgt = GameObject.Find("---InventoryController").GetComponent<InventorySlotMgt>();
         FishBossNotification = GameObject.Find("FishBossUI").GetComponent<FishBossNotification>();
         BagsController = GameObject.Find("---BagsController").GetComponent<BagsController>();
+        FishTextManager = GameObject.Find("---FishTextManager").GetComponent<FishTextManager>();
         FishBossNotification.HideFish();
         //pageList.Add(RetroPage);
         //pageList.Add(KararaPage);
@@ -367,20 +370,42 @@ public class FinalCameraController : MonoBehaviour
         CancelAllUI(false);
         if (isfishTalking == false)
         {
-            // Show(fishTalk);
             fishTalk.SetActive(true);
-            isfishTalking = true;
-            fishTalkText.text = "Concentrate on your work! Do the laundry!";
+            FishTalk("Concentrate");
         }
-        else
-        {
-            // Hide(fishTalk);
-            fishTalk.SetActive(false);
-            isfishTalking = false;
-        }
+        else fishTalk.SetActive(false);
+        isfishTalking = !isfishTalking;
     }
 
-    void CheckScreenNum()
+    public void FishTalkAccessFromScript(string keyWord)
+    {
+        CancelAllUI(false);
+        if (isfishTalking == false)
+        {
+            fishTalk.SetActive(true);
+            FishTalk(keyWord);
+        }
+        else fishTalk.SetActive(false);
+        isfishTalking = !isfishTalking;
+
+    }
+
+    public void FishTalk(string keyWord)
+    {
+        currentFT = FishTextManager.GetText(keyWord);
+        int idx = Random.Range(0, currentFT.content.Count);
+        
+        fishTalkText.text = currentFT.content[currentFT.playingIdx];
+    }
+
+    
+
+    public void ClickWhileFishTalking()
+    {
+
+    }
+
+        void CheckScreenNum()
     {
 
         switch (CameraMovement.currentPage)
@@ -773,7 +798,6 @@ public class FinalCameraController : MonoBehaviour
     public void InstructionDismiss()
     {
         instruction.GetComponentInChildren<ScrollRect>().verticalNormalizedPosition = 1f;
-        activeInstruction.SetActive(false);
         instruction.SetActive(false);
     }
 

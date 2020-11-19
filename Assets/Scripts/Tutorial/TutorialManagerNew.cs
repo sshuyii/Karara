@@ -26,6 +26,7 @@ public class TutorialManagerNew : MonoBehaviour
     private bool timerStop = false;
     private bool isFirstOpen = true;
     private bool scrollTeaching = false;
+    private bool forwardLater = false;
 
     [SerializeField]
     private bool deactiveButtons = false;
@@ -38,6 +39,7 @@ public class TutorialManagerNew : MonoBehaviour
     private float timer = 0;
     public TextMeshPro timerNum;
     private TutorialCameraController TutorialCameraController;
+    private FishTextManager FishTextManager;
 
 
     [SerializeField]
@@ -45,7 +47,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     [SerializeField]
     private GameObject Exclamation, Posture, Phone,Hint2D, HintUI, HintScreen,ScrollHint, clothBag,machineFull, machineEmpty, phoneAnimation, changePostureButton,
-        machineOccupied,ClothUI, KararaC,KararaB,KararaA,EmojiBubble,InventoryBackButton, Ins, Particle,Shutter,Notice;
+        machineOccupied,ClothUI, KararaC,KararaB,KararaA,EmojiBubble,InventoryBackButton, Ins, Particle,Shutter,Notice,FishTalkButton;
 
     [SerializeField]
     private CanvasGroup CameraBackground,scream, Inventory, Flashlight, FloatingUI,Comic;
@@ -78,6 +80,8 @@ public class TutorialManagerNew : MonoBehaviour
     }
 
     MachineState myMachineState;
+    FishText currentFT;
+    Coroutine lastRoutine = null;
 
 
     void Start()
@@ -96,6 +100,8 @@ public class TutorialManagerNew : MonoBehaviour
         workAds0 = Resources.Load<Sprite>("Images/Karara/Cloth/Pose/Pose1_1/work");
         workAds1 = Resources.Load<Sprite>("Images/Karara/Cloth/Pose/Pose1_3/work");
 
+        FishTextManager = GameObject.Find("---FishTextManager").GetComponent<FishTextManager>();
+
         //disable a lot of things when tutorial starts
         KararaB.SetActive(false);
         phoneAnimation.SetActive(false);
@@ -111,6 +117,8 @@ public class TutorialManagerNew : MonoBehaviour
            
             CalculateTime();
         }
+
+
 
         if(flashing)
         {
@@ -128,6 +136,8 @@ public class TutorialManagerNew : MonoBehaviour
         {
             Hide(scream);
         }
+
+
 
 
         if (TutorialCameraController.reachTarget)
@@ -163,8 +173,10 @@ public class TutorialManagerNew : MonoBehaviour
             {
                
                 TutorialCameraController.targetPage = 2;
-                if (machineOpen) FishTalk("Close the door!!",false);
-                else FishTalk("Right!", false);
+
+                forwardLater = false;
+                if (machineOpen) FishTalk("CloseDoor",true);
+                else FishTalk("Right",true);
             }
             else if (TutorialCameraController.targetPage == 1)
             {
@@ -180,7 +192,10 @@ public class TutorialManagerNew : MonoBehaviour
 
         }
 
-
+        //if(currentFT.isPlaying)
+        //{
+        //    FishTalkNextSentence();
+        //}
 
         //go to next step
         if (forwardOneStep)
@@ -200,7 +215,10 @@ public class TutorialManagerNew : MonoBehaviour
                     break;
                 case 3:
                     scrollTeaching = false;
-                    FishTalk("too late",true);
+
+                    forwardLater = true;
+                    FishTalk("Late", true);
+
                     break;
                 case 4:
                     BagOccur();
@@ -250,6 +268,7 @@ public class TutorialManagerNew : MonoBehaviour
 
                 case 16:
                     //
+                    
                     ReturnPrep();
                     break;
 
@@ -434,12 +453,77 @@ public class TutorialManagerNew : MonoBehaviour
 
     }
 
-    private void FishTalk(string content, bool forwardOrNot)
+    private void FishTalk(string keyWord, bool animateOrNot)
     {
-        StartCoroutine(AnimateText(fishText, content,forwardOrNot));
-        Debug.Log("fishTalking " + content);
+        FishTalkButton.SetActive(true);
+        currentFT = FishTextManager.GetText(keyWord);
+
+        FishTalk(animateOrNot);
     }
 
+    private void FishTalk(bool animateOrNot)
+    {
+        int idx = currentFT.playingIdx;
+        if (animateOrNot) StartCoroutine(AnimateText(fishText, currentFT.content[idx]));
+        else
+        {
+            
+            //when last sentence
+            if (currentFT.playingIdx > currentFT.content.Count - 2)
+            {
+                FishTalkButton.SetActive(false);
+                currentFT.isPlaying = false;
+                forwardOneStep = forwardLater;
+            }
+
+            fishText.text = currentFT.content[idx];
+        }
+
+        Debug.Log("idx " + idx);
+        Debug.Log("fishTalking " + currentFT.content[idx]);
+    }
+
+
+    public void ClickWhileFishTalking()
+    {
+        Debug.Log("Click While Fish Talking");
+        if(currentFT.isPlaying)
+        {
+            ShowWholeSentence();
+        }
+        else if (!currentFT.isPlaying)
+        {
+            FishTalkNextSentence();
+        }
+    }
+
+
+
+     void ShowWholeSentence()
+    {
+        currentFT.isPlaying = false;
+        StopCoroutine(lastRoutine);
+        FishTalk(false);
+    }
+
+
+
+    private void FishTalkNextSentence()
+    {
+        Debug.Log("reset " + currentFT.playingIdx);
+        currentFT.playingIdx = currentFT.playingIdx+1;
+        Debug.Log("reset " + currentFT.playingIdx);
+
+        if (currentFT.playingIdx < currentFT.content.Count) FishTalk( true);
+        else
+        {
+            Debug.Log("reset 0 ");
+            currentFT.playingIdx = currentFT.playingIdx - 1;
+            FishTalk(false);
+            currentFT.playingIdx = 0;
+        }
+        
+    }
 
 
 
@@ -712,9 +796,12 @@ public class TutorialManagerNew : MonoBehaviour
         CloseMachine();
         HintUI.SetActive(false);
         yield return new WaitForSeconds(1f);
-        TutorialCameraController.JumpToPage(1);
+        TutorialCameraController.GotoPage(1);
         Hide(scream);
-        FishTalk("Close the door", false);
+
+
+        forwardLater = false;
+        FishTalk("CloseDoor",true);
 
         deactiveButtons = false;
 
@@ -883,7 +970,8 @@ public class TutorialManagerNew : MonoBehaviour
         //ScrollHint.transform.localRotation = new Quaternion(0, 0, 0, 0);
         //ScrollHint.SetActive(true);
 
-        FishTalk("Return this bag!", true);
+        forwardLater = true;
+        FishTalk("ReturnBag", true);
     }
 
 
@@ -939,8 +1027,8 @@ public class TutorialManagerNew : MonoBehaviour
         //screen1用kararaC
         KararaB.SetActive(true);
 
-
-        FishTalk("say something say something say something ", false);
+        forwardLater = false;
+        FishTalk("MultipleSentence", true);
         yield return new WaitForSeconds(1f);
         
         Particle.transform.localPosition = ParticlePos1;
@@ -1034,17 +1122,24 @@ public class TutorialManagerNew : MonoBehaviour
 
 
 
-    IEnumerator AnimateText(TextMeshPro text, string textContent,bool forwardOrNot)
+    IEnumerator AnimateText(TextMeshPro text, string textContent)
     {
+        //TutorialCameraController.
+
+        currentFT.isPlaying = true;
         for (int i = 0; i < (textContent.Length + 1); i++)
         {
+            if (!currentFT.isPlaying) break;
+
             text.text = textContent.Substring(0, i);
-            yield return new WaitForSeconds(.03f);
-            if (i == textContent.Length)
-            {
-                forwardOneStep = forwardOrNot;
-            }
+            yield return new WaitForSeconds(.1f);
+
+     
         }
+
+  
+
+        FishTalkNextSentence();
     }
 
     void KararaTalk(Sprite sprite)

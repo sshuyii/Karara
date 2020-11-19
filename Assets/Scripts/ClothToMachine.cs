@@ -214,7 +214,6 @@ public class ClothToMachine : MonoBehaviour
         //    FinalCameraController.lateReturnComic = false;
         //}
 
-        Debug.Log("add star!!!");
 
         if (!timeUp)
         {

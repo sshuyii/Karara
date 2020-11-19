@@ -4247,7 +4247,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1522229831}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: startChapter1
         m_Mode: 1
@@ -5305,7 +5305,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1522229831}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: DialogueArrowButton
         m_Mode: 1
@@ -9570,6 +9570,77 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 929472382}
   m_CullTransparentMesh: 0
+--- !u!1 &957381866
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 957381868}
+  - component: {fileID: 957381867}
+  m_Layer: 0
+  m_Name: ---FishTextManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &957381867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957381866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 444742876a1fd4802b49af72abf78cff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FishTextList:
+  - key: CloseDoor
+    content:
+    - Close the washer!
+    isPlaying: 0
+    playingIdx: 0
+  - key: Right
+    content:
+    - Right!
+    isPlaying: 0
+    playingIdx: 0
+  - key: Late
+    content:
+    - It's too late!
+    isPlaying: 0
+    playingIdx: 0
+  - key: ReturnBag
+    content:
+    - Return this bag!
+    isPlaying: 0
+    playingIdx: 0
+  - key: MultipleSentence
+    content:
+    - '1 Say something something something '
+    - '2 Say something something something '
+    - '3 Say something something something '
+    isPlaying: 0
+    playingIdx: 0
+--- !u!4 &957381868
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957381866}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -257.63422, y: 1076.5101, z: -973.8956}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &964778979
 GameObject:
   m_ObjectHideFlags: 0
@@ -11267,7 +11338,7 @@ GameObject:
   - component: {fileID: 1109823853}
   - component: {fileID: 1109823854}
   m_Layer: 0
-  m_Name: Notice
+  m_Name: FishBubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15538,7 +15609,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1522229830}
   - component: {fileID: 1522229833}
-  - component: {fileID: 1522229831}
   - component: {fileID: 1522229832}
   m_Layer: 0
   m_Name: ---TutorialManager
@@ -15561,80 +15631,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1522229831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1522229829}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ed641ddc6f1e45d5a0eacc2ce7224e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DialogueBubble: {fileID: 1431000927}
-  hintArrowInventory: {fileID: 0}
-  ChapterOne: {fileID: 1216268729}
-  closetSubway: {fileID: 0}
-  screenshot: {fileID: 0}
-  hintArrow: {fileID: 0}
-  finalComic: {fileID: 354719320}
-  anotherApp: {fileID: 0}
-  closet: {fileID: 0}
-  Inventory: {fileID: 0}
-  startButton: {fileID: 0}
-  hint: {fileID: 0}
-  screamImage: {fileID: 1334685512}
-  KararaDialogueBubble: {fileID: 0}
-  kararaTextRT: {fileID: 0}
-  GestureCG: {fileID: 2041206146}
-  FinalCameraController: {fileID: 0}
-  ClothUI: {fileID: 0}
-  chooseBag: 0
-  ScreenZero: {fileID: 0}
-  ScreenFour: {fileID: 0}
-  DialogueImageList: []
-  fishText: {fileID: 0}
-  arrow: {fileID: 0}
-  arrowButton: {fileID: 518576197}
-  KararaDialogueImageList: []
-  kararaText: {fileID: 0}
-  poster: {fileID: 0}
-  wearNothing: 1
-  KararaStanding: {fileID: 0}
-  KararaSitting: {fileID: 0}
-  KararaStandingImage: {fileID: 0}
-  ProfileImage: {fileID: 37270311}
-  KararaProfile: {fileID: 21300000, guid: 3e1f13652468e4b16a0c35cdd33864c4, type: 3}
-  FishProfile: {fileID: 21300000, guid: 4e66548ec03394403a1ee1f62ddcc15a, type: 3}
-  nameTag: {fileID: 21585882}
-  DialogueKarara: {fileID: 21300000, guid: 91d22fb4e5d3d487daf41c10c552652f, type: 3}
-  DialogueFish: {fileID: 21300000, guid: d1cf960c5c9a14abf89767ac830f46fc, type: 3}
-  DialogueBackground: {fileID: 1431000929}
-  pressScreenshot: 0
-  myFlash: {fileID: 964778981}
-  isFishTalking: 0
-  isPrewash: 0
-  tutorialNumber: 0
-  clothBag: {fileID: 7060612506242793232, guid: 2bb8f610f330c48c6a68244dffc3b0d9,
-    type: 3}
-  bagPos: {x: -7.5, y: -2.5, z: 0}
-  clothBagGroup: {fileID: 0}
-  bag: {fileID: 0}
-  door: {fileID: 0}
-  cloth: {fileID: 0}
-  SubwayMap: {fileID: 0}
-  gobackButton: {fileID: 0}
-  KararaButton: {fileID: 0}
-  KararaDisco: {fileID: 21300000, guid: c7fdea6b968ea4aa98bd5f1a346bc6d0, type: 3}
-  stopDisappear: 0
-  NameTagImage: {fileID: 1269546107}
-  tutorialDialogueState: 0
-  pause: 0
-  lastTextFinish: 0
-  hintArrowCG: {fileID: 0}
-  clicktime: 0
 --- !u!82 &1522229832
 AudioSource:
   m_ObjectHideFlags: 0
@@ -15771,6 +15767,7 @@ MonoBehaviour:
   Particle: {fileID: 2003605991}
   Shutter: {fileID: 1805502132}
   Notice: {fileID: 1630564389287005974}
+  FishTalkButton: {fileID: 1661224276}
   CameraBackground: {fileID: 2024295195}
   scream: {fileID: 1334685515}
   Inventory: {fileID: 1740492217}
@@ -16657,6 +16654,7 @@ MonoBehaviour:
   reachTarget: 0
   targetPage: 0
   myCameraState: 0
+  disableInputCG: {fileID: 0}
   currentPage: 0
 --- !u!82 &1595186209
 AudioSource:
@@ -18196,6 +18194,137 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1654594099}
+  m_CullTransparentMesh: 0
+--- !u!1 &1661224276
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1661224277}
+  - component: {fileID: 1661224280}
+  - component: {fileID: 1661224279}
+  - component: {fileID: 1661224278}
+  m_Layer: 5
+  m_Name: FishTalkButton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1661224277
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661224276}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2052396412}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.000015259, y: -2.4602}
+  m_SizeDelta: {x: 790, y: 1718.2595}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1661224278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661224276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1661224279}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1522229833}
+        m_TargetAssemblyTypeName: TutorialManagerNew, Assembly-CSharp
+        m_MethodName: ClickWhileFishTalking
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1661224279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661224276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: d7f409a287fc14824a84a822ef378d81, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1661224280
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661224276}
   m_CullTransparentMesh: 0
 --- !u!1 &1667985006
 GameObject:
@@ -21028,6 +21157,7 @@ RectTransform:
   - {fileID: 1231978607}
   - {fileID: 1484702136}
   - {fileID: 363418756}
+  - {fileID: 1661224277}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

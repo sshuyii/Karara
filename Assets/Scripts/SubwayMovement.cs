@@ -673,7 +673,7 @@ public class SubwayMovement : MonoBehaviour
             FinalCameraController.ChangeCameraSpeed(normalSpeed*3f);
             FinalCameraController.GotoPage(1);
 
-            FinalCameraController.fishTalkText.text = GenerateFishTalkForPause();
+            FinalCameraController.FishTalkAccessFromScript("bag"+bagNum.ToString());
         }
         else
         {

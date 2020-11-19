@@ -314,9 +314,10 @@ public class WasherController : MonoBehaviour
 
     public void clickMachineNewMethod()
     {
-//        if (clothNum == 0 && shut == 0) //if there's no cloth in the door, don't let it open
-//        {
-            if (myMachineState == AllMachines.MachineState.bagUnder)
+        Debug.Log("machine " + number.ToString() + " clickMachine()");
+        //        if (clothNum == 0 && shut == 0) //if there's no cloth in the door, don't let it open
+        //        {
+        if (myMachineState == AllMachines.MachineState.bagUnder)
             {
 
             }

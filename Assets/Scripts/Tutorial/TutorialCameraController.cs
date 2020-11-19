@@ -22,6 +22,9 @@ public class TutorialCameraController : MonoBehaviour
     public int targetPage;
     public CameraState myCameraState;
 
+    [SerializeField]
+    CanvasGroup disableInputCG;
+
     public int currentPage;
     // Start is called before the first frame update
     void Start()
@@ -81,5 +84,8 @@ public class TutorialCameraController : MonoBehaviour
         CameraMovement.swipping = value;
     }
 
-
+    public void DisableInput(bool temp)
+    {
+        disableInputCG.blocksRaycasts = temp;
+    }
 }
