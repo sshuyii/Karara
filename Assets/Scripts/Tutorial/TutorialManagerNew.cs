@@ -47,7 +47,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     [SerializeField]
     private GameObject Exclamation, Posture, Phone,Hint2D, HintUI, HintScreen,ScrollHint, clothBag,machineFull, machineEmpty, phoneAnimation, changePostureButton,
-        machineOccupied,ClothUI, KararaC,KararaB,KararaA,EmojiBubble,InventoryBackButton, Ins, Particle,Shutter,Notice,FishTalkButton;
+        machineOccupied,ClothUI, KararaC,KararaB,KararaA,EmojiBubble,InventoryBackButton, Ins, Shutter,Notice,FishTalkButton;
 
     [SerializeField]
     private CanvasGroup CameraBackground,scream, Inventory, Flashlight, FloatingUI,Comic;
@@ -63,6 +63,9 @@ public class TutorialManagerNew : MonoBehaviour
     [SerializeField]
     private SpriteRenderer body, everything,machineFront, emoji,KararaFace,MachineDoor;
 
+
+    [SerializeField]
+    private CanvasGroup followerNum, followerAnimation, mobile;
 
     [SerializeField]
     SpriteRenderer[] subwayCloth, inventoryCloth, adsCloth;
@@ -221,14 +224,17 @@ public class TutorialManagerNew : MonoBehaviour
 
                     break;
                 case 4:
+                    //鱼讲完话前进
                     BagOccur();
-                    //从包出现到看到手机之前
+                    //包出现在screen1
+                    //forward的时机：衣服进了洗衣机
                     break;
                 case 5:
-                    PhoneOccur();
+                    //衣服进了洗衣机
+                    // PhoneOccur();
                     break;
                 case 6:
-                    BackToWashing();
+                    BackToWashing();//时间开始前进
                     break;
                 case 7:
                     AfterWash();
@@ -267,16 +273,15 @@ public class TutorialManagerNew : MonoBehaviour
                     break;
 
                 case 16:
-                    //
-                    
-                    ReturnPrep();
+                    //ReturnPrep();
                     break;
 
                 case 17:
-                    StartCoroutine(AddFans());
+                    FishTalkLast();
                     break;
                 case 18:
-                    StartCoroutine(ShowComic());
+                    // StartCoroutine(ShowComic());
+                    StartCoroutine(AddFans());
                     break;
 
 
@@ -464,10 +469,12 @@ public class TutorialManagerNew : MonoBehaviour
     private void FishTalk(bool animateOrNot)
     {
         int idx = currentFT.playingIdx;
-        if (animateOrNot) StartCoroutine(AnimateText(fishText, currentFT.content[idx]));
+        if (animateOrNot) 
+        {
+            lastRoutine = StartCoroutine(AnimateText(fishText, currentFT.content[idx]));
+        }
         else
         {
-            
             //when last sentence
             if (currentFT.playingIdx > currentFT.content.Count - 2)
             {
@@ -496,8 +503,6 @@ public class TutorialManagerNew : MonoBehaviour
             FishTalkNextSentence();
         }
     }
-
-
 
      void ShowWholeSentence()
     {
@@ -543,7 +548,6 @@ public class TutorialManagerNew : MonoBehaviour
         if(bagClick == 1)
         {
             StartCoroutine(BeforeWash());
-
         }
 
         else if(bagClick == 2)
@@ -566,12 +570,7 @@ public class TutorialManagerNew : MonoBehaviour
             {
                 bagClick = 2;
             }
-
         }
-
-        
-
-
     }
     private IEnumerator ChangeFace()
     {
@@ -643,11 +642,10 @@ public class TutorialManagerNew : MonoBehaviour
 
                 StartCoroutine(StopTimerAndForward());
                 //进入找到手机的部分
-                //forwardOneStep = true;
+                forwardOneStep = true;
 
                 break;
             case MachineState.Finish:
-                
                 if (!machineOpen) OpenMachine();
                 else CloseMachine();
                 break;
@@ -666,8 +664,7 @@ public class TutorialManagerNew : MonoBehaviour
         yield return new WaitForSeconds(2.5f);
 
         timerStop = true;
-        forwardOneStep = true;
-
+        // forwardOneStep = true;
     }
 
     public void OpenMachine()
@@ -732,7 +729,7 @@ public class TutorialManagerNew : MonoBehaviour
         Debug.Log("PickChargingPhone");
         Phone.SetActive(false);
         //TutorialCameraController.GotoPage(2);
-        forwardOneStep = true;
+        forwardOneStep = true;//从4到5
     }
 
 
@@ -1013,7 +1010,7 @@ public class TutorialManagerNew : MonoBehaviour
     }
 
 
-    IEnumerator AddFans()
+    private void FishTalkLast()
     {
         Debug.Log("添加follower");
 
@@ -1027,27 +1024,38 @@ public class TutorialManagerNew : MonoBehaviour
         //screen1用kararaC
         KararaB.SetActive(true);
 
-        forwardLater = false;
+        forwardLater = true;
         FishTalk("MultipleSentence", true);
-        yield return new WaitForSeconds(1f);
-        
-        Particle.transform.localPosition = ParticlePos1;
-        Particle.transform.localScale = new Vector3(2, 2, 1);
+    }
 
-        foreach (Transform child in FloatingUI.transform)
-        {
-            child.gameObject.SetActive(true);
-        }
+    IEnumerator AddFans()
+    {
+        //todo: 需要等鱼说完话之后再显示
+        Handheld.Vibrate();
+
+        Show(followerNum);
+        Show(followerAnimation);
+
+        yield return new WaitForSeconds(2f);
+
+        Show(mobile);
+        
+        // Particle.transform.localPosition = ParticlePos1;
+        // Particle.transform.localScale = new Vector3(2, 2, 1);
+
+        // foreach (Transform child in FloatingUI.transform)
+        // {
+        //     child.gameObject.SetActive(true);
+        // }
         // KararaA.transform.localRotation = new Quaternion(0, 180, 0,0);
         // KararaA.transform.localPosition = KararaAInScreen1Pos;
         // KararaA.SetActive(true);
-        Exclamation.transform.localPosition = Exclamation.transform.localPosition;
-        Exclamation.SetActive(true);
-        Hint2D.SetActive(true);
-        ChangeHintPos(Exclamation.transform.position,0);
+        // Exclamation.transform.localPosition = Exclamation.transform.localPosition;
+        // Exclamation.SetActive(true);
+        // Hint2D.SetActive(true);
+        // ChangeHintPos(Exclamation.transform.position,0);
 
-        yield return new WaitForSeconds(1f);
-        Particle.SetActive(false);
+        // yield return new WaitForSeconds(1f);
     }
 
 
@@ -1058,15 +1066,20 @@ public class TutorialManagerNew : MonoBehaviour
     }
 
 
-    IEnumerator ShowComic()
-    {
+    // IEnumerator ShowComic()
+    // {
         
+    //     Show(Comic);
+
+    //     yield return new WaitForSeconds(2f);
+
+    //     SceneManager.LoadScene("StreetStyle", LoadSceneMode.Single);
+
+    // }
+
+    public void ShowComic()
+    {
         Show(Comic);
-
-        yield return new WaitForSeconds(2f);
-
-        SceneManager.LoadScene("StreetStyle", LoadSceneMode.Single);
-
     }
 
 
@@ -1133,8 +1146,6 @@ public class TutorialManagerNew : MonoBehaviour
 
             text.text = textContent.Substring(0, i);
             yield return new WaitForSeconds(.1f);
-
-     
         }
 
   
@@ -1147,5 +1158,9 @@ public class TutorialManagerNew : MonoBehaviour
         emoji.sprite = sprite;
     }
 
+    public void ProceedToChapterOne()
+    {
+        SceneManager.LoadScene("StreetStyle");
 
+    }
 }
