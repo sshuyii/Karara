@@ -1305,7 +1305,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 72290161}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.61, y: 4.71, z: 0}
+  m_LocalPosition: {x: 3.7, y: 1.6, z: 0}
   m_LocalScale: {x: 4, y: 4, z: 1}
   m_Children: []
   m_Father: {fileID: 2070080256}
@@ -1412,7 +1412,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 81093514}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 19.8, y: 0.3, z: 10}
+  m_LocalPosition: {x: 19.8, y: -0.87, z: 10}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children:
   - {fileID: 1129221759}
@@ -1604,7 +1604,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &84539402
 Transform:
   m_ObjectHideFlags: 0
@@ -1613,8 +1613,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 84539401}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.05, y: 7.33, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 3.65, y: 0.22, z: 0}
+  m_LocalScale: {x: 1, y: -1, z: 1}
   m_Children:
   - {fileID: 1198774076}
   m_Father: {fileID: 1315521658}
@@ -2262,7 +2262,7 @@ RectTransform:
   - {fileID: 354719319}
   - {fileID: 1216268728}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -6602,7 +6602,7 @@ Transform:
   - {fileID: 804579200}
   - {fileID: 886753683}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &667096647
 GameObject:
@@ -9470,7 +9470,7 @@ MonoBehaviour:
   FishTextList:
   - key: CloseDoor
     content:
-    - Close the washer!
+    - What are you doing! Close the door!
     isPlaying: 0
     playingIdx: 0
   - key: Right
@@ -9480,20 +9480,19 @@ MonoBehaviour:
     playingIdx: 0
   - key: Late
     content:
-    - It's too late!
-    - It's too late!
+    - Karara!!!! You are late! Where have you been!
+    - See the bag here! Do your job now! Pick it up and start washing!
     isPlaying: 0
     playingIdx: 0
   - key: ReturnBag
     content:
-    - Return this bag!
+    - What have you done with your customer's clothes! Return them!!
     isPlaying: 0
     playingIdx: 0
   - key: MultipleSentence
     content:
-    - '1 Say something something something '
-    - '2 Say something something something '
-    - '3 Say something something something '
+    - That's right Karara! Don't you ever dare touch customers' clothes!
+    - And get here everyday on time! Your job is to
     isPlaying: 0
     playingIdx: 0
 --- !u!4 &957381868
@@ -9508,7 +9507,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &964778979
 GameObject:
@@ -10769,6 +10768,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   particleEffect: {fileID: 0}
+  StoreRating: {fileID: 0}
 --- !u!1 &1087227635
 GameObject:
   m_ObjectHideFlags: 0
@@ -10824,7 +10824,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1087385104
 GameObject:
@@ -11132,7 +11132,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1109823852}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.63, y: 4, z: 0}
+  m_LocalPosition: {x: 1.19, y: 4.58, z: 0}
   m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_Children:
   - {fileID: 1613725188}
@@ -11179,7 +11179,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 21300000, guid: a49a2fb9aaaac4c13846ff76cf325e8a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9202c56f0c3144e8ea7aee2a84c61cdf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -11585,7 +11585,7 @@ Transform:
   m_GameObject: {fileID: 1198774075}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: -1, z: 1}
   m_Children: []
   m_Father: {fileID: 84539402}
   m_RootOrder: 0
@@ -13299,7 +13299,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -395.79095, y: -706.78}
+  m_AnchoredPosition: {x: -396.6, y: -706.95}
   m_SizeDelta: {x: 85.80763, y: 85.80763}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1279335113
@@ -13397,7 +13397,7 @@ Transform:
   - {fileID: 2075176296}
   - {fileID: 1390689239}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1289597027
 GameObject:
@@ -15555,8 +15555,8 @@ MonoBehaviour:
   Comic: {fileID: 363418759}
   HintPosPoster: {x: 19.3, y: 0.8, z: 0}
   HintPosCamera: {x: 19.8, y: -3, z: 0}
-  HintPosBag: {x: -387.2233, y: -707, z: 0}
-  MachinePos: {x: -387.22333, y: -704, z: 0}
+  HintPosBag: {x: -386.94, y: -706.97, z: 0}
+  MachinePos: {x: -386.94, y: -704.63, z: 0}
   ClothUIPos: {x: 6.7, y: 1.6, z: 0}
   HintPosKarara: {x: 5, y: -1, z: 0}
   HintPosBackButton: {x: -221, y: -615, z: 0}
@@ -16413,7 +16413,7 @@ RectTransform:
   - {fileID: 1205198115}
   - {fileID: 335968007}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -16638,8 +16638,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4289611215
-  m_fontColor: {r: 0.8117647, g: 0.27058825, b: 0.68235296, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -16700,7 +16700,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -1.6712362, y: 0, z: -0.81174237, w: 0}
   m_textInfo:
     textComponent: {fileID: 1613725189}
     characterCount: 6
@@ -17370,7 +17370,7 @@ Transform:
   - {fileID: 2064229304}
   - {fileID: 1766605552}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1644515765
 GameObject:
@@ -19723,7 +19723,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1896821341
 GameObject:
@@ -20944,7 +20944,7 @@ RectTransform:
   - {fileID: 363418756}
   - {fileID: 1661224277}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
