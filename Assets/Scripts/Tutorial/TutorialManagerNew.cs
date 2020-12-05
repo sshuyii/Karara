@@ -635,7 +635,7 @@ public class TutorialManagerNew : MonoBehaviour
     public void ClickMachine()
     {
         if (deactiveButtons) return;
-        if (!timerStop) return;//确保在没进行到洗衣机的时候洗衣机不能点
+        if (stepCounter < 4) return;//确保在没进行到洗衣机的时候洗衣机不能点
 
         switch (myMachineState)
         {
@@ -731,6 +731,9 @@ public class TutorialManagerNew : MonoBehaviour
 
     public void PickChargingPhone()
     {
+        if (!timerStop) return;
+        if (deactiveButtons) return;
+
         Debug.Log("PickChargingPhone");
         Phone.SetActive(false);
         //TutorialCameraController.GotoPage(2);

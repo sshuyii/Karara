@@ -287,8 +287,7 @@ public class TutorialTouchController : MonoBehaviour
                     TutorialManagerNew.ClickMachine();
                     break;
                 case "phone":
-                    if(TutorialManagerNew.stepCounter == 5)
-                    {TutorialManagerNew.PickChargingPhone();}
+                    TutorialManagerNew.PickChargingPhone();
                     break;
                 case "ClothSlot1":
                     TutorialManagerNew.ClickClothUI();
