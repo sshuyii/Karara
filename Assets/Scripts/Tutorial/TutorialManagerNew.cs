@@ -635,7 +635,7 @@ public class TutorialManagerNew : MonoBehaviour
     public void ClickMachine()
     {
         if (deactiveButtons) return;
-        if (stepCounter < 4) return;//确保在没进行到洗衣机的时候洗衣机不能点
+        if (!timerStop) return;//确保在没进行到洗衣机的时候洗衣机不能点
 
         switch (myMachineState)
         {
@@ -662,13 +662,11 @@ public class TutorialManagerNew : MonoBehaviour
 
     IEnumerator StopTimerAndForward()
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(2.5f);
 
         //提示手机动画
         //考虑一下出现手机动画的时机，目前是洗衣机转一会儿之后才出现
         phoneAnimation.SetActive(true);
-
-        yield return new WaitForSeconds(2.5f);
 
         timerStop = true;
         // forwardOneStep = true;
