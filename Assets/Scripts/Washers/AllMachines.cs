@@ -147,9 +147,17 @@ public class AllMachines : MonoBehaviour
         {
             // close door image
             // clothui active = false
-            if (!isClickMachine) wc.shut = 0;
-            wc.ClothUI.SetActive(false);
-            wc.DoorImage.sprite = closedDoor;
+            if(wc.shut == 1)
+            {
+                wc.shut = 0;
+                // Hide(ClothUI);
+                wc.MachineFold();
+                //ClothUiAnimator.SetBool("isUnfold",false);
+
+                //change door to closed sprite
+                wc.DoorImage.sprite = closedDoor;
+                wc.Occupied.SetActive(true);
+            }
         }
     }
 

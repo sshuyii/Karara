@@ -52,10 +52,18 @@ public class TutorialCameraController : MonoBehaviour
 
        
     }
+    public void ChangeCameraSpeed(float speed)
 
-     public void GotoPage(int pageNum)
     {
-        CameraMovement.currentPage = pageNum;
+        if (speed < 0) CameraMovement.smoothSpeed = CameraMovement.defaultSpeed;
+        CameraMovement.smoothSpeed = speed;
+    }
+
+
+    public void GotoPage(int pageNum)
+    {
+        //CameraMovement.currentPage = pageNum;
+        CameraMovement.Go2Page(pageNum);
     }
 
     public void JumpToPage(int pageNum)

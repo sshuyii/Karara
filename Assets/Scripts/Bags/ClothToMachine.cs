@@ -279,10 +279,7 @@ public class ClothToMachine : MonoBehaviour
  
     public void putClothIn()
     {
-        if(!FinalCameraController.isTutorial)
-        {
-            FinalCameraController.LevelManager.isInstruction = false;
-        }
+
         
         FinalCameraController.CancelAllUI(false);
 
