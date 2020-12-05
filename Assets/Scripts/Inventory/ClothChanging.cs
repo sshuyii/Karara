@@ -223,7 +223,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         bool bagFoundInCar = AllMachines.PutClothBackToMachine(this.tag, originSlotNum);
         
 
-        if(timer < 0)
+        if(timer < 0||bagFoundInCar ==false)
         {
             
             DropToLostAndFound();
