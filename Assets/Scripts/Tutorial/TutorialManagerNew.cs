@@ -114,12 +114,18 @@ public class TutorialManagerNew : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!timerStop) timer += Time.deltaTime;
-        if (myMachineState == MachineState.Washing)
+        if (!timerStop)
         {
-           
-            CalculateTime();
+            if (myMachineState == MachineState.Washing)
+            {
+
+                CalculateTime();
+            }
+
+            timer += Time.deltaTime;
+            
         }
+
 
 
 
@@ -304,6 +310,7 @@ public class TutorialManagerNew : MonoBehaviour
 
         if(realTimer<0)
         {
+            myMachineState = MachineState.Finish;
             forwardOneStep = true;
         }
 
@@ -740,7 +747,7 @@ public class TutorialManagerNew : MonoBehaviour
 
         KararaA.SetActive(false);
 
-        timer = 4;
+       
         timerStop = false;
     }
 
@@ -748,7 +755,7 @@ public class TutorialManagerNew : MonoBehaviour
     void AfterWash()
     {
         
-        myMachineState = MachineState.Finish;
+        //myMachineState = MachineState.Finish;
         machineFull.SetActive(false);
         machineEmpty.SetActive(true);
         machineOccupied.SetActive(true);
@@ -793,6 +800,8 @@ public class TutorialManagerNew : MonoBehaviour
         CloseMachine();
         HintUI.SetActive(false);
         yield return new WaitForSeconds(1f);
+
+        TutorialCameraController.ChangeCameraSpeed(5f);
         TutorialCameraController.GotoPage(1);
         Hide(scream);
 

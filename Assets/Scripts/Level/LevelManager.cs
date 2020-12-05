@@ -38,18 +38,25 @@ public class LevelManager : MonoBehaviour
     public bool isInstruction;
     private Vector2 stationV = new Vector2(-50, 80);
 
-    public GameObject Instructions;
+    public GameObject InstructionScroll, closeInstructionButton;
+    //[SerializeField]
+    //private Button closeInstructionButton;
     public bool skip;
     public GameObject fishBubble;
     public TextMeshPro fishText;
+
+    private SubwayMovement SubwayMovement;
+    private RatingSystem RatingSystem;
     // Start is called before the first frame update
     void Start()
     {
         Resources.UnloadUnusedAssets();
 
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
+        SubwayMovement = GameObject.Find("---StationController").GetComponent<SubwayMovement>();
+        RatingSystem = GameObject.Find("FloatingUI").GetComponent<RatingSystem>();
 
-//        instructionText = InstructionBubble.GetComponentInChildren<TextMeshProUGUI>();
+        //        instructionText = InstructionBubble.GetComponentInChildren<TextMeshProUGUI>();
         hintArrowCG = hintArrow.GetComponent<CanvasGroup>();
 
         PathFollower = car.GetComponent<PathFollower>();
@@ -58,37 +65,21 @@ public class LevelManager : MonoBehaviour
         int skipInstruction = PlayerPrefs.GetInt("skip",-1);
         if(skipInstruction == 1) skip = true;
 
-        if (skip)
-        {
-            GameObject.Find("Main Camera").transform.position = new Vector3(0, 0, -20);
-            clicktime = 7;
-            //Instructions.SetActive(false);
-            //Show(subwayCG);
-            Hide(instructionCG);
-            Hide(FinalCameraController.SubwayMap);
-            //bagIn.SetActive(false);
-            Hide(chapterOne);
+        GameObject.Find("Main Camera").transform.position = new Vector3(0, 0, -20);
 
+        if (!skip)
+        {
+            isInstruction = true;
+            ShowRatingSys(true);
+            closeInstructionButton.SetActive(true);
+            closeInstructionButton.GetComponent<Button>().interactable = false;
+
+            StartCoroutine(ShowInstruction());
         }
         else
         {
-            isInstruction = true;            
-        
-            
-            GameObject.Find("Main Camera").transform.position = new Vector3(0,14, 20);
-//            Show(startScreen);
-            Show(instructionCG);
-            Instructions.SetActive(true);
-            //bagIn.SetActive(false);
-            Show(chapterOne);
-            Show(arrowButton);
-            Show(FinalCameraController.SubwayMap);
-            Hide(GoBackSubway);
-            //Hide(subwayCG);
-            FinalCameraController.myCameraState = FinalCameraController.CameraState.Map;
-            StartCoroutine(StartChapterOne());//start map tutorial directly
-           
-
+            ShowRatingSys(false);
+            CloseInstruction();
         }
         
 
@@ -97,27 +88,45 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (clicktime == 6)//已经点开了station detail
-        {
-            Hide(instructionCG);
-            Show(GoBackSubway); 
-            Hide(hintArrowCG);
-            //PathFollower.isInstruction = true;
-        }
-        else if (clicktime == 7 && FinalCameraController.mySubwayState == FinalCameraController.SubwayState.One)//鱼开始说话
-        {
-            fishBubble.SetActive(true);
-            LocalizationManager.CurrentLanguage = "Chinese(Simplified)";
-            LocalizedString locString = "Fish/SeeBags";
-            string translation = locString;
-            StartCoroutine(AnimateFishText(fishText, translation, false, null, Vector2.zero));//clicktime = 6;
-            //Show(arrowButton);
-            //debug.Log("lets see when it is called3");
-            //PathFollower.isGame = true;
-            Hide(arrowButton);
-            //Hide(clear);
-        }
         
+        if(isInstruction&& InstructionScroll.active &&
+            InstructionScroll.GetComponent<ScrollRect>().verticalNormalizedPosition < 0.3f)
+        {
+            closeInstructionButton.GetComponent<Button>().interactable = true;
+        }
+    }
+
+
+
+    private void ShowRatingSys(bool withParticleEffect)
+    {
+        RatingSystem.ShowRatingSys(withParticleEffect);
+
+        
+    }
+
+
+    public void CloseInstruction()
+    {
+        closeInstructionButton.SetActive(false);
+        isInstruction = false;
+        FinalCameraController.InstructionDismiss();
+        StartCoroutine(AnimateFishText(fishText, "See the bags? Time for work!", false, null, Vector2.zero));
+
+        SubwayMovement.trainStop();
+        SubwayMovement.timerStay = SubwayMovement.stayTime - 9.9f;
+
+        FinalCameraController.enableScroll = true;
+    }
+
+
+    IEnumerator ShowInstruction()
+    {
+        FinalCameraController.enableScroll = false;
+
+        yield return new WaitForSeconds(2f);
+
+        FinalCameraController.InstructionShow();
     }
 
     private bool lastTextFinish;

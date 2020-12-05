@@ -360,8 +360,8 @@ public class InstagramController : MonoBehaviour
 
     public void CheckOnePicture()
     {
-        currentLargePhoto = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject as GameObject;
-        Sprite thisButtonImg = currentLargePhoto.GetComponent<Image>().sprite;
+        currentLargePhoto = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.transform.parent.gameObject as GameObject;
+        Sprite thisButtonImg = currentLargePhoto.GetComponentInChildren<Image>().sprite;
         savedPhotoLarge.GetComponent<Image>().sprite = thisButtonImg;
         FinalCameraController.AlbumToLargePicture();
 

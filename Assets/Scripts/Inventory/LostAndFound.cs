@@ -112,8 +112,12 @@ public class LostAndFound : MonoBehaviour
     {
         totalCount += dropNumThisStation;
         lostFoundNum.text = totalCount.ToString();
-        dropNumText.SetActive(true);
-        if(dropNumThisStation > 0)dropNumText.GetComponent<TextMeshPro>().text = "- "+dropNumThisStation.ToString();
+        
+        if (dropNumThisStation > 0)
+        {
+            dropNumText.SetActive(true);
+            dropNumText.GetComponent<TextMeshPro>().text = "- " + dropNumThisStation.ToString();
+        }
         clickLostFound();
 
         yield return new WaitForSeconds(1f);

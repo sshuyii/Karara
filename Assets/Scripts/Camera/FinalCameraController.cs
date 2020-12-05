@@ -182,6 +182,7 @@ public class FinalCameraController : MonoBehaviour
         //clothCG.SetActive(false);
         //messageCG.SetActive(false);
         Hide(Inventory);
+        Hide(fishShoutCG);
 
         ChapterOneEnd = false;
 
@@ -193,28 +194,11 @@ public class FinalCameraController : MonoBehaviour
     {
         //print("cancelallui");
 
+        //CloseAllUI();
+        Hide(fishShoutCG);
+        isShown = false;
+        if(!clickMachine) AllMachines.CloseAllMachines(clickMachine);
         
-
-
-        if (!isTutorial)
-        {
-            //touch anywhere on screen, close Karara UI
-            // Hide(clothCG);
-            //clothCG.SetActive(false);
-            //messageCG.SetActive(false);
-            Hide(fishShoutCG);
-            isShown = false;
-            //close fish talking
-            //            Hide(fishTalk);
-            if (alreadyNotice)
-            {
-                //generatedNotice.SetActive(false);
-
-            }
-
-            AllMachines.CloseAllMachines(clickMachine);
-
-        }
 
     }
 
@@ -253,21 +237,6 @@ public class FinalCameraController : MonoBehaviour
 
         ChapterEndChecker();
 
-
-        //hide shout
-        if (!isTutorial && LevelManager.isInstruction)
-        {
-            if (mySubwayState == SubwayState.One)
-            {
-
-                Hide(fishShoutCG);
-            }
-            else
-            {
-                //Debug.Log("show shout2");
-                Show(fishShoutCG);
-            }
-        }
 
 
 
@@ -436,19 +405,7 @@ public class FinalCameraController : MonoBehaviour
     {
 
         Debug.Log("click KARARA");
-        if (!isShown)
-        {
-
-
-            CancelAllUI(false);//进行完了isshown一定是false?
-
-            Debug.Log("show cloth CG");
-            isShown = true;
-        }
-        else
-        {
-            isShown = false;
-        }
+        
     }
 
     public void ChangeToCloth()
@@ -463,23 +420,16 @@ public class FinalCameraController : MonoBehaviour
         if (!isTutorial) CheckInstructionButton.SetActive(true);
 
 
-
-        if (alreadyClothUI == false)
+        lastCameraState = myCameraState;
+        transform.position = new Vector3(-25, 0, -10);
+        if (!InventoryInstructionShown)
         {
-            if (isSwipping == false)
-            {
-                lastCameraState = myCameraState;
-                transform.position = new Vector3(-25, 0, -10);
-            }
 
-            if (!InventoryInstructionShown)
-            {
+            StartCoroutine(WaitingInstruction());
 
-                StartCoroutine(WaitingInstruction());
-
-            }
         }
-        else
+
+        if (alreadyClothUI)
         {
             currentClothUI.SetActive(false);
             alreadyClothUI = false;
@@ -566,15 +516,7 @@ public class FinalCameraController : MonoBehaviour
 
 
 
-        if (LevelManager.isInstruction)//换到鱼界面
-        {
-            //print("Final camera controller clicktime = 7");
-            //myHSS.GoToScreen(3);
-            LevelManager.clicktime = 7;
-            LevelManager.isInstruction = false;
-            //Debug.Log("show shout1");
-            Show(fishShoutCG);
-        }
+
 
         Hide(TakePhoto);
         Posture.SetActive(false);
@@ -705,19 +647,16 @@ public class FinalCameraController : MonoBehaviour
     public void ChangeToMap()
     {
         //print("mappppppp");
-        if (!isTutorial) CheckInstructionButton.SetActive(true);
+        CheckInstructionButton.SetActive(true);
 
         if (alreadyClothUI == false)
         {
-            //Hide(subwayBackground);
-            if (isSwipping == false)
-            {
+            
                 lastCameraState = myCameraState;
                 myCameraState = CameraState.Map;
                 RatingSys.LeaveSubway();
                 phone.SetActive(false);
                 Show(SubwayMap);
-            }
         }
         else
         {
@@ -797,7 +736,10 @@ public class FinalCameraController : MonoBehaviour
     // hide inventory
     public void InstructionDismiss()
     {
+        if (LevelManager.isInstruction) return;
+
         instruction.GetComponentInChildren<ScrollRect>().verticalNormalizedPosition = 1f;
+        if (activeInstruction != null) activeInstruction.SetActive(false);
         instruction.SetActive(false);
     }
 
@@ -810,21 +752,21 @@ public class FinalCameraController : MonoBehaviour
             inventoryInstruction.SetActive(true);
             activeInstruction = inventoryInstruction;
         }
-
-        if (myCameraState == CameraState.Map)
-        {
-            mapInstruction.SetActive(true);
-            activeInstruction = mapInstruction;
-        }
-
-
-        if (myCameraState == CameraState.Ad)
+        else if (myCameraState == CameraState.Ad)
         {
             cameraInstruction.SetActive(true);
             activeInstruction = cameraInstruction;
             instruction.GetComponentInChildren<ScrollRect>().StopMovement();
             instruction.GetComponentInChildren<ScrollRect>().enabled = false;
         }
+        else
+        {
+            mapInstruction.SetActive(true);
+            activeInstruction = mapInstruction;
+        }
+
+
+        
 
 
         //Debug.Log("showInstruction");

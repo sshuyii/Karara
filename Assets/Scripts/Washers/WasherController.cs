@@ -290,17 +290,13 @@ public class WasherController : MonoBehaviour
         pressOK = true;
         FinalCameraController.machineOpen = false;
         FinalCameraController.DisableInput(false);
-        FinalCameraController.clickKarara();
+        //FinalCameraController.clickKarara();
 
-        if (FinalCameraController.isTutorial && FinalCameraController.TutorialManager.tutorialNumber == 9 || FinalCameraController.isTutorial && FinalCameraController.TutorialManager.tutorialNumber == 11)
-        {
-            FinalCameraController.TutorialManager.tutorialNumber = 10;
-        }
 
         if(clothNum == 0){
             Occupied.SetActive(false);
         }
-        // yield return new WaitForSeconds(0.1f);
+       
     }
     
     public void CancelPanel()
@@ -359,10 +355,10 @@ public class WasherController : MonoBehaviour
     public void clickMachine()
     {
 
-            FinalCameraController.CancelAllUI(true);
-            //print("presssssssed");
+        FinalCameraController.CancelAllUI(true);
+        //print("presssssssed");
 
-                if (shut == 0)
+        if (shut == 0)
                 {
                     //Debug.Log("machine " + number.ToString() + " open the door");
                     shut = 1;

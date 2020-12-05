@@ -12,7 +12,7 @@ public class RatingSystem : MonoBehaviour
     public GameObject[] stars;
 
     [SerializeField]
-    private GameObject particleEffect;
+    private GameObject particleEffect,StoreRating;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +24,12 @@ public class RatingSystem : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void ShowRatingSys(bool withParticleEffect)
+    {
+        StoreRating.SetActive(true);
+        if(withParticleEffect) StartCoroutine(ParticleEffect());
     }
 
     public void LeaveSubway() {

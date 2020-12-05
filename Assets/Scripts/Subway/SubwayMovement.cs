@@ -249,7 +249,7 @@ public class SubwayMovement : MonoBehaviour
         }
 
 
-        trainStop();
+        //trainStop();
     }
 
 
@@ -262,8 +262,8 @@ public class SubwayMovement : MonoBehaviour
     private Button clothBag2;
     private Button clothBag3;
 
-    public float timerStay;
-    public float timerS2S; //station to station move + stay
+    public float timerStay = 0f;
+    public float timerS2S = 0f; //station to station move + stay
     public float timerPause = 0f;
 
 
@@ -280,13 +280,13 @@ public class SubwayMovement : MonoBehaviour
            
         }
 
-        timerStay = 0;
+        //timerStay = 0;
     }
     // Update is called once per frame
     void Update()
     {
         // 转完两圈就terminate
-        if (isTerminated) return;
+        if (isTerminated||LevelManager.isInstruction) return;
 
         
 
@@ -311,9 +311,6 @@ public class SubwayMovement : MonoBehaviour
         //        //print("FinalCameraController.AllStationClothList.Count  =" + FinalCameraController.AllStationClothList.Count);
         //正式游戏
 
-        if (LevelManager.clicktime < 7) return;
-
-
 
         if (!pauseBeforeMove)
         {
@@ -335,21 +332,23 @@ public class SubwayMovement : MonoBehaviour
         else if (Banner.active)
         {
             int leftT = (int)(stayTime - timerStay);
+            Banner.GetComponent<TextMeshProUGUI>().text = leftT.ToString();
         }
 
 
         if (timerStay > stayTime)
         {
             timerStay = 0f;
-            if (!atInitailStation) StartCoroutine(trainPause());//test
-            else
-            {
-                Banner.SetActive(false);
-                atInitailStation = false;
-                trainMove();
-            }
+            StartCoroutine(trainPause());
+            //if (!atInitailStation) StartCoroutine(trainPause());//test
+            //else
+            //{
+            //    Banner.SetActive(false);
+            //    atInitailStation = false;
+            //    trainMove();
+            //}
 
-           
+
         }
 
 
@@ -646,6 +645,9 @@ public class SubwayMovement : MonoBehaviour
         yield return new WaitForSeconds(1f);
         BlackScreen.SetActive(false);
 
+        
+
+
         if(roundNum > 0)
         {
             //黑屏结束之后
@@ -680,7 +682,7 @@ public class SubwayMovement : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             AdsController.UpdatePosters();
 
-            yield return new WaitForSeconds(2f);
+            if(!atInitailStation) yield return new WaitForSeconds(2f);
             FinalCameraController.ChangeCameraSpeed(normalSpeed);
             FinalCameraController.GotoPage(1);
         }
@@ -720,7 +722,7 @@ public class SubwayMovement : MonoBehaviour
 
     public void trainMove()
     {
-        //atInitailStation = false;
+        atInitailStation = false;
         LocalizedString locString = "Fish/DoYourJob";
         string translation = locString;
         FinalCameraController.fishTalkText.text = translation;
