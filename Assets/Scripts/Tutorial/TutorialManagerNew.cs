@@ -46,26 +46,29 @@ public class TutorialManagerNew : MonoBehaviour
     TextMeshPro fishText;
 
     [SerializeField]
-    private GameObject Exclamation, Posture, Phone,Hint2D, HintUI, HintScreen,ScrollHint, clothBag,machineFull, machineEmpty, phoneAnimation, changePostureButton,
-        machineOccupied,ClothUI, KararaC,KararaB,KararaA,EmojiBubble,InventoryBackButton, Ins, Shutter,Notice,FishTalkButton;
+    private GameObject Exclamation, Posture, Phone,Hint2D, HintUI, HintScreen, ScrollHint, clothBag,machineFull, machineEmpty, phoneAnimation, changePostureButton,
+        machineOccupied, ClothUI, KararaC, KararaB, KararaA, EmojiBubble, InventoryBackButton, Ins, Shutter, Notice, FishTalkButton;
 
     [SerializeField]
-    private CanvasGroup CameraBackground,scream, Inventory, Flashlight, FloatingUI,Comic;
+    private CanvasGroup CameraBackground, scream, Inventory, Flashlight, FloatingUI,Comic;
 
     [SerializeField]
-    private Vector3 HintPosPoster, HintPosCamera, HintPosBag,MachinePos, ClothUIPos,HintPosKarara,HintPosBackButton,
-        HintPosShutter,HintPosInsBack, ParticlePos1, KararaAInScreen1Pos;
+    private Vector3 HintPosPoster, HintPosCamera, HintPosBag, MachinePos, ClothUIPos, HintPosKarara, HintPosBackButton,
+        HintPosShutter, HintPosInsBack, ParticlePos1, KararaAInScreen1Pos;
 
     [SerializeField]
-    private Sprite initialBody,pos0Body, pos1Body, pos0Under, pos1Under, pos0Work, pos1Work,openBag,fullImg,emptyImg,EmojiOpenDoor, unhappyFace,happyFace,
-        EmojiCloth, EmojiHappy, EmojiUnhappy, openDoor, closeDoor, transparet,cameraBGFull;
+    private Sprite initialBody, pos0Body, pos1Body, pos0Under, pos1Under, pos0Work, pos1Work, openBag, fullImg, emptyImg, EmojiOpenDoor, unhappyFace, happyFace,
+        EmojiCloth, EmojiHappy, EmojiUnhappy, openDoor, closeDoor, transparet, cameraBGFull, postPose1, postPose2;
 
     [SerializeField]
-    private SpriteRenderer body, everything,machineFront, emoji,KararaFace,MachineDoor;
+    private SpriteRenderer body, everything, machineFront, emoji, KararaFace, MachineDoor;
 
 
     [SerializeField]
     private CanvasGroup followerNum, followerAnimation, mobile;
+
+    [SerializeField]
+    private Image postKararaImage;
 
     [SerializeField]
     SpriteRenderer[] subwayCloth, inventoryCloth, adsCloth;
@@ -429,6 +432,7 @@ public class TutorialManagerNew : MonoBehaviour
                 body.sprite = pos0Work;
                 // everything.sprite = pos0Work;     
                 isInitialPosture = false;
+                postKararaImage.sprite = postPose1;
        
             }
             else if(clickTime == 2)
@@ -437,6 +441,7 @@ public class TutorialManagerNew : MonoBehaviour
                 // everything.sprite = pos1Work;
                 clickTime = 0;
                 isInitialPosture = true;
+                postKararaImage.sprite = postPose2;
 
             }
 
@@ -655,6 +660,13 @@ public class TutorialManagerNew : MonoBehaviour
             case MachineState.Finish:
                 if (!machineOpen) OpenMachine();
                 else CloseMachine();
+
+                //如果第二次打开了洗衣机门，鱼要阻止
+                if (stepCounter == 8)
+                {
+                    Show(scream);
+                    FishTalk("Open2ndTime", true);
+                }
                 break;
         }
     }
@@ -782,9 +794,13 @@ public class TutorialManagerNew : MonoBehaviour
 
         Hint2D.SetActive(false);
         HintUI.SetActive(false);
-
+        
         inLoop = false;
         forwardOneStep = true;
+
+        //fish continue talking
+        Show(scream);
+        FishTalk("NoTouchCloth", true);
     }
 
 
@@ -840,6 +856,7 @@ public class TutorialManagerNew : MonoBehaviour
         if (deactiveButtons) return;
         Hint2D.SetActive(false);
         forwardOneStep = true;
+        Hide(scream);
 
     }
 
@@ -891,6 +908,9 @@ public class TutorialManagerNew : MonoBehaviour
 
         HintScreen.SetActive(false);
 
+        //karara现在穿着工作服啦
+        GameObject.Find("PlayerEverythingSubway").GetComponent<SpriteRenderer>().enabled = true;
+        KararaC.SetActive(true);
         forwardOneStep = true;
     }
 
@@ -898,7 +918,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     private void ReadyForPhoto()
     {
-        KararaC.SetActive(false);
+        // KararaC.SetActive(false);
         // KararaA.SetActive(true);
 
         Hint2D.SetActive(true);
@@ -1032,7 +1052,7 @@ public class TutorialManagerNew : MonoBehaviour
         // KararaA.transform.localPosition = pos;
 
         //screen1用kararaC
-        KararaB.SetActive(true);
+        // KararaB.SetActive(true);
 
         forwardLater = true;
         FishTalk("MultipleSentence", true);

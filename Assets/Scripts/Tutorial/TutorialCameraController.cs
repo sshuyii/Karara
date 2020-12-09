@@ -5,6 +5,7 @@ using UnityEngine;
 public class TutorialCameraController : MonoBehaviour
 {
     CameraMovement CameraMovement;
+    // TutorialManagerNew TutorialManagerNew;
     public enum CameraState
     {
         Subway,
@@ -34,6 +35,9 @@ public class TutorialCameraController : MonoBehaviour
         CameraMovement.currentPage = 4;
 
         currentPage = CameraMovement.currentPage;
+
+        // TutorialManagerNew = GameObject.Find("---TutorialManager").GetComponent<TutorialManagerNew>();
+
     }
 
     // Update is called once per frame
@@ -85,6 +89,9 @@ public class TutorialCameraController : MonoBehaviour
         CameraMovement.previousPage = CameraMovement.currentPage;
         transform.position = new Vector3(-25, 0, -10);
         CameraMovement.atInventory = true;
+
+        //disable fish calling
+        // TutorialManagerNew.Hide(TutorialManagerNew.scream);
     }
 
     public void Swipping(bool value)
