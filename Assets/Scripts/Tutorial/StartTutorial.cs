@@ -231,14 +231,17 @@ public class StartTutorial : MonoBehaviour
     {
         clickButton.Play();
         int ongoingChapter = PlayerPrefs.GetInt("ongoingChapter",0);
-        if(ongoingChapter == 0){
+        print("tutorial start pre");
+        print("ongoingChapter = " + ongoingChapter);
+        if(ongoingChapter == 1){
             comicStart = true;
-        }
-        else if(ongoingChapter == 1){
-            // no tutoiral, start from chap 1;
-            SceneManager.LoadScene("StreetStyle", LoadSceneMode.Single);
+            print("comicStart = true");
         }
         else if(ongoingChapter == 2){
+            // no tutoiral, start fromo chap 1;
+            // SceneManager.LoadScene("StreetStyle", LoadSceneMode.Single);
+        }
+        else if(ongoingChapter == 3){
             // start from chapter 2, no tutorial 
         }
 

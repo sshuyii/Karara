@@ -323,8 +323,14 @@ public class TutorialManagerNew : MonoBehaviour
     IEnumerator ShowExclamation()
     {
         yield return new WaitForSeconds(1f);
+        KararaA.SetActive(true);
+
+        yield return new WaitForSeconds(1f);
 
         Exclamation.SetActive(true);
+
+        yield return new WaitForSeconds(1f);
+
         Hint2D.SetActive(true);
     }
 
