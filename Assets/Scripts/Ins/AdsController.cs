@@ -62,7 +62,11 @@ public class AdsController : MonoBehaviour
 
 
         //StreamWriter writer = new StreamWriter("./file2.txt");
-        StreamReader reader = new System.IO.StreamReader("./file2.txt");
+        //StreamReader reader = new System.IO.StreamReader("./file2.txt");
+
+        StringReader reader = null;
+        TextAsset file = (TextAsset)Resources.Load("AdAttributes", typeof(TextAsset));
+        reader = new StringReader(file.text);
 
 
         object[] loadedPics = Resources.LoadAll(AdsPath, typeof(Sprite));
@@ -71,7 +75,8 @@ public class AdsController : MonoBehaviour
             Sprite newPic = (Sprite)loadedPics[i];
             backgrounds.Add(newPic.name);
             string atbs = "a 1 1 1 1";
-            if(!reader.EndOfStream) atbs = reader.ReadLine();
+            atbs = reader.ReadLine();
+            if(atbs == null) atbs = "a 1 1 1 1";
             AdsDic.Add(newPic.name, new Ad(newPic.name, newPic,atbs));
 
         }

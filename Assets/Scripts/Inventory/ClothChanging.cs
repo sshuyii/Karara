@@ -183,7 +183,11 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     }
     public void showReturnConfirm()
     {
-        if(timer < 0)
+        currentSprite = GetComponent<Image>().sprite;
+        Cloth thisCloth = SpriteLoader.ClothDic[currentSprite.name];
+        bool bagFoundInCar = AllMachines.FoundBagInCar(thisCloth.owner);
+
+        if (timer < 0|| bagFoundInCar == false)
         {
             dropClothImage.GetComponent<Image>().sprite = InventorySlotMgt.dropToLandFImg;
         }
@@ -219,13 +223,16 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         //print("return cloth is working and double touched");
 
 
-        Debug.Log(this.tag);
-        bool bagFoundInCar = AllMachines.PutClothBackToMachine(this.tag, originSlotNum);
+
+        currentSprite = GetComponent<Image>().sprite;
+        Cloth thisCloth = SpriteLoader.ClothDic[currentSprite.name];
+        Debug.Log(thisCloth.owner);
+        bool bagFoundInCar = AllMachines.PutClothBackToMachine(thisCloth.owner, originSlotNum);
         
 
         if(timer < 0||bagFoundInCar ==false)
         {
-            
+            Debug.Log("put l f");
             DropToLostAndFound();
             //Debug.Log("put l f");
         }

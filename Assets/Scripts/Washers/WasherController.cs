@@ -310,6 +310,11 @@ public class WasherController : MonoBehaviour
 
     public void clickMachineNewMethod()
     {
+        if(FinalCameraController.myCameraState != FinalCameraController.CameraState.Subway)
+        {
+            return;
+        }
+
         Debug.Log("machine " + number.ToString() + " clickMachine()");
         //        if (clothNum == 0 && shut == 0) //if there's no cloth in the door, don't let it open
         //        {
@@ -551,6 +556,7 @@ public class WasherController : MonoBehaviour
         
        
     public void ResetMachine(){
+        Debug.Log("from " + transform.tag + " to untagge");
         currentCustomer = "";
         transform.tag ="Untagged";
         myMachineState = AllMachines.MachineState.empty;

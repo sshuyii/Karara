@@ -166,7 +166,7 @@ public class AllMachines : MonoBehaviour
     {
         foreach(WasherController wc in WasherControllerList)
         {
-            if(wc.tag == customerName)
+            if(wc.currentCustomer == customerName)
             {
                 wc.buttons[slotNum-1].GetComponent<SpriteRenderer>().enabled = true;
                 wc.buttons[slotNum - 1].GetComponent<BoxCollider2D>().enabled = true;
@@ -175,6 +175,19 @@ public class AllMachines : MonoBehaviour
             }
         }
         
+        return false;
+    }
+
+    public bool FoundBagInCar(string customerName)
+    {
+        foreach (WasherController wc in WasherControllerList)
+        {
+            if (wc.currentCustomer == customerName)
+            { 
+                return true;
+            }
+        }
+
         return false;
     }
 

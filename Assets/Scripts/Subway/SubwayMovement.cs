@@ -680,6 +680,7 @@ public class SubwayMovement : MonoBehaviour
         else
         {
             yield return new WaitForSeconds(0.5f);
+            if(currentStation > 0) StartCoroutine(LostAndFound.AnimationDropNUm());
             AdsController.UpdatePosters();
 
             if(!atInitailStation) yield return new WaitForSeconds(2f);

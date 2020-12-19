@@ -57,6 +57,8 @@ public class TouchController : MonoBehaviour
     private AdsController AdsController;
     private AudioManager AudioManager;
 
+    public GameObject DebugOutput;
+
     void Start()
     {
         myInputState = InputState.None;
@@ -84,11 +86,13 @@ public class TouchController : MonoBehaviour
 
 
         // @@@
-        if (FinalCameraController.myCameraState!=FinalCameraController.CameraState.Subway&&EventSystem.current.IsPointerOverGameObject())
+        //&& EventSystem.current.IsPointerOverGameObject()
+        if (FinalCameraController.myCameraState!=FinalCameraController.CameraState.Subway)
         {
             return;
         }
         if (EventSystem.current.currentSelectedGameObject != null) {
+            //DebugOutput.GetComponent<Text>().text = EventSystem.current.currentSelectedGameObject.name;
             //AudioManager.PlayAudio(AudioType.UI_Dialogue);
             return;
         }
@@ -291,9 +295,9 @@ public class TouchController : MonoBehaviour
                 AdsController.ClickBackground(hit.transform.GetComponent<SpriteRenderer>().sprite.name);
             }
 
-            
 
-            
+
+            //DebugOutput.GetComponent<Text>().text = hit.transform.gameObject.name;
             Debug.Log(hit.transform.gameObject.name);
             
         }
@@ -304,8 +308,8 @@ public class TouchController : MonoBehaviour
         HashSet<string> buttons = new HashSet<string>{"Music","Sound","Realtime","Lost&Found_basket"};
         if( hit.collider != null){
             string name = hit.transform.name;
-
-            if(buttons.Contains(name)){
+            //DebugOutput.GetComponent<Text>().text = name;
+            if (buttons.Contains(name)){
                 RaycastHitResult[0] = name;
             }
 

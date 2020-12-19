@@ -187,6 +187,7 @@ public class SpriteLoader : MonoBehaviour
                 {
                     
                     ClothDic[picName].spritesInScenes[i] = newPic;
+                    Debug.Log("测试！ " + picName + scenes[i]);
 
                 }
                 else
@@ -217,7 +218,11 @@ public class SpriteLoader : MonoBehaviour
     private void LoadClothes() {
         //StreamWriter writer = new StreamWriter("./file.txt");
 
-        StreamReader reader = new System.IO.StreamReader("./file.txt");
+        //StreamReader reader = new System.IO.StreamReader("./file.txt");
+        StringReader reader = null;
+        TextAsset file = (TextAsset)Resources.Load("clothAttributes", typeof(TextAsset));
+        reader = new StringReader(file.text);
+
 
 
         Cloth.ClothType thisType;
@@ -241,6 +246,7 @@ public class SpriteLoader : MonoBehaviour
                     {
                         
                         ClothDic[picName].spritesInScenes[i] = newPic;
+                        Debug.Log("测试！ " + picName + scenes[i]);
 
                     }
                     else
@@ -249,7 +255,8 @@ public class SpriteLoader : MonoBehaviour
                         string owner = CheckOwner(picName);
                         NPCDic[owner].myClothes.Add(picName);
                         string atbs = "a 1 1 1 1";
-                        if (!reader.EndOfStream) atbs = reader.ReadLine();
+                        atbs = reader.ReadLine();
+                        if (atbs == null) atbs = "a 1 1 1 1";
                         //Debug.Log(atbs);
                         ClothDic.Add(picName, new Cloth(picName, newPic, thisType, owner,atbs));
 

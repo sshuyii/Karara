@@ -410,6 +410,11 @@ public class FinalCameraController : MonoBehaviour
 
     public void ChangeToCloth()
     {
+        if(myCameraState != CameraState.Subway)
+        {
+            return;
+        }
+
         myCameraState = CameraState.Closet;
         CameraMovement.atInventory = true;
         phone.SetActive(false);

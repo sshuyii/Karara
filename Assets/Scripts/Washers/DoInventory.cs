@@ -48,57 +48,50 @@ public class DoInventory : MonoBehaviour
 
     public IEnumerator AddClothToInventory()
     {
+        WasherController = GetComponentInParent<WasherController>();
 
-        if (FinalCameraController.isSwipping == false)
-        {            
-            WasherController = GetComponentInParent<WasherController>();
+        if (InventorySlotMgt.occupiedNum < 6)
+        {
 
-            if (InventorySlotMgt.occupiedNum < 6)
+            //get the machine this cloth belongs to
+            //if all clothes in the machine are taken, close door
+            WasherController.clothNum--; //洗衣机里的衣服少一
+
+            //如果洗衣机里没衣服了，那么直接关上
+            if (WasherController.clothNum == 0)
             {
-     
-                //get the machine this cloth belongs to
-                //if all clothes in the machine are taken, close door
-                WasherController.clothNum--; //洗衣机里的衣服少一
-
-                //如果洗衣机里没衣服了，那么直接关上
-                if (WasherController.clothNum == 0)
-                {
-       
-                    WasherController.MachineFold();
-                    WasherController.DoorImage.sprite = WasherController.AllMachines.closedDoor;
-                }
-
-
-                
-
-                currentSprite = GetComponent<SpriteRenderer>().sprite;
-
-                InventorySlotMgt.AddClothToInventory(currentSprite.name,slotNum);
-
-
-
-                //for tutorial
-                if (FinalCameraController.isTutorial) //打开了洗衣机的门，真的拿了衣服
-                {
-                    //do somehting
-
-                }
-
-                GetComponent<SpriteRenderer>().enabled = false;
-                GetComponent<BoxCollider2D>().enabled = false;
-            }
-
-            else if (InventorySlotMgt.occupiedNum > 5 && !InventorySlotMgt.showingFullNotice)
-            {
-
-                InventorySlotMgt.ShowInventoryFullNotice();
+                WasherController.shut = 0;
                 WasherController.MachineFold();
                 WasherController.DoorImage.sprite = WasherController.AllMachines.closedDoor;
+            }
+
+
+            currentSprite = GetComponent<SpriteRenderer>().sprite;
+
+            InventorySlotMgt.AddClothToInventory(currentSprite.name, slotNum);
+
+
+
+            GetComponent<SpriteRenderer>().enabled = false;
+            GetComponent<BoxCollider2D>().enabled = false;
+        }
+
+        else if (InventorySlotMgt.occupiedNum > 5 && !InventorySlotMgt.showingFullNotice)
+        {
+
+            InventorySlotMgt.ShowInventoryFullNotice();
+            WasherController.shut = 0;
+            WasherController.MachineFold();
+            WasherController.DoorImage.sprite = WasherController.AllMachines.closedDoor;
+
+
+        }
+
+        yield return null;
+    }
+    
+           
             
 
-            }
-        }
-    yield return null;
-
-    }
+    
 }
