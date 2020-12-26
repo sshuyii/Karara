@@ -265,6 +265,10 @@ public class TouchController : MonoBehaviour
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     FinalCameraController.ChangeToCloth();
                     break;
+                case "PlayerHeadSubway":
+                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                    FinalCameraController.ChangeToCloth();
+                    break;
 
                 case "SettingButton":
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);

@@ -63,7 +63,7 @@ public class WasherController : MonoBehaviour
 
     public string currentCustomer;
     private AudioManager AudioManager;
-    
+    SubwayMovement SubwayMovement;
     // Start is called before the first frame update
     void Start()
     {
@@ -75,7 +75,7 @@ public class WasherController : MonoBehaviour
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
         SpriteLoader = GameObject.Find("---SpriteLoader").GetComponent<SpriteLoader>();
         AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
-
+        SubwayMovement = GameObject.Find("---StationController").GetComponent<SubwayMovement>();
 
         washingSound = AllMachines.gameObject.GetComponent<AudioSource>();
         
@@ -109,7 +109,7 @@ public class WasherController : MonoBehaviour
     {
 
         
-        realTimer = AllMachines.washTime - timer;
+        if(!SubwayMovement.pauseBeforeMove) realTimer = AllMachines.washTime - timer;
         if (Mathf.RoundToInt(timer / 60) < 10)
         {
             if (Mathf.RoundToInt(realTimer % 60) < 10)
@@ -212,7 +212,7 @@ public class WasherController : MonoBehaviour
 
                 myAnimator.SetBool("isWashing", false);
                 lightAnimator.SetBool("isWashing", false);
-                AudioManager.PauseAudio(AudioType.Machine_Washing);
+                //AudioManager.PauseAudio(AudioType.Machine_Washing);
                 //washingSound.Stop();
                 //@@@
                 // Show(Occupied);
@@ -245,12 +245,6 @@ public class WasherController : MonoBehaviour
         pressOK = false;
         FinalCameraController.machineOpen = true;
         //disable any input
-        FinalCameraController.DisableInput(true);
-        if (FinalCameraController.isTutorial && FinalCameraController.TutorialManager.tutorialNumber > 12)
-        {
-            return;
-        }
-
         //
         if (isFirstOpen) {
             //只有karara见到过的衣服才能进collection
@@ -261,20 +255,12 @@ public class WasherController : MonoBehaviour
 
         //@@@
         StartCoroutine(ShowClothUI());
-               
-        pressOK = true;
         FinalCameraController.machineOpen = false;
         FinalCameraController.DisableInput(false);
 
-        if(FinalCameraController.isTutorial && FinalCameraController.TutorialManager.tutorialNumber == 8 && FinalCameraController.TutorialManager.clicktime == 10)
-        {
+        DoorImage.sprite = AllMachines.openedDoor;
+        Occupied.SetActive(false);
 
-            FinalCameraController.TutorialManager.tutorialNumber = 9;
-        }
-        else if (FinalCameraController.isTutorial && FinalCameraController.TutorialManager.tutorialNumber == 10)
-        {
-            FinalCameraController.TutorialManager.tutorialNumber = 11;//如果karara还是把门打开了
-        }
 
     }
     
@@ -287,13 +273,14 @@ public class WasherController : MonoBehaviour
         StartCoroutine(HideClothUI());
       
         Occupied.SetActive(true);
-        pressOK = true;
+        
         FinalCameraController.machineOpen = false;
         FinalCameraController.DisableInput(false);
-        //FinalCameraController.clickKarara();
 
+        DoorImage.sprite = AllMachines.closedDoor;
+        Occupied.SetActive(true);
 
-        if(clothNum == 0){
+        if (clothNum == 0){
             Occupied.SetActive(false);
         }
        
@@ -364,46 +351,17 @@ public class WasherController : MonoBehaviour
         //print("presssssssed");
 
         if (shut == 0)
-                {
-                    //Debug.Log("machine " + number.ToString() + " open the door");
-                    shut = 1;
-                    MachineUnfold();
+        {
+            shut = 1;
+            MachineUnfold();
 
-                    //change door sprite to open
-                    DoorImage.sprite = AllMachines.openedDoor;
-                    //@@@
-                    // Hide(Occupied);
-                    Occupied.SetActive(false);
+        }
+        else if (shut == 1)
+        {
+            shut = 0;
+            MachineFold();
 
-                    //ClothUiAnimator.SetBool("isUnfold",true);
-
-//                    StartCoroutine("WaitFor2Seconds");
-
-                }
-                //if click machine again, close UI
-                else if (shut == 1)
-                {
-                    //Debug.Log("machine " + number.ToString() + " close the door");
-                    shut = 0;
-                    // Hide(ClothUI);
-                    MachineFold();
-                    //ClothUiAnimator.SetBool("isUnfold",false);
-
-                    //change door to closed sprite
-                    DoorImage.sprite = AllMachines.closedDoor;
-                    Occupied.SetActive(true);
-                    //@@@
-                    // Show(Occupied);
-                    //如果是通过点洗衣机关门的话，展示karara头上的两个对话框
-
-                    //show message and closet UI
-//                    if(!FinalCameraController.isTutorial)
-//                    {
-//                        Show(FinalCameraController.clothCG);
-//                        Show(FinalCameraController.messageCG);
-//                        FinalCameraController.isShown = true;
-//                    }
-                }
+        }
     }
 
     void Hide(CanvasGroup UIGroup) {
@@ -415,11 +373,7 @@ public class WasherController : MonoBehaviour
         if (UIGroup == ClothUI)
         {
             FinalCameraController.alreadyClothUI = false;
-        }
-//            foreach (Button btn in btns)
-//            {
-//                btn.enabled = false;
-//            }            
+        }           
     }
     
     void Show(CanvasGroup UIGroup) {
@@ -441,12 +395,14 @@ public class WasherController : MonoBehaviour
         ClothUI.GetComponent<Animator>().SetTrigger("AfterPop");
         FinalCameraController.alreadyClothUI = true;
         FinalCameraController.currentClothUI = ClothUI;
+        pressOK = true;
     }
     IEnumerator HideClothUI(){
         ClothUI.GetComponent<Animator>().SetTrigger("StartClose");
         yield return new WaitForSeconds(0.5f);
         ClothUI.SetActive(false);
         FinalCameraController.alreadyClothUI = false;
+        pressOK = true;
     }
 
     
@@ -481,28 +437,7 @@ public class WasherController : MonoBehaviour
             Sprite buttonImage = buttons[i].GetComponent<SpriteRenderer>().sprite;
             MachineClothList.Add(buttonImage);
 
-
-            //int randomIndex = UnityEngine.Random.Range(0, AllMachines.nameToTemp[tagName].Count);
-
-            //                  Button ClothInMachine =
-            //                  Instantiate(alexClothesTemp[randomIndex], buttonPositions[i], Quaternion.identity) as Button;
-            // buttons[i].GetComponent<Button>().enabled = true;
-            // @@@
-            //buttons[i].GetComponent<SpriteRenderer>().enabled = true;
-            //buttons[i].GetComponent<BoxCollider2D>().enabled = true;
-            //buttons[i].tag = tagName;
-            //buttons[i].GetComponent<SpriteRenderer>().sprite = AllMachines.nameToTemp[tagName][randomIndex];
-            //Sprite buttonImage = buttons[i].GetComponent<SpriteRenderer>().sprite;
-
-
-            //AllMachines.nameToTemp[tagName].Remove(AllMachines.nameToTemp[tagName][randomIndex]);
-            //as child of the folder
-            //doesn't work for some reason I don't understand
-            //ClothInMachine.transform.SetParent(MachineGroup.transform, false);
-            //ClothInMachine.transform.SetParent(MachineGroup.transform, false);
-
-            //record into List
-            //MachineClothList.Add(buttonImage);
+          
         }
     }
     
@@ -528,15 +463,7 @@ public class WasherController : MonoBehaviour
                 Sprite buttonImage = buttons[0].GetComponent<SpriteRenderer>().sprite;
 
                 MachineClothList.Add(buttonImage);
-                
-                //cloth 2
-                //buttons[1].GetComponent<Button>().enabled = true;
-                //buttons[1].tag = "Tutorial";
-                //Image buttonImage1 = buttons[1].GetComponent<Image>();
-                //buttonImage1.enabled = true;
-                //buttonImage1.sprite = AllMachines.TutorialCloth2;
-                
-                //MachineClothList.Add(buttonImage1.sprite);
+
             }
             else if (AllMachines.CustomerNameList[number].Contains(tagName))
             {

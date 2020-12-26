@@ -142,7 +142,7 @@ public class AllMachines : MonoBehaviour
         WasherControllerList[idx].AddClothSprite(clothes);
     }
 
-    public void CloseAllMachines(bool isClickMachine) {
+    public void CloseAllMachines() {
         foreach (WasherController wc in WasherControllerList)
         {
             // close door image

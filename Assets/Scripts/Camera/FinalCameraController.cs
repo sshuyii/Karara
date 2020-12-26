@@ -192,26 +192,8 @@ public class FinalCameraController : MonoBehaviour
 
     public void CancelAllUI(bool clickMachine)
     {
-        //print("cancelallui");
-
-        //CloseAllUI();
-        Hide(fishShoutCG);
-        isShown = false;
-        if(!clickMachine) AllMachines.CloseAllMachines(clickMachine);
-        
-
-    }
-
-
-    public void CloseAllUI()
-    {
-
-        //    //
-        //public CanvasGroup disableInputCG, ChapterOneEndComic, Mask, TakePhoto, fishShoutCG,
-        //    ChapterOneFailCG, Inventory, SubwayMap, inventory, appBackground, albumBackground, albumCG, albumDetailCG, frontPage, SavingPage;
-
         inventorySlotMgt.CloseAllUI();
-        AllMachines.CloseAllMachines(machineOpen);
+        if (!clickMachine) AllMachines.CloseAllMachines();
         BagsController.ClickReturnNo();
         InstructionDismiss();
 
@@ -226,9 +208,11 @@ public class FinalCameraController : MonoBehaviour
         Hide(albumDetailCG);
         Hide(frontPage);
         Hide(SavingPage);
+
+
+        isShown = false;
+        
     }
-
-
 
 
     // Update is called once per frame
@@ -252,6 +236,7 @@ public class FinalCameraController : MonoBehaviour
 
         if (isSwipping && !machineOpen)
         {
+            Debug.Log("????");
             CancelAllUI(false);
         }
 
@@ -415,6 +400,9 @@ public class FinalCameraController : MonoBehaviour
             return;
         }
 
+        CancelAllUI(false);
+
+
         myCameraState = CameraState.Closet;
         CameraMovement.atInventory = true;
         phone.SetActive(false);
@@ -433,13 +421,6 @@ public class FinalCameraController : MonoBehaviour
             StartCoroutine(WaitingInstruction());
 
         }
-
-        if (alreadyClothUI)
-        {
-            currentClothUI.SetActive(false);
-            alreadyClothUI = false;
-        }
-
 
     }
 
@@ -529,6 +510,7 @@ public class FinalCameraController : MonoBehaviour
         if (myCameraState == CameraState.Closet || myCameraState == CameraState.Map ||
             myCameraState == CameraState.App || myCameraState == CameraState.Ad)
         {
+
             if (lastCameraState != CameraState.Closet && lastCameraState != CameraState.Map &&
                 lastCameraState != CameraState.App && myCameraState != CameraState.Ad)
             {
@@ -541,6 +523,8 @@ public class FinalCameraController : MonoBehaviour
                 myCameraState = CameraState.Subway;
                 RatingSys.GoBackToSubway();
             }
+
+            
         }
 
 
@@ -560,7 +544,12 @@ public class FinalCameraController : MonoBehaviour
 
     public void ChangeToApp()
     {
+        if (myCameraState != CameraState.Subway && myCameraState != CameraState.App)
+        {
+            return;
+        }
 
+        CancelAllUI(false);
 
         phone.SetActive(false);
         Hide(fishShoutCG);
@@ -572,34 +561,16 @@ public class FinalCameraController : MonoBehaviour
 
         InstagramController.redDot.SetActive(false);
 
-
         Hide(SavingPage);
         Hide(TakePhoto);
 
-        Debug.Log("change to app");
+        lastCameraState = myCameraState;
+        myCameraState = CameraState.App;
+        RatingSys.LeaveSubway();
+        myAppState = AppState.Mainpage;
+        Show(frontPage);
 
-        if (alreadyClothUI == false)
-        {
-
-            if (isSwipping == false)
-            {
-                //transform.position = new Vector3(0, 0, -10);
-                lastCameraState = myCameraState;
-                myCameraState = CameraState.App;
-                RatingSys.LeaveSubway();
-                myAppState = AppState.Mainpage;
-                Show(frontPage);
-            }
-        }
-        else
-        {
-            //print("alreadyClothUi = true");
-
-            //generatedNotice.SetActive(false);
-            // Hide(currentClothUI);
-            currentClothUI.SetActive(false);
-            alreadyClothUI = false;
-        }
+        
     }
 
 
@@ -645,31 +616,26 @@ public class FinalCameraController : MonoBehaviour
         myCameraState = CameraState.App;
         myAppState = AppState.SavingPage;
         Show(SavingPage);
-
-
     }
 
     public void ChangeToMap()
     {
-        //print("mappppppp");
+        if (myCameraState != CameraState.Subway)
+        {
+            return;
+        }
+
+        CancelAllUI(false);
+
         CheckInstructionButton.SetActive(true);
 
-        if (alreadyClothUI == false)
-        {
-            
-                lastCameraState = myCameraState;
-                myCameraState = CameraState.Map;
-                RatingSys.LeaveSubway();
-                phone.SetActive(false);
-                Show(SubwayMap);
-        }
-        else
-        {
-            //generatedNotice.SetActive(false);
-            // Hide(currentClothUI);
-            currentClothUI.SetActive(false);
-            alreadyClothUI = false;
-        }
+
+        lastCameraState = myCameraState;
+        myCameraState = CameraState.Map;
+        RatingSys.LeaveSubway();
+        phone.SetActive(false);
+        Show(SubwayMap);
+
 
     }
 
@@ -690,9 +656,13 @@ public class FinalCameraController : MonoBehaviour
         UIGroup.interactable = true;
     }
 
-    public void GoAdvertisement()
+    public void ChangeToAdvertisement()
     {
         //Hide(subwayBackground);
+        if (myCameraState != CameraState.Subway)
+        {
+            return;
+        }
         myCameraState = CameraState.Ad;
         if (!AdInstructionShown)
         {

@@ -117,7 +117,7 @@ public class AdsController : MonoBehaviour
         ChangeClothEnterAds();
         //=========
 
-        FinalCameraController.GoAdvertisement();
+        FinalCameraController.ChangeToAdvertisement();
 
     }
 

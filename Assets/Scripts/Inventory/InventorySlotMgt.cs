@@ -95,6 +95,7 @@ public class InventorySlotMgt : MonoBehaviour
 
     public void AddClothToInventory(string clothName, int subwaySlotNum)
     {
+        occupiedNum++;
         int slot = GetFirstEmptySlot();
 
         if (slot < 0)
@@ -121,6 +122,7 @@ public class InventorySlotMgt : MonoBehaviour
 
     public void ShowInventoryFullNotice()
     {
+        Debug.Log("full ");
         showingFullNotice = true;
         InventoryFull.SetActive(true);
     }

@@ -40,7 +40,7 @@ public class DoInventory : MonoBehaviour
 // @@@
         if(TouchController.myInputState == TouchController.InputState.Tap){
             if(TouchController.RaycastHitResult[0] == "doIvt" && Int32.Parse(TouchController.RaycastHitResult[1]) == slotNum){
-                //Debug.Log("get hit slot #" + slotNum.ToString());
+                Debug.Log("get hit slot #" + slotNum.ToString());
                 StartCoroutine(AddClothToInventory());     
             }
         }
@@ -62,7 +62,6 @@ public class DoInventory : MonoBehaviour
             {
                 WasherController.shut = 0;
                 WasherController.MachineFold();
-                WasherController.DoorImage.sprite = WasherController.AllMachines.closedDoor;
             }
 
 
@@ -70,7 +69,7 @@ public class DoInventory : MonoBehaviour
 
             InventorySlotMgt.AddClothToInventory(currentSprite.name, slotNum);
 
-
+            Debug.Log("NOT FULL");
 
             GetComponent<SpriteRenderer>().enabled = false;
             GetComponent<BoxCollider2D>().enabled = false;
@@ -78,13 +77,10 @@ public class DoInventory : MonoBehaviour
 
         else if (InventorySlotMgt.occupiedNum > 5 && !InventorySlotMgt.showingFullNotice)
         {
-
+            
             InventorySlotMgt.ShowInventoryFullNotice();
             WasherController.shut = 0;
             WasherController.MachineFold();
-            WasherController.DoorImage.sprite = WasherController.AllMachines.closedDoor;
-
-
         }
 
         yield return null;

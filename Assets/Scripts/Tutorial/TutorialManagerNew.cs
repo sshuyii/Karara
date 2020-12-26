@@ -88,12 +88,12 @@ public class TutorialManagerNew : MonoBehaviour
     MachineState myMachineState;
     FishText currentFT;
     Coroutine lastRoutine = null;
-
+    AudioManager AudioManager;
 
     void Start()
     {
         TutorialCameraController = GameObject.Find("Main Camera").GetComponent<TutorialCameraController>();
-
+        AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
         //step1
         stepCounter = 0;
         bagClick = 0;
@@ -313,6 +313,7 @@ public class TutorialManagerNew : MonoBehaviour
 
         if(realTimer<0)
         {
+            AudioManager.PlayAudio(AudioType.Machine_Finished);
             myMachineState = MachineState.Finish;
             forwardOneStep = true;
         }
@@ -404,6 +405,8 @@ public class TutorialManagerNew : MonoBehaviour
     {
         if (deactiveButtons) return;
 
+
+        AudioManager.PlayAudio(AudioType.Photo_Pose);
         Debug.Log("ClickChangePosture");
 
         if (AdClick1stTime)
@@ -559,21 +562,26 @@ public class TutorialManagerNew : MonoBehaviour
     public void ClickBag()
     {
         if (deactiveButtons) return;
-
+        
         bagClick++;
         Debug.Log("Bag click " + bagClick.ToString());
 
         if(bagClick == 1)
         {
+            AudioManager.AdjustPitch(AudioType.Bag_Phase1, 0.5f);
+            AudioManager.PlayAudio(AudioType.Bag_Phase1);
             StartCoroutine(BeforeWash());
         }
 
         else if(bagClick == 2)
         {
+            AudioManager.AdjustPitch(AudioType.Bag_Phase1, 0.6f);
+            AudioManager.PlayAudio(AudioType.Bag_Phase1);
             ThrowClothToMachine();
         }
         else
         {
+            AudioManager.PlayAudio(AudioType.Bag_Phase1);
             if (inLoop)
             {
                 bagClick = 2;
@@ -637,6 +645,8 @@ public class TutorialManagerNew : MonoBehaviour
    private void ThrowClothToMachine()
     {
         Debug.Log("ThrowClothToMachine");
+
+        
         clothBag.GetComponent<Image>().sprite = openBag;
         machineFront.sprite = fullImg;
         HintUI.transform.localPosition = MachinePos;
@@ -651,6 +661,8 @@ public class TutorialManagerNew : MonoBehaviour
         switch (myMachineState)
         {
             case MachineState.Empty:
+                AudioManager.PlayAudio(AudioType.Machine_OnOff);
+                AudioManager.PlayAudio(AudioType.Machine_Washing);
                 Debug.Log("start washing");
                 machineFull.SetActive(true);
                 machineEmpty.SetActive(false);
@@ -693,6 +705,7 @@ public class TutorialManagerNew : MonoBehaviour
     public void OpenMachine()
     {
         machineOpen = !machineOpen;
+        AudioManager.PlayAudio(AudioType.Machine_OpenDoor);
 
         if (isFirstOpen)
         {
@@ -727,6 +740,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     public void CloseMachine()
     {
+        AudioManager.PlayAudio(AudioType.Machine_OpenDoor);
         if (inLoop)
         {
             if (Hint2D.active) Hint2D.SetActive(false);
@@ -946,6 +960,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     public void ClickShutter()
     {
+        AudioManager.PlayAudio(AudioType.Photo_Shutter);
         HintScreen.SetActive(false);
         Hide(CameraBackground);
 

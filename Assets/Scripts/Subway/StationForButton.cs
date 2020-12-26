@@ -102,6 +102,9 @@ public class StationForButton : MonoBehaviour
 
     public bool confirmed = false;
 
+
+    public bool displayingBag, displayingProfile, exiting;
+
     
 
     void Start()
@@ -143,7 +146,9 @@ public class StationForButton : MonoBehaviour
             ProfileUsageState.Add("");
         }
 
-
+        displayingBag = false;
+        displayingProfile = false;
+        exiting = false;
 
     }
 
@@ -161,6 +166,7 @@ public class StationForButton : MonoBehaviour
         stationNum = 0;
         tabNum = 0;
         PressStationForButton();
+
 
     }
 
@@ -256,7 +262,7 @@ public class StationForButton : MonoBehaviour
         // if no bag created in the sation, do not show anything.
        
             
-        if (isDetailed && stationNum == currDetailedStation)
+        if ((isDetailed && stationNum == currDetailedStation) || exiting)
         {
                 
            collection.SetActive(false);
@@ -282,6 +288,7 @@ public class StationForButton : MonoBehaviour
             {
                 string currentBagOwner = BagsController.stationBagOwners[currDetailedStation][tabNum+i];
                 tabs[i].transform.GetComponentInChildren<Image>().sprite = bagLogoInCollection[currentBagOwner];
+                tabsBG[i].GetComponent<Image>().sprite = normalTab;
             }
             tabsBG[tabNum].GetComponent<Image>().sprite = PressedTab;
             DisplayCollectionContent(tabNum);
@@ -300,7 +307,7 @@ public class StationForButton : MonoBehaviour
 
     public void DisplayCollectionContent(int tabIdx)
     {
-        
+        displayingBag = true;
         int usedTabNum = SubwayMovement.bagCounts[currDetailedStation];
         for (int i = 0; i < usedTabNum; i++)
         {
@@ -361,7 +368,9 @@ public class StationForButton : MonoBehaviour
 
     private void ExpandProfile(string name)
     {
-       //todo: tab变色
+        //todo: tab变色
+        displayingProfile = true;
+        displayingBag = false;
         ClearCollectionContent();
         InstagramController.displayProfileContent(name);
 
@@ -372,7 +381,7 @@ public class StationForButton : MonoBehaviour
 
     private void HideProfile()
     {
-
+        displayingProfile = false;
         InstagramController.clearProfileContent();
         DisplayCollectionContent(stationNum);
     }
@@ -442,7 +451,7 @@ public class StationForButton : MonoBehaviour
     private void HideProfileWhenCloseStationDetail()
     {
         
-        if (SubwayMovement.isDetailed == false)
+        if (isDetailed == false)
         {
             ShowingProfile = false;
             InstagramController.clearProfileContent();
@@ -552,7 +561,13 @@ public class StationForButton : MonoBehaviour
 
 
     
-
+    public void ExitMap()
+    {
+        exiting = true;
+        StationDetails();
+        HideProfileWhenCloseStationDetail();
+        exiting = false;
+    }
 
     //public void ProfileDetail_old()
     //{

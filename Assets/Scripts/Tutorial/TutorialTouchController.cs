@@ -57,7 +57,7 @@ public class TutorialTouchController : MonoBehaviour
 
     private LostAndFound LostAndFound;
     //private AdsController AdsController;
-
+    private AudioManager AudioManager;
     void Start()
     {
         myInputState = InputState.None;
@@ -65,7 +65,7 @@ public class TutorialTouchController : MonoBehaviour
         TutorialCameraController = GameObject.Find("Main Camera").GetComponent<TutorialCameraController>();
         cameraMovement = GameObject.Find("Main Camera").GetComponent<CameraMovement>();
         TutorialManagerNew = GameObject.Find("---TutorialManager").GetComponent<TutorialManagerNew>();
-
+        AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
         // washerController = GameObject.Find("").GetComponent<WasherController>();
     }
 
@@ -280,22 +280,32 @@ public class TutorialTouchController : MonoBehaviour
             {
                 case "front":
                     Debug.Log("hit front");
+                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickMachine();
                     break;
                 case "full":
                     Debug.Log("hit front");
+                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickMachine();
                     break;
                 case "phone":
+                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.PickChargingPhone();
                     break;
                 case "ClothSlot1":
+                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickClothUI();
                     break;
                 case "PlayerBodySubway":
+                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                    TutorialManagerNew.ClickKarara();
+                    break;
+                case "PlayerHeadSubway":
+                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickKarara();
                     break;
                 case "!":
+                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickExclamation();
                     break;
 

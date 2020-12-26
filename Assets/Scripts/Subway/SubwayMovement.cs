@@ -625,7 +625,7 @@ public class SubwayMovement : MonoBehaviour
     public IEnumerator trainPause()
     {
         float normalSpeed = 0.3f
-;        FinalCameraController.CloseAllUI();
+;       FinalCameraController.CancelAllUI(false);
         FinalCameraController.enableScroll = false;
         Banner.SetActive(false);
         pauseBeforeMove = true;
