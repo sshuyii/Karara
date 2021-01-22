@@ -64,7 +64,18 @@ public class WasherController : MonoBehaviour
     public string currentCustomer;
     private AudioManager AudioManager;
     SubwayMovement SubwayMovement;
+
+    [SerializeField]
+    Image progressBar;
+
+    [SerializeField]
+    SpriteRenderer Light;
+
+    [SerializeField]
+    Sprite statusEmpty, statusFinished, statusWashing;
     // Start is called before the first frame update
+
+
     void Start()
     {
         clothNum = buttons.Length;
@@ -85,6 +96,8 @@ public class WasherController : MonoBehaviour
         emptyImage  = empty.GetComponent<SpriteRenderer>();
         fullImage  = full.GetComponent<SpriteRenderer>();
         DoorImage  = front.GetComponent<SpriteRenderer>();
+
+        Light.sprite = statusEmpty;
         
     }
 
@@ -95,11 +108,7 @@ public class WasherController : MonoBehaviour
         if(myMachineState == AllMachines.MachineState.full)
         {
             myMachineState = AllMachines.MachineState.washing;
-            //for tutorial
-            if (FinalCameraController.isTutorial)
-            {
-                FinalCameraController.TutorialManager.tutorialNumber = 6;
-            }
+            Light.sprite = statusWashing;
         }
     }
     
@@ -110,32 +119,35 @@ public class WasherController : MonoBehaviour
 
         
         if(!SubwayMovement.pauseBeforeMove) realTimer = AllMachines.washTime - timer;
-        if (Mathf.RoundToInt(timer / 60) < 10)
-        {
-            if (Mathf.RoundToInt(realTimer % 60) < 10)
-            {
-                timerNum.text = "0" + Mathf.RoundToInt(realTimer / 60).ToString() + ":" + "0" +
-                                Mathf.RoundToInt(realTimer % 60).ToString();
-            }
-            else
-            {
-                timerNum.text = "0" + Mathf.RoundToInt(realTimer / 60).ToString() + ":" +
-                                Mathf.RoundToInt(realTimer % 60).ToString();
-            }
-        }
-        else
-        {
-            if (Mathf.RoundToInt(realTimer % 60) < 10)
-            {
-                timerNum.text = Mathf.RoundToInt(realTimer / 60).ToString() + ":" + "0" +
-                                Mathf.RoundToInt(realTimer % 60).ToString();
-            }
-            else
-            {
-                timerNum.text = Mathf.RoundToInt(realTimer / 60).ToString() + ":" +
-                                Mathf.RoundToInt(realTimer % 60).ToString();
-            }
-        }
+
+        UpdateProgressBar();
+        
+        //if (Mathf.RoundToInt(timer / 60) < 10)
+        //{
+        //    if (Mathf.RoundToInt(realTimer % 60) < 10)
+        //    {
+        //        timerNum.text = "0" + Mathf.RoundToInt(realTimer / 60).ToString() + ":" + "0" +
+        //                        Mathf.RoundToInt(realTimer % 60).ToString();
+        //    }
+        //    else
+        //    {
+        //        timerNum.text = "0" + Mathf.RoundToInt(realTimer / 60).ToString() + ":" +
+        //                        Mathf.RoundToInt(realTimer % 60).ToString();
+        //    }
+        //}
+        //else
+        //{
+        //    if (Mathf.RoundToInt(realTimer % 60) < 10)
+        //    {
+        //        timerNum.text = Mathf.RoundToInt(realTimer / 60).ToString() + ":" + "0" +
+        //                        Mathf.RoundToInt(realTimer % 60).ToString();
+        //    }
+        //    else
+        //    {
+        //        timerNum.text = Mathf.RoundToInt(realTimer / 60).ToString() + ":" +
+        //                        Mathf.RoundToInt(realTimer % 60).ToString();
+        //    }
+        //}
        
                 
         //close all ui if swipping the screen
@@ -191,8 +203,8 @@ public class WasherController : MonoBehaviour
         else if (myMachineState == AllMachines.MachineState.washing)
         {
             myAnimator.SetBool("isWashing", true);
-            lightAnimator.SetBool("isWashing", true);
-            lightAnimator.SetBool("Reset",false);
+            //lightAnimator.SetBool("isWashing", true);
+            //lightAnimator.SetBool("Reset",false);
             
             emptyImage.enabled = false;
             
@@ -211,15 +223,16 @@ public class WasherController : MonoBehaviour
                 
 
                 myAnimator.SetBool("isWashing", false);
-                lightAnimator.SetBool("isWashing", false);
-                //AudioManager.PauseAudio(AudioType.Machine_Washing);
-                //washingSound.Stop();
-                //@@@
-                // Show(Occupied);
+                //lightAnimator.SetBool("isWashing", false);
+                
                 Occupied.SetActive(true);
-                     
 
-                timer = 0;
+
+                //timer = 0; //when the bag returned set the timer 0 and change image 
+                Light.sprite = statusFinished;
+                UpdateProgressBar();
+
+                
                 
 
             }
@@ -238,7 +251,11 @@ public class WasherController : MonoBehaviour
         
 
     }
-
+    private void UpdateProgressBar()
+    {
+        progressBar.fillAmount = timer/AllMachines.washTime;
+        
+    }
     public void MachineUnfold()
     {
         
@@ -489,7 +506,10 @@ public class WasherController : MonoBehaviour
         myMachineState = AllMachines.MachineState.empty;
         isFirstOpen = true;
         clothNum = 4;
-        lightAnimator.SetBool("Reset",true);
+        //lightAnimator.SetBool("Reset",true);
+
+        timer = 0;
+        Light.sprite = statusEmpty;
                 
     }
 

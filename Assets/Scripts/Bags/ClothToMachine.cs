@@ -71,6 +71,9 @@ public class ClothToMachine : MonoBehaviour
     private Animator myAnimator;
 
 
+
+
+
     void Start()
     {
         //find the horizontal scroll snap script
@@ -108,8 +111,8 @@ public class ClothToMachine : MonoBehaviour
             FinalCameraController.AllStationClothList.Add(owner.name, new List<Sprite>());
         }
 
-        
 
+        myImage.enabled = true;
     }
 
 

@@ -71,10 +71,12 @@ public class LevelManager : MonoBehaviour
         {
             isInstruction = true;
             ShowRatingSys(true);
-            closeInstructionButton.SetActive(true);
-            closeInstructionButton.GetComponent<Button>().interactable = false;
 
-            StartCoroutine(ShowInstruction());
+            ShowInstructionInMap();
+
+            //closeInstructionButton.SetActive(true);
+            //closeInstructionButton.GetComponent<Button>().interactable = false;
+            //StartCoroutine(ShowInstruction());
         }
         else
         {
@@ -88,12 +90,17 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //只有滚到底的时候才会显示关闭按钮
         if(isInstruction&& InstructionScroll.active &&
             InstructionScroll.GetComponent<ScrollRect>().verticalNormalizedPosition < 0.3f)
         {
             closeInstructionButton.GetComponent<Button>().interactable = true;
         }
+    }
+
+    private void ShowInstructionInMap()
+    {
+        //
     }
 
 
@@ -105,18 +112,21 @@ public class LevelManager : MonoBehaviour
         
     }
 
-
+    // 如果是chap 1 开屏在地铁内显示图片instruction 关闭时用这个
     public void CloseInstruction()
     {
-        closeInstructionButton.SetActive(false);
-        isInstruction = false;
-        FinalCameraController.InstructionDismiss();
-        StartCoroutine(AnimateFishText(fishText, "See the bags? Time for work!", false, null, Vector2.zero));
+        //closeInstructionButton.SetActive(false);
+        //isInstruction = false;
+        //FinalCameraController.InstructionDismiss();
+        //StartCoroutine(AnimateFishText(fishText, "See the bags? Time for work!", false, null, Vector2.zero));
+
+        //SubwayMovement.trainStop();
+        //SubwayMovement.timerStay = SubwayMovement.stayTime - 9.9f;
+        //FinalCameraController.enableScroll = true;
+
 
         SubwayMovement.trainStop();
-        SubwayMovement.timerStay = SubwayMovement.stayTime - 9.9f;
-
-        FinalCameraController.enableScroll = true;
+        SubwayMovement.timerStay = SubwayMovement.stayTime - 0.01f;
     }
 
 
