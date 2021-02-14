@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PathFollower : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class PathFollower : MonoBehaviour
     public int waypointIndex = 0;
     private RectTransform myRT;
     private SubwayMovement SubwayMovement;
+    public LevelManager LevelManager;
 
     public List<int> stationNumList;
     public float moveSpeed;
@@ -29,6 +31,8 @@ public class PathFollower : MonoBehaviour
     private float instructionMoveSpeed;
 
     public bool isGame;
+    public Image MapTutorialBag;
+    private float fillamount = 1f;
     // Use this for initialization
     private void Start () {
 
@@ -68,6 +72,8 @@ public class PathFollower : MonoBehaviour
     private void QuickMove()
     {
         instructionMoveSpeed = 500f;
+        fillamount -= 0.01f;
+        MapTutorialBag.fillAmount = fillamount;
 
         if (waypointIndex <= waypoints.Length - 1)
         {
@@ -115,6 +121,7 @@ public class PathFollower : MonoBehaviour
             if (myRT.anchoredPosition == waypoints[0].anchoredPosition)
             {
                 //那么停下来
+                LevelManager.ShowHint();
                 instructionMoveSpeed = 0;
                 isInstruction = false;
 //                waypointIndex = 0;

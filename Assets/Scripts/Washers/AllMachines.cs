@@ -108,8 +108,8 @@ public class AllMachines : MonoBehaviour
 
     public void SetMachineAsFull(int idx)
     {
-        WasherControllerList[idx].myMachineState = MachineState.full;
-
+        WasherControllerList[idx].SetMachineAsFull();
+        
     }
 
 
@@ -191,4 +191,6 @@ public class AllMachines : MonoBehaviour
         return false;
     }
 
+
+    
 }

@@ -161,28 +161,8 @@ public class WasherController : MonoBehaviour
             
         }
         
-        if (myMachineState == AllMachines.MachineState.empty)
-        {
-           
-            fullImage.enabled = false;
-            emptyImage.enabled = true;
-            DoorImage.sprite = AllMachines.closedDoor;
-            //@@@
-            // Hide(Occupied);
-            Occupied.SetActive(false);
-
-        }
-        else if (myMachineState == AllMachines.MachineState.full)
-        {
-
-            if(clothNum > 0)
-            {
-                emptyImage.enabled = false;
-                fullImage.enabled = true;
-            }
-            
-        }
-        else if(myMachineState == AllMachines.MachineState.finished)
+     
+        if(myMachineState == AllMachines.MachineState.finished)
         {
            //todo: 滑动关闭ClothUI & cloth buttons
             
@@ -200,7 +180,7 @@ public class WasherController : MonoBehaviour
         }
         
         //if click a bag of cloth, put them into the machine and start washing
-        else if (myMachineState == AllMachines.MachineState.washing)
+        if (myMachineState == AllMachines.MachineState.washing)
         {
             myAnimator.SetBool("isWashing", true);
             //lightAnimator.SetBool("isWashing", true);
@@ -220,7 +200,10 @@ public class WasherController : MonoBehaviour
 
                 myMachineState = AllMachines.MachineState.finished;
                 //本来在这里 generatecloth
+                //finish
                 
+
+
 
                 myAnimator.SetBool("isWashing", false);
                 //lightAnimator.SetBool("isWashing", false);
@@ -251,6 +234,15 @@ public class WasherController : MonoBehaviour
         
 
     }
+
+    public void SetMachineAsFull()
+    {
+       
+        StartCoroutine(DropClothes());
+    }
+
+
+
     private void UpdateProgressBar()
     {
         progressBar.fillAmount = timer/AllMachines.washTime;
@@ -500,6 +492,7 @@ public class WasherController : MonoBehaviour
         
        
     public void ResetMachine(){
+
         Debug.Log("from " + transform.tag + " to untagge");
         currentCustomer = "";
         transform.tag ="Untagged";
@@ -507,9 +500,11 @@ public class WasherController : MonoBehaviour
         isFirstOpen = true;
         clothNum = 4;
         //lightAnimator.SetBool("Reset",true);
-
+        
         timer = 0;
-        Light.sprite = statusEmpty;
+
+        StartCoroutine(CollectClothese());
+        
                 
     }
 
@@ -532,5 +527,38 @@ public class WasherController : MonoBehaviour
             FinalCameraController.AllStationClothList[currentCustomer]
                 .Add(thisButton.GetComponent<SpriteRenderer>().sprite);
         }
+    }
+
+
+    public IEnumerator DropClothes()
+    {
+
+
+        emptyImage.enabled = false;
+        fullImage.enabled = true;
+        DoorImage.sprite = AllMachines.openedDoor;
+
+
+        yield return new WaitForSeconds(0.5f);
+
+        
+        DoorImage.sprite = AllMachines.closedDoor;
+
+        myMachineState = AllMachines.MachineState.full;
+
+    }
+
+    public IEnumerator CollectClothese()
+    {
+
+        Occupied.SetActive(false);
+        emptyImage.enabled = true;
+        fullImage.enabled = false;
+
+        DoorImage.sprite = AllMachines.openedDoor;
+        yield return new WaitForSeconds(0.5f);
+
+        DoorImage.sprite = AllMachines.closedDoor;
+        Light.sprite = statusEmpty;
     }
 }

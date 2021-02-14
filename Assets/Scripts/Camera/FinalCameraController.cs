@@ -494,6 +494,8 @@ public class FinalCameraController : MonoBehaviour
 
     public void ChangeToSubway()
     {
+        if (LevelManager.isInstruction) return;
+
         phone.SetActive(true);
         CameraMovement.atInventory = false;
         CameraMovement.JumpToPreviousPage();

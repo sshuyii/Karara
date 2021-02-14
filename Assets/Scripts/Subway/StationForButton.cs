@@ -187,6 +187,7 @@ public class StationForButton : MonoBehaviour
 
     private void PressStationForButton()
     {
+        if (FinalCameraController.LevelManager.isInstruction) return;
         activeSelectorIdx = stationNum * tabPerStation;
         StationDetails();
         showProfileSelectors();
@@ -194,7 +195,11 @@ public class StationForButton : MonoBehaviour
     }
 
 
-
+    public void CloseStationDetail()
+    {
+        if (FinalCameraController.LevelManager.isInstruction) return;
+        PressStationForButton();
+    }
 
     public void ClickTab0()
     {
@@ -222,6 +227,7 @@ public class StationForButton : MonoBehaviour
 
     public void ClickTab()
     {
+        if (FinalCameraController.LevelManager.isInstruction) return;
         // * tabPerStation
         for (int i = 0;i < tabsBG.Count; i++)
         {
