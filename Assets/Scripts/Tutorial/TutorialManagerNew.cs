@@ -648,10 +648,24 @@ public class TutorialManagerNew : MonoBehaviour
 
         
         clothBag.GetComponent<Image>().sprite = openBag;
-        machineFront.sprite = fullImg;
-        HintUI.transform.localPosition = MachinePos;
+        StartCoroutine(PreWash());
+        
     }
 
+    IEnumerator PreWash()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        MachineDoor.sprite = openDoor;
+
+        yield return new WaitForSeconds(0.5f);
+        machineFront.sprite = fullImg;
+        HintUI.transform.localPosition = MachinePos;
+
+        yield return new WaitForSeconds(0.5f);
+
+        MachineDoor.sprite = closeDoor;
+    }
 
     public void ClickMachine()
     {
@@ -664,6 +678,7 @@ public class TutorialManagerNew : MonoBehaviour
                 AudioManager.PlayAudio(AudioType.Machine_OnOff);
                 AudioManager.PlayAudio(AudioType.Machine_Washing);
                 Debug.Log("start washing");
+
                 machineFull.SetActive(true);
                 machineEmpty.SetActive(false);
                 HintUI.SetActive(false);
@@ -1038,6 +1053,21 @@ public class TutorialManagerNew : MonoBehaviour
 
     }
 
+    IEnumerator PreReturn()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        MachineDoor.sprite = openDoor;
+
+        yield return new WaitForSeconds(0.5f);
+        machineFront.sprite = emptyImg;
+
+        yield return new WaitForSeconds(0.5f);
+
+        MachineDoor.sprite = closeDoor;
+        forwardOneStep = true;
+
+    }
 
     public void ReturnYes()
     {
@@ -1047,8 +1077,7 @@ public class TutorialManagerNew : MonoBehaviour
         clothBag.SetActive(false);
 
         TutorialCameraController.allowScroll = false;
-        forwardOneStep = true;
-
+        StartCoroutine(PreReturn());
 
     }
 
