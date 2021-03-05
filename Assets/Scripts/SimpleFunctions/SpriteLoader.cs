@@ -187,7 +187,7 @@ public class SpriteLoader : MonoBehaviour
                 {
                     
                     ClothDic[picName].spritesInScenes[i] = newPic;
-                    Debug.Log("测试！ " + picName + scenes[i]);
+                    //Debug.Log("测试！ " + picName + scenes[i]);
 
                 }
                 else
@@ -246,7 +246,7 @@ public class SpriteLoader : MonoBehaviour
                     {
                         
                         ClothDic[picName].spritesInScenes[i] = newPic;
-                        Debug.Log("测试！ " + picName + scenes[i]);
+                        //Debug.Log("测试！ " + picName + scenes[i]);
 
                     }
                     else

@@ -9,24 +9,61 @@ public class BagsController : MonoBehaviour
     public GameObject returnNotice;
     public GameObject returningBag;
     FinalCameraController FinalCameraController;
-
-
+    LevelManager LevelManager;
+    public int timeUpBagNum;
+    public int unfinishedBagNum;
+    public FishBossNotification FishBossNotification;
     // Start is called before the first frame update
+
+    float timer; //for check bag status periodicly 
     void Start()
     {
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
+        LevelManager = GameObject.Find("---LevelManager").GetComponent<LevelManager>();
+
 
         stationBagOwners.Add(new List<string>());
         stationBagOwners.Add(new List<string>());
         stationBagOwners.Add(new List<string>());
+
+
+        timeUpBagNum = 0;
+        unfinishedBagNum = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        timer += Time.deltaTime;
+
+        if (LevelManager.stage == 1 && timer>5f)
+        {
+            timer = 0f;
+            CheckBagsStates();
+            
+        }
+
     }
 
+
+    void CheckBagsStates()
+    {
+        unfinishedBagNum = 0;
+        foreach(GameObject bag in bagsInCar)
+        {
+            ClothToMachine ctm = bag.GetComponent<ClothToMachine>();
+            if(ctm.underMachineNum < 0 || (ctm.underMachineNum>= 0 && !ctm.isFinished))
+            {
+                //todo:忽略了一种情况就是衣服正在洗但没洗完
+                unfinishedBagNum++;
+            }
+        }
+
+       if(unfinishedBagNum > 1)
+        {
+            FinalCameraController.BagOverFlow();
+        }
+    }
     public void AddBagToCar(GameObject bag, int homeStation, string owner)
     {
         bagsInCar.Add(bag);
@@ -169,4 +206,11 @@ public class BagsController : MonoBehaviour
         }
         return returnedBagNum;
     }
+
+    public void AddTimeUpBags()
+    {
+        timeUpBagNum++;
+        
+    }
+
 }

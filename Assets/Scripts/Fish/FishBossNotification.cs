@@ -1,12 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class FishBossNotification : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField]
-    GameObject FishBubble,FishText;
+    GameObject FishBubble;
+
+    [SerializeField]
+    TextMeshProUGUI FishText;
 
     private Animator myAnimator;
     bool isOut = false;
@@ -14,11 +18,16 @@ public class FishBossNotification : MonoBehaviour
 
     public GameObject FishBossUI;
 
-    
+    string defaultString;
+
+  
+
     void Start()
     {
         myAnimator = transform.gameObject.GetComponent<Animator>();
         FishBossUI = transform.gameObject;
+
+        defaultString = FishText.text;
 
 
     }
@@ -32,7 +41,15 @@ public class FishBossNotification : MonoBehaviour
     public void HideFish()
     {
         FishBossUI.SetActive(false);
+        FishText.text = defaultString;
     }
+
+    public void ShowFish(string content)
+    {
+        FishText.text = content;
+        ShowFish();
+    }
+
 
     public void ShowFish()
     {
@@ -86,5 +103,5 @@ public class FishBossNotification : MonoBehaviour
         FishBubble.SetActive(true);
     }
 
-
+    
 }

@@ -146,8 +146,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
                 Time.deltaTime;
 
             timer -= Time.deltaTime;
-            myImage.fillAmount = timer/totalTime;
-
+            if (FinalCameraController.LevelManager.stage > 1)  myImage.fillAmount = timer/totalTime;
         }
 
     }

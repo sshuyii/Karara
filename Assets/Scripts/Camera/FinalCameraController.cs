@@ -69,6 +69,7 @@ public class FinalCameraController : MonoBehaviour
     private BagsController BagsController;
 
 
+
     public enum AppState
     {
         Mainpage,
@@ -242,6 +243,7 @@ public class FinalCameraController : MonoBehaviour
 
         ////print(CameraMovement.CurrentPage);
         //change camera state to page number
+
         if (myCameraState == CameraState.Subway && !isSwipping)
         {
             CheckScreenNum();
@@ -629,7 +631,7 @@ public class FinalCameraController : MonoBehaviour
 
         CancelAllUI(false);
 
-        CheckInstructionButton.SetActive(true);
+        if(LevelManager.stage > 1) CheckInstructionButton.SetActive(true);
 
 
         lastCameraState = myCameraState;
@@ -797,5 +799,25 @@ public class FinalCameraController : MonoBehaviour
     {
         if (speed < 0) CameraMovement.smoothSpeed = CameraMovement.defaultSpeed;
         CameraMovement.smoothSpeed = speed;
+    }
+
+    public void BagOverFlow()
+    {
+        Debug.Log("有很多包没洗");
+        string toSay;
+
+        if(AllMachines.FindSuitableMachine(AllMachines.MachineState.empty)>0)
+        {
+            toSay = "Wash the bags!";
+
+        }
+        else toSay = "Return bags have been washed!";  
+
+        if(myCameraState == CameraState.Subway)
+        {
+            if (mySubwayState == SubwayState.One) fishTalkText.text = toSay;
+            else FishBossNotification.ShowFish(toSay);
+        }
+        
     }
 }

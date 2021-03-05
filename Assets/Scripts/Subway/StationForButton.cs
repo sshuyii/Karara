@@ -105,11 +105,12 @@ public class StationForButton : MonoBehaviour
 
     public bool displayingBag, displayingProfile, exiting;
 
-    
+    LevelManager LevelManager;
 
     void Start()
     {
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
+        LevelManager = FinalCameraController.LevelManager;
         SpriteLoader = GameObject.Find("---SpriteLoader").GetComponent<SpriteLoader>();
         SubwayMovement = GameObject.Find("---StationController").GetComponent<SubwayMovement>();
 
@@ -187,7 +188,7 @@ public class StationForButton : MonoBehaviour
 
     private void PressStationForButton()
     {
-        if (FinalCameraController.LevelManager.isInstruction) return;
+        if (LevelManager.isInstruction || LevelManager.stage == 1) return;
         activeSelectorIdx = stationNum * tabPerStation;
         StationDetails();
         showProfileSelectors();
@@ -197,7 +198,7 @@ public class StationForButton : MonoBehaviour
 
     public void CloseStationDetail()
     {
-        if (FinalCameraController.LevelManager.isInstruction) return;
+        if (LevelManager.isInstruction|| LevelManager.stage == 1) return;
         PressStationForButton();
     }
 
@@ -227,7 +228,7 @@ public class StationForButton : MonoBehaviour
 
     public void ClickTab()
     {
-        if (FinalCameraController.LevelManager.isInstruction) return;
+        if (LevelManager.isInstruction || LevelManager.stage == 1) return;
         // * tabPerStation
         for (int i = 0;i < tabsBG.Count; i++)
         {

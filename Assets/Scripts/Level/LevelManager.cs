@@ -62,6 +62,11 @@ public class LevelManager : MonoBehaviour
     private bool HintShowing = false;
     private bool Practicing = false;
     public bool fakeMatch = false;
+
+    public int stage = 1;
+    FishBossNotification FishBossNotification;
+
+
     void Start()
     {
         Resources.UnloadUnusedAssets();
@@ -69,9 +74,9 @@ public class LevelManager : MonoBehaviour
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
         SubwayMovement = GameObject.Find("---StationController").GetComponent<SubwayMovement>();
         RatingSystem = GameObject.Find("FloatingUI").GetComponent<RatingSystem>();
+        FishBossNotification = GameObject.Find("FishBossUI").GetComponent<FishBossNotification>();
 
-        //        instructionText = InstructionBubble.GetComponentInChildren<TextMeshProUGUI>();
-        //hintArrowCG = hintArrow.GetComponent<CanvasGroup>();
+
 
         PathFollower = car.GetComponent<PathFollower>();
         carCG = car.GetComponent<CanvasGroup>();
@@ -87,16 +92,12 @@ public class LevelManager : MonoBehaviour
             ShowRatingSys(true);
             GoBackButton.SetActive(false);
             FinalCameraController.myCameraState = FinalCameraController.CameraState.Map;
-            //ShowInstructionInMap();
-
-            //closeInstructionButton.SetActive(true);
-            //closeInstructionButton.GetComponent<Button>().interactable = false;
-            //StartCoroutine(ShowInstruction());
+           
         }
         else
         {
             //FinalCameraController.myCameraState = FinalCameraController.CameraState.Subway;
-            ShowRatingSys(false);
+            //ShowRatingSys(false);
             //CloseInstruction();
             EndMapTutorial();
         }
@@ -209,7 +210,7 @@ public class LevelManager : MonoBehaviour
 
         FinalCameraController.myCameraState = FinalCameraController.CameraState.Subway;
         SubwayMovement.trainStop();
-        SubwayMovement.timerStay = SubwayMovement.stayTime - 0.01f;
+        //SubwayMovement.timerStay = SubwayMovement.stayTime - 0.01f;
     }
 
 
@@ -225,7 +226,8 @@ public class LevelManager : MonoBehaviour
 
     private bool lastTextFinish;
 
- 
+
+    
     public void Hide(CanvasGroup UIGroup) {
         UIGroup.alpha = 0f; //this makes everything transparent
         UIGroup.blocksRaycasts = false; //this prevents the UI element to receive input events

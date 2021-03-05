@@ -21,8 +21,6 @@ public class ClothToMachine : MonoBehaviour
     private FinalCameraController FinalCameraController;
 
 
-    private bool alreadyWashed;
-    private bool isOverdue;
     public int hitTime;//can be made private
 
     private Image myImage;
@@ -71,7 +69,7 @@ public class ClothToMachine : MonoBehaviour
     private Animator myAnimator;
 
 
-
+    int stage;
 
 
     void Start()
@@ -113,64 +111,41 @@ public class ClothToMachine : MonoBehaviour
 
 
         myImage.enabled = true;
+        stage = FinalCameraController.LevelManager.stage;
     }
 
 
 
     void Update()
     {
+        if (SubwayMovement.pauseBeforeMove) return;
 
+        timer -= Time.deltaTime;
+        if (stage > 1) myImage.fillAmount = timer / totalTime;
+        // todo: why timer < 2f
+
+
+        if (!timeUp && timer < 0f)
+        {
+            timeUp = true;
+            Debug.Log("包包过期！！");
+
+            if (stage > 1)
+            {
+                GameObject overdue = Instantiate(AllMachines.Overdue, this.gameObject.transform.position,
+                        Quaternion.identity);
+                overdue.transform.SetParent(this.gameObject.transform);
+            }
+
+        }
 
         if (underMachineNum >= 0) isFinished = AllMachines.FinishedOrNot(underMachineNum);
-        if (isFinished) alreadyWashed = true;
 
-        if(isOverdue&&alreadyWashed)
+        if(timeUp && isFinished)
         {
             StartCoroutine(ReturnBag2cases());
         }
-       
-
-        if(!FinalCameraController.isTutorial && !isNoticePrefab)
-        {
-            secondImage.sprite = myImage.sprite;
-        }
-
-
-        
-        if(!isNotice && !SubwayMovement.pauseBeforeMove)
-        {
-            timer -= Time.deltaTime;
-            //remainTime = (SubwayMovement.moveTime + SubwayMovement.stayTime) * 3 - timer;
-            //remainTime = totalTime - timer;
-            myImage.fillAmount = timer / totalTime;
-
-            if (!timeUp && timer< 2f)
-            {
-                timeUp = true;
-
-                Debug.Log("包包过期！！");
-
-                if (!FinalCameraController.ChapterOneEnd)
-                {
-                    if (alreadyWashed) //if this bag is already washed
-                    {
-                        //一次只能还一个包
-                        //如果已经有包在还了，就直接还
-                        //ReturnBag2cases();
-                    }
-                    else if (!isOverdue)
-                    {
-                        Debug.Log("这个过期了！");
-                        GameObject overdue = Instantiate(AllMachines.Overdue, this.gameObject.transform.position,
-                                Quaternion.identity);
-                        overdue.transform.SetParent(this.gameObject.transform);
-                        isOverdue = true;
-                    }
-                }
-            }
-
-
-        }
+      
     }
 
 
@@ -179,6 +154,15 @@ public class ClothToMachine : MonoBehaviour
         //todo: overdue bag 洗完，右上角有鱼老板提示
         //if (underMachineNum == 0) FinalCameraController.CameraMovement.JumpToPage(2);
         //else FinalCameraController.CameraMovement.JumpToPage(3);
+
+        //如果在stage 1: 只记录数值
+
+        if(stage == 1)
+        {
+            BagsController.AddTimeUpBags();
+            yield return null;
+        }
+
 
         BagsController.returningBag = this.transform.gameObject;
         BagsController.ClickReturnYes();
