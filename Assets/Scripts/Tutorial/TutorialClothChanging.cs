@@ -13,7 +13,6 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
     public int originSlotNum;
     public Text text;
     private Vector3 startPos;
-    public Sprite transparent;
 
 //    public Image checkImage;
 //    public GameObject crossImage;
@@ -89,17 +88,20 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
     private int clothName;    //这件衣服是什么
     [SerializeField]
     private GameObject returnClothNotice;//还包的提示
+    private Sprite top;
+    private Sprite bottom;
 
     void Start()
     {
         currentSprite = GetComponent<Image>().sprite;
+        top =  TutorialManagerNew.inventoryCloth[0].sprite;
+        bottom = TutorialManagerNew.inventoryCloth[1].sprite;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-
-
         if (pointerDown)
 		{
 			pointerDownTimer += Time.deltaTime;
@@ -117,37 +119,77 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
 		}
     }
 
+
     public void ClickClothInventory()
     {
+        //如果长按
+        if(longPress) return;
+        
+
         //点击inventory里的衣服UI
         // if (deactiveButtons) return;
         Debug.Log("ClickClothInventory");
 
         //change Cloth
         if(clothName == 1)
-        {
-            TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.workInventory;
-            TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.workSubway;
-            TutorialManagerNew.adsCloth[3].sprite = TutorialManagerNew.workAds0;
-            TutorialManagerNew.workClothOn = true;
-            TutorialManagerNew.isAlter = false;
+        {   
+            if(TutorialManagerNew.isWearingClothNum != 1)
+            {
+                TutorialManagerNew.isWearingClothNum = 1;
 
+                TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.workInventory;
+                TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.workSubway;
+                // TutorialManagerNew.postKararaImage.sprite = postPose1;
+                TutorialManagerNew.workClothOn = true;
+                TutorialManagerNew.isAlter = false;
+            }
+            else{
+                //把这件衣服脱了
+                TutorialManagerNew.isWearingClothNum = 0;
+
+                TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.transparent;
+                // TutorialManagerNew.inventoryCloth[0].sprite = top;
+                // TutorialManagerNew.inventoryCloth[1].sprite = bottom;
+
+            }
         }
         else if(clothName == 2)
         {
-            TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.workAlterInventory;
-            TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.workAlterSubway;
-            TutorialManagerNew.adsCloth[3].sprite = TutorialManagerNew.workAds1;
-            TutorialManagerNew.workClothOn = true;
-            TutorialManagerNew.isAlter = true;
+            if(TutorialManagerNew.isWearingClothNum != 2)
+            {
+                TutorialManagerNew.isWearingClothNum = 2;
+
+                TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.workAlterInventory;
+                TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.workAlterSubway;
+                // TutorialManagerNew.postKararaImage.sprite = postPose1Alter;
+                TutorialManagerNew.workClothOn = true;
+                TutorialManagerNew.isAlter = true;
+            }
+            else{
+                //把这件衣服脱了
+                TutorialManagerNew.isWearingClothNum = 0;
+
+                TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.transparent;
+            }
 
         }
         else if(clothName == 3)
         {
-            TutorialManagerNew.inventoryCloth[2].sprite = TutorialManagerNew.workShoe;
-            TutorialManagerNew.subwayCloth[2].sprite = TutorialManagerNew.workShoeSubway;
-            TutorialManagerNew.workShoeOn = true;
-        }
+            if(TutorialManagerNew.isWearingClothNum != 3)
+            {
+                TutorialManagerNew.isWearingClothNum = 3;
+
+                TutorialManagerNew.inventoryCloth[2].sprite = TutorialManagerNew.workShoe;
+                TutorialManagerNew.subwayCloth[2].sprite = TutorialManagerNew.workShoeSubway;
+                TutorialManagerNew.workShoeOn = true;
+            }
+            else{
+                //把鞋脱了
+                TutorialManagerNew.isWearingClothNum = 0;
+
+                TutorialManagerNew.inventoryCloth[2].sprite = TutorialManagerNew.transparent;
+            }
+        } 
 
 
         // for (int i = 0; i<2; i++)
@@ -168,7 +210,7 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
     }
     public void OnPointerDown(PointerEventData eventData)
 	{
-        //AudioManager.PlayAudio(AudioType.UI_Dia logue);
+        //AudioManager.PlayAudio(AudioType.UI_Dialogue);
 		pointerDown = true;
 	}
 
@@ -230,23 +272,36 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         longPress = false;
 
         //inventory里的衣服消失
-        GetComponent<Image>().sprite = transparent;
+        GetComponent<Image>().sprite = TutorialManagerNew.transparent;
 
         //确认哪件衣服出现
         TutorialManagerNew.clothSlotTable[clothName].SetActive(true);
 
         //Karara身上的衣服消失
-        if(clothName == 1|| clothName == 2)
-        {
+        if(clothName == 1)
+        {   
+            //还了任意一件工作服，就不能还另一件了
+            TutorialManagerNew.putClothBack = true;
+            if(TutorialManagerNew.isWearingClothNum == 1)
+            {
                 //karara身上的衣服消失
-                TutorialManagerNew.inventoryCloth[3].sprite = transparent;
-                TutorialManagerNew.subwayCloth[3].sprite = transparent;
-                TutorialManagerNew.adsCloth[3].sprite = transparent;
-
-                //还了任意一件工作服，就不能还另一件了
-                TutorialManagerNew.putClothBack = true;
+                TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.transparent;
+                TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.transparent;
+                TutorialManagerNew.adsCloth[3].sprite = TutorialManagerNew.transparent;
+            }
         }
-       
+        else if(clothName == 2)
+        {   
+            //还了任意一件工作服，就不能还另一件了
+            TutorialManagerNew.putClothBack = true;
+            if(TutorialManagerNew.isWearingClothNum == 2)
+            {
+                //karara身上的衣服消失
+                TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.transparent;
+                TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.transparent;
+                TutorialManagerNew.adsCloth[3].sprite = TutorialManagerNew.transparent;
+            }
+        }       
 
 
         //todo: long press but later chose not to return?
@@ -444,12 +499,12 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
 
     private void HideTopBottom()
     {
-        InventorySlotMgt.TopImages[0].sprite = transparent;
-        InventorySlotMgt.TopImages[1].sprite = transparent;
+        InventorySlotMgt.TopImages[0].sprite = TutorialManagerNew.transparent;
+        InventorySlotMgt.TopImages[1].sprite = TutorialManagerNew.transparent;
         AdsController.TakeOffInAds(1);
 
-        InventorySlotMgt.BottomImages[0].sprite = transparent;
-        InventorySlotMgt.BottomImages[1].sprite = transparent;
+        InventorySlotMgt.BottomImages[0].sprite = TutorialManagerNew.transparent;
+        InventorySlotMgt.BottomImages[1].sprite = TutorialManagerNew.transparent;
         AdsController.TakeOffInAds(2);
 
 
@@ -476,8 +531,8 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         if (InventorySlotMgt.wearingNonDefualtClothes[3]||InventorySlotMgt.isWorkingCloth)
         {
             
-            InventorySlotMgt.EverythingImages[0].sprite = transparent;
-            InventorySlotMgt.EverythingImages[1].sprite = transparent;
+            InventorySlotMgt.EverythingImages[0].sprite = TutorialManagerNew.transparent;
+            InventorySlotMgt.EverythingImages[1].sprite = TutorialManagerNew.transparent;
             AdsController.TakeOffInAds(3);
 
 

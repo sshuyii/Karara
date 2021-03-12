@@ -47,7 +47,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     [SerializeField]
     private GameObject Exclamation, Posture, Phone,Hint2D, HintUI, HintScreen, ScrollHint, clothBag,machineFull, machineEmpty, phoneAnimation, changePostureButton,
-        machineOccupied, ClothUI, KararaC, KararaB, KararaA, EmojiBubble, InventoryBackButton, Ins, Shutter, Notice, FishTalkButton;
+        machineOccupied, ClothUI, KararaC, KararaB, KararaA, EmojiBubble, InventoryBackButton, Ins, Shutter, Notice, FishTalkButton, inventoryBubble, inventoryFish;
 
     [SerializeField]
     private CanvasGroup CameraBackground, scream, Inventory, Flashlight, FloatingUI,Comic;
@@ -58,10 +58,10 @@ public class TutorialManagerNew : MonoBehaviour
 
     [SerializeField]
     private Sprite initialBody, pos0Body, pos1Body, pos0Under, pos1Under, pos0Work, pos1Work, pos0WorkAlter, pos1WorkAlter,openBag, fullImg, emptyImg, EmojiOpenDoor, unhappyFace, happyFace,
-        EmojiCloth, EmojiHappy, EmojiUnhappy, openDoor, closeDoor, transparent, cameraBGFull, postPose1, postPose2, postPose1Alter, postPose2Alter;
+        EmojiCloth, EmojiHappy, EmojiUnhappy, openDoor, closeDoor, cameraBGFull, postPose1, postPose2, postPose1Alter, postPose2Alter;
 
     [SerializeField]
-    private SpriteRenderer body, everything, machineFront, emoji, KararaFace, MachineDoor;
+    private SpriteRenderer body, everything, machineFront, emoji, KararaFace, MachineDoor, inventoryBubbleSR, inventoryFishSR;
 
 
     [SerializeField]
@@ -73,7 +73,8 @@ public class TutorialManagerNew : MonoBehaviour
     public SpriteRenderer[] subwayCloth, inventoryCloth, adsCloth;
 
 
-    public Sprite workInventory, workSubway, workAds0, workAds1,workAlterInventory, workAlterSubway, workAds2, workShoe, workShoeSubway;
+    public Sprite workInventory, workSubway, workAds0, workAds1,workAlterInventory, workAlterSubway, workAds2, workShoe, workShoeSubway,
+        hoodie, barefoot, transparent;
 
     private float KararaPosX = -39f;
 
@@ -100,6 +101,10 @@ public class TutorialManagerNew : MonoBehaviour
     public Dictionary <int, GameObject> clothSlotTable = new Dictionary <int, GameObject> ();
 
     public bool isAlter;//用于判断穿的是哪一件工作服
+
+    //inventory里穿了哪几件衣服
+    public int isWearingClothNum = 0;
+
 
 
     void Start()
@@ -129,6 +134,8 @@ public class TutorialManagerNew : MonoBehaviour
         {
             clothSlotTable.Add(i+1, ClothSlotList[i]);
         }
+
+        inventoryBubbleSR = inventoryBubble.GetComponentsInChildren<SpriteRenderer>()[1];
     }
 
     // Update is called once per frame
@@ -411,7 +418,11 @@ public class TutorialManagerNew : MonoBehaviour
             Show(CameraBackground);
             CameraBackground.GetComponent<Image>().sprite = cameraBGFull;
             HintScreen.SetActive(true);
-            body.sprite = pos0Work;
+
+            //身上穿的衣服
+            if(isAlter) {body.sprite = pos0WorkAlter;}
+            else {body.sprite = pos0Work;}            
+            
             everything.sprite = null;
             HintScreen.transform.localPosition = HintPosShutter;
             
@@ -651,7 +662,7 @@ public class TutorialManagerNew : MonoBehaviour
         TutorialCameraController.GotoPage(2);
 
         //localPosition!!!!
-        Vector3 newPos = new Vector3(MachinePos.x, clothBag.transform.localPosition.y, 0);
+        Vector3 newPos = new Vector3(MachinePos.x - 0.5f, clothBag.transform.localPosition.y, 0);
         clothBag.transform.localPosition = newPos;
         
 
@@ -685,15 +696,16 @@ public class TutorialManagerNew : MonoBehaviour
 
     IEnumerator PreWash()
     {
-        yield return new WaitForSeconds(0.5f);
+        //洗衣机开门，衣服进去，又关门
+        yield return new WaitForSeconds(0.2f);
 
         MachineDoor.sprite = openDoor;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
         machineFront.sprite = fullImg;
         HintUI.transform.localPosition = MachinePos;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
 
         MachineDoor.sprite = closeDoor;
         forwardOneStep = true;
@@ -782,8 +794,6 @@ public class TutorialManagerNew : MonoBehaviour
             MachineDoor.sprite = openDoor;
 
         }
-
-        
     }
 
     public void CloseMachine()
@@ -886,23 +896,21 @@ public class TutorialManagerNew : MonoBehaviour
         deactiveButtons = true;
         inLoop = true;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
 
         Show(scream);
         CloseMachine();
         HintUI.SetActive(false);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.3f);
 
         TutorialCameraController.ChangeCameraSpeed(5f);
         TutorialCameraController.GotoPage(1);
         Hide(scream);
 
-
         forwardLater = false;
         FishTalk("CloseDoor",true);
 
         deactiveButtons = false;
-
 
         TutorialCameraController.allowScroll = true;
         TutorialCameraController.targetPage = 2;
@@ -947,7 +955,19 @@ public class TutorialManagerNew : MonoBehaviour
         InventoryBackButton.SetActive(true);
         HintScreen.transform.localPosition = HintPosBackButton;
     }
+    
+    IEnumerator KararaTalkInventory(Sprite emoji)
+    {
+        //出现karara对话框，需要有个动画吸引玩家注意力
+        yield return new WaitForSeconds(0.1f);
 
+        inventoryBubble.SetActive(true);
+        inventoryBubbleSR.sprite = emoji;
+
+        //对话框出现3s后消失（暂时
+        yield return new WaitForSeconds(3f);
+        inventoryBubble.SetActive(false);
+    }
 
     public void ClickBackButton()
     {
@@ -956,10 +976,12 @@ public class TutorialManagerNew : MonoBehaviour
             inventoryCloth[3].sprite != workAlterInventory) 
         {
             //如果两件工作服都没穿的话
-
             //todo: 手机震动
+            Handheld.Vibrate();
 
-            //todo: 提示要穿上工作服
+            //todo: 提示不想只穿白帽衫
+            StartCoroutine(KararaTalkInventory(hoodie));
+            
             return;
         }
         else{
@@ -967,8 +989,12 @@ public class TutorialManagerNew : MonoBehaviour
             if(inventoryCloth[2].sprite != workShoe)//但是没穿鞋
             {
                 //todo: 手机震动
+                Handheld.Vibrate();
 
-                //todo: 提示要穿上工作服
+
+                //todo: 提示不想光脚
+                StartCoroutine(KararaTalkInventory(barefoot));
+
 
                 return;
             }
@@ -978,9 +1004,9 @@ public class TutorialManagerNew : MonoBehaviour
         if(!putClothBack) 
         {
             //todo: 鱼告诉karara要把衣服都还了
+            StartCoroutine(FishTalkInventory());
             
             return;
-    
         }
         TutorialCameraController.ReturnToApp();
         Hide(Inventory);
@@ -993,6 +1019,17 @@ public class TutorialManagerNew : MonoBehaviour
         forwardOneStep = true;
     }
 
+    IEnumerator FishTalkInventory()
+    {
+        //出现karara对话框，需要有个动画吸引玩家注意力
+        yield return new WaitForSeconds(0.1f);
+
+        inventoryFish.SetActive(true);
+
+        //对话框出现3s后消失（暂时
+        yield return new WaitForSeconds(3f);
+        inventoryFish.SetActive(false);    
+    }
 
 
     private void ReadyForPhoto()
@@ -1095,8 +1132,8 @@ public class TutorialManagerNew : MonoBehaviour
         Notice.SetActive(true);
         HintUI.SetActive(false);
 
+        StartCoroutine(AddFans());
     }
-
     IEnumerator PreReturn()
     {
         yield return new WaitForSeconds(0.5f);
