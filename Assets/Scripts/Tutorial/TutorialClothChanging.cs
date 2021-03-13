@@ -104,6 +104,14 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
     {
         if (pointerDown)
 		{
+            //取消已经生成的所有ui界面
+            for(int i = 0; i < 4; i++)
+            {            
+                TutorialManagerNew.ReturnNoticeList[i].SetActive(false);
+            }
+
+            longPress = false;
+
 			pointerDownTimer += Time.deltaTime;
 			if (pointerDownTimer >= requiredHoldTime)
 			{
@@ -175,9 +183,9 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         }
         else if(clothName == 3)
         {
-            if(TutorialManagerNew.isWearingClothNum != 3)
+            if(!TutorialManagerNew.isWearingShoe)
             {
-                TutorialManagerNew.isWearingClothNum = 3;
+                TutorialManagerNew.isWearingShoe = true;
 
                 TutorialManagerNew.inventoryCloth[2].sprite = TutorialManagerNew.workShoe;
                 TutorialManagerNew.subwayCloth[2].sprite = TutorialManagerNew.workShoeSubway;
@@ -185,22 +193,12 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
             }
             else{
                 //把鞋脱了
-                TutorialManagerNew.isWearingClothNum = 0;
+                TutorialManagerNew.isWearingShoe = false;
 
                 TutorialManagerNew.inventoryCloth[2].sprite = TutorialManagerNew.transparent;
             }
         } 
-
-
-        // for (int i = 0; i<2; i++)
-        // {
-        //     TutorialManagerNew.inventoryCloth[i].sprite = transparent;
-        //     TutorialManagerNew.subwayCloth[i].sprite = transparent;
-        //     TutorialManagerNew.adsCloth[i].sprite = transparent;
-        // }
-
     }
-
 
 
 
@@ -248,6 +246,18 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
                 
             }
             
+            //karara摇头
+            TutorialManagerNew.kararaAnimator.SetTrigger("isShaking");
+            return;
+        }
+
+        //鞋无论如何都不能还
+        if(clothName == 3)
+        {
+            //鞋不可以还
+            //todo: 显示karara说一些话，鞋不能还
+
+            TutorialManagerNew.kararaAnimator.SetTrigger("isShaking");
             return;
         }
 
@@ -289,6 +299,8 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
                 TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.transparent;
                 TutorialManagerNew.adsCloth[3].sprite = TutorialManagerNew.transparent;
             }
+            //放回洗衣机里
+            TutorialManagerNew.ClothSlotList[0].SetActive(true);
         }
         else if(clothName == 2)
         {   
@@ -301,6 +313,8 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
                 TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.transparent;
                 TutorialManagerNew.adsCloth[3].sprite = TutorialManagerNew.transparent;
             }
+            //放回洗衣机里
+            TutorialManagerNew.ClothSlotList[1].SetActive(true);
         }       
 
 

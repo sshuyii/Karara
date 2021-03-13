@@ -104,6 +104,16 @@ public class TutorialManagerNew : MonoBehaviour
 
     //inventory里穿了哪几件衣服
     public int isWearingClothNum = 0;
+    public bool isWearingShoe = false;
+
+    //inventory里karara
+    public Animator kararaAnimator;
+    
+    [SerializeField]
+    private Animator ClothUiAnimator;
+
+
+    public List<GameObject> ReturnNoticeList;
 
 
 
@@ -218,12 +228,18 @@ public class TutorialManagerNew : MonoBehaviour
                 if (machineOpen) FishTalk("CloseDoor",true);
                 else FishTalk("Right",true);
             }
+            else if(inLoop && TutorialCameraController.currentPage == 3)
+            {
+                TutorialCameraController.JumpToPage(2);
+
+            }
             else if (TutorialCameraController.targetPage == 1)
             {
 
                 //FishTalk("Return this bag!",true);
                 // after ins ->return prep
             }
+            
                 TutorialCameraController.targetPage = -1;
 
 
@@ -288,8 +304,11 @@ public class TutorialManagerNew : MonoBehaviour
                     ShowInventory();
                     break;
                 case 11:
-                //穿了工作服和鞋之后就可以显示返回地铁的按钮
+                    //穿了工作服和鞋之后就可以显示返回地铁的按钮
                     ShowBackButton();
+                    //一定是还了一件衣服才能返回的，所以洗衣机里又有衣服了
+                    machineFront.sprite = fullImg;
+
                     break;
                 case 12:
                     ReadyForPhoto();
@@ -788,26 +807,29 @@ public class TutorialManagerNew : MonoBehaviour
             //forwardOneStep = true;
 
         }
-
         else {
 
-            MachineDoor.sprite = openDoor;
+            // MachineDoor.sprite = openDoor;
+            OpenDoor();
 
         }
     }
 
     public void CloseMachine()
     {
+        machineOpen = !machineOpen;
+
         // AudioManager.PlayAudio(AudioType.Machine_OpenDoor);
         if (inLoop)
         {
             if (Hint2D.active) Hint2D.SetActive(false);
-            machineOpen = !machineOpen;
             CloseDoor();
         }
         else
         {
+            machineOccupied.SetActive(true);
             MachineDoor.sprite = closeDoor;
+            ClothUI.SetActive(false);        
         }
     }
 
@@ -856,16 +878,18 @@ public class TutorialManagerNew : MonoBehaviour
 
         HintUI.SetActive(true);
         HintUI.transform.localPosition = MachinePos;
-
-
     }
 
   
     public void ClickClothUI(int slotNum)
     {
-        pickedClothNum ++;
-        
         if (deactiveButtons) return;
+
+        //已经穿上工作服了之后，针对放回洗衣机的那件衣服，不可以再拿了
+        if(stepCounter > 10) return;
+        //todo: 有个震动或者其他提示
+
+        pickedClothNum ++;
         //点的衣服
         clothSlotTable[slotNum].SetActive(false);
 
@@ -960,6 +984,9 @@ public class TutorialManagerNew : MonoBehaviour
     {
         //出现karara对话框，需要有个动画吸引玩家注意力
         yield return new WaitForSeconds(0.1f);
+        kararaAnimator.SetTrigger("isShaking");
+
+        yield return new WaitForSeconds(1f);
 
         inventoryBubble.SetActive(true);
         inventoryBubbleSR.sprite = emoji;
@@ -994,7 +1021,6 @@ public class TutorialManagerNew : MonoBehaviour
 
                 //todo: 提示不想光脚
                 StartCoroutine(KararaTalkInventory(barefoot));
-
 
                 return;
             }
@@ -1249,6 +1275,7 @@ public class TutorialManagerNew : MonoBehaviour
         machineOccupied.SetActive(false);
         MachineDoor.sprite = openDoor;
         ClothUI.SetActive(true);
+        ClothUiAnimator.SetTrigger("AfterPop");
 
         HintUI.SetActive(false);
 
@@ -1266,6 +1293,8 @@ public class TutorialManagerNew : MonoBehaviour
         MachineDoor.sprite = closeDoor;
         KararaTalk(EmojiOpenDoor);
         ClothUI.SetActive(false);
+        ClothUiAnimator.SetTrigger("StartClose");
+
 
 
         HintUI.SetActive(true);
