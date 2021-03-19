@@ -54,8 +54,7 @@ public class FishBossNotification : MonoBehaviour
     public void ShowFish()
     {
         FishBossUI.SetActive(true);
-        isActive = true;
-        
+        ClickFishBossUI();
         //auto hide after five seconds;
         StartCoroutine(AutoHide());
 
@@ -63,9 +62,8 @@ public class FishBossNotification : MonoBehaviour
 
     IEnumerator AutoHide()
     {
-        yield return new WaitForSeconds(30f);
-        isActive = false;
-        HideFish();
+        yield return new WaitForSeconds(4f);
+        ClickFishBossUI();
         
     }
 
@@ -77,22 +75,24 @@ public class FishBossNotification : MonoBehaviour
         if(isOut)
         {
             Debug.Log("clickFish out");
-            myAnimator.SetTrigger("MovingOut");
+            myAnimator.SetTrigger("Idle");
+            StartCoroutine(SetIdle(3f));
         }
         else
         {
             Debug.Log("clickFish in");
-            myAnimator.SetTrigger("MovingIn");
-            FishBubble.SetActive(false);
+            myAnimator.SetTrigger("Idle");
+            StartCoroutine(SetIdle(1f));
+
         }
 
-        StartCoroutine(SetIdle());
+        
     }
 
 
-    IEnumerator SetIdle()
+    IEnumerator SetIdle(float time)
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(time);
 
         myAnimator.SetTrigger("Idle");
     }
@@ -100,7 +100,7 @@ public class FishBossNotification : MonoBehaviour
     public void ShowBubble()
     {
 
-        FishBubble.SetActive(true);
+        //FishBubble.SetActive(true);
     }
 
     

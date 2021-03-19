@@ -52,7 +52,9 @@ public class AdsController : MonoBehaviour
 
     [SerializeField]
     private GameObject[] AdsInSubway;
-    int nextAdIdx = 2; //第三个
+    public int nextAdIdx; //第三个
+
+    public int stage1UpperBound;
 
     void Start()
     {
@@ -216,11 +218,13 @@ public class AdsController : MonoBehaviour
     {
         usedAds.Add(currentAd);
         usedPoses.Add(currentPoseIdx);
+
+        if (usedAds.Count >= stage1UpperBound) FinalCameraController.LevelManager.upgradeReadyOrNot = true;
     }
 
 
-
-    public void UpdatePosters()
+    
+    public IEnumerator UpdatePosters()
     {
         int adsNumInSubway = 0;
         foreach(GameObject ad in AdsInSubway)
@@ -228,10 +232,32 @@ public class AdsController : MonoBehaviour
             if (ad.active) adsNumInSubway++;
         }
 
-        if (adsNumInSubway -2 >= usedAds.Count) return;
+        if (adsNumInSubway -2 >= usedAds.Count) yield break;
 
-        if(nextAdIdx < AdsInSubway.Length) AdsInSubway[nextAdIdx].SetActive(true);
+      
+
+        if (nextAdIdx < AdsInSubway.Length)
+        {
+            SpriteRenderer renderer = AdsInSubway[nextAdIdx].GetComponent<SpriteRenderer>();
+            Color c = renderer.material.color;
+            c.a = 0f;
+            renderer.material.color = c;
+            AdsInSubway[nextAdIdx].SetActive(true);
+
+            //fade in effect
+            for(float f = 0.05f; f< 1f; f+=0.05f)
+            {
+                c.a = f;
+                renderer.material.color = c;
+                yield return new WaitForSeconds(0.05f);
+                     
+            }
+        }
+
+        
         nextAdIdx++;
+
+        
     }
 
 

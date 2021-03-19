@@ -281,9 +281,10 @@ public class InstagramController : MonoBehaviour
         countTakenPhotos++;
         AddInsPost("Karara", PicInSavePage.sprite);
         AddFollower();
-        FinalCameraController.ChangeToApp();
-
         AdsController.UseAdAndPose();
+
+        
+        FinalCameraController.ChangeToApp();
 
     }
 

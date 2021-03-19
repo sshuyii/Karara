@@ -248,6 +248,12 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     
    
     private void DropToLostAndFound(){
+        if(FinalCameraController.LevelManager.neverLandF)
+        {
+            FinalCameraController.ChangeToSubway();
+            FinalCameraController.GotoPage(3);
+            StartCoroutine(LostAndFound.AnimationDropNUm());
+        }
         currentSprite = GetComponent<Image>().sprite;
         //Debug.Log("丢掉" +currentSprite.name);
         Cloth thisCloth = SpriteLoader.ClothDic[currentSprite.name];

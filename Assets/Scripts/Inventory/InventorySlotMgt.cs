@@ -45,6 +45,7 @@ public class InventorySlotMgt : MonoBehaviour
 
     public bool isWorkingCloth = true;
     public Sprite dropToMachineImg, dropToLandFImg;
+  
 
 
     // Start is called before the first frame update

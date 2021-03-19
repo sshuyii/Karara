@@ -36,7 +36,7 @@ public class BagsController : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-        if (LevelManager.stage == 1 && timer>5f)
+        if (LevelManager.stage == 1 && timer> 10f)
         {
             timer = 0f;
             CheckBagsStates();

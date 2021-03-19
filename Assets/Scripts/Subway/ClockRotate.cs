@@ -66,7 +66,7 @@ public class ClockRotate : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!isFast)
+        if(!isFast && !SubwayMovement.pauseBeforeMove)
         {
             fillAmount -= 1 / (3 * (SubwayMovement.stayTime + SubwayMovement.moveTime) + SubwayMovement.stayTime) *
                 Time.deltaTime;

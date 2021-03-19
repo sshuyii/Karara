@@ -185,7 +185,7 @@ public class SpriteLoader : MonoBehaviour
 
                 if (i > 0)
                 {
-                    
+                    Debug.Log("测试！ " + picName + scenes[i]);
                     ClothDic[picName].spritesInScenes[i] = newPic;
                     //Debug.Log("测试！ " + picName + scenes[i]);
 

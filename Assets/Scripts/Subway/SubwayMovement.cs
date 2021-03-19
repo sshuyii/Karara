@@ -160,7 +160,7 @@ public class SubwayMovement : MonoBehaviour
     private InstagramController InstagramController;
     private BagsController BagsController;
     private AdsController AdsController;
-    private bool atInitailStation = true;
+    public bool atInitailStation = true;
 
     public bool NoPosition = false;
     public bool OpeningProcess = false;
@@ -340,8 +340,17 @@ public class SubwayMovement : MonoBehaviour
         if (timerStay > stayTime)
         {
             timerStay = 0f;
-            if (LevelManager.stage > 1) StartCoroutine(trainPause());
-            trainMove();
+            if (LevelManager.stage > 1 && !atInitailStation) StartCoroutine(trainPause());
+            else if (!atInitailStation)
+            {
+                StartCoroutine(AdsController.UpdatePosters());
+                trainMove();
+            }
+            else
+            {
+                trainMove();
+            }
+
         }
 
 
@@ -359,7 +368,7 @@ public class SubwayMovement : MonoBehaviour
 
         // banner shows 10s before moving
         // does not work on stage one
-        if (LevelManager.stage > 1 && timerStay > stayTime - 10f)
+        if (LevelManager.stage > 1 && !atInitailStation && timerStay > stayTime - 10f)
         {
             if (!Banner.active) Banner.SetActive(true);
             else
@@ -455,24 +464,24 @@ public class SubwayMovement : MonoBehaviour
 
     void DoorOpenFinish()
     {
-
-
-        for (int i = 0; i < specialNPCPerStation; i++)
+        // check ugradeOrNot
+        if(LevelManager.upgradeReadyOrNot)
         {
-
-            // 门完全开之后：
-            // 1.产生包
-            // 2.丢l&f衣服,发post(包含在3里)
-            // 3.更新posture(ad)
-            GenerateBag(currentStation);
-
-            if (LevelManager.stage > 0) return; // 如果stage 1 只产生包，不考虑其他
-            
-            if (roundNum>0) LostAndFound.DropLostFoundClothes(currentStation); //转完一圈 丢衣服+更post
-            else if(!atInitailStation) InstagramController.RefreshPost("", FinalCameraController.RatingSys.rating); // 第一圈且不在始发站 只更post
-
-
+            pauseBeforeMove = true;
+            StationForButton.UpdateCollectionUI();
+            LevelManager.StageTrasiting();
         }
+
+        // 门完全开之后：
+        // 1.产生包
+        // 2.丢l&f衣服,发post(包含在3里)
+        // 3.更新posture(ad)
+        GenerateBag(currentStation);
+
+        if (LevelManager.stage < 2) return; // 如果stage 1 只产生包，不考虑其他
+
+        if (roundNum > 0) LostAndFound.DropLostFoundClothes(currentStation); //转完一圈 丢衣服+更post
+        else if (!atInitailStation) InstagramController.RefreshPost("", FinalCameraController.RatingSys.rating);
 
 
     }
@@ -643,7 +652,7 @@ public class SubwayMovement : MonoBehaviour
             //黑屏结束之后
             yield return new WaitForSeconds(0.5f);
             StartCoroutine(LostAndFound.AnimationDropNUm());
-            AdsController.UpdatePosters();
+            StartCoroutine(AdsController.UpdatePosters());
 
 
             yield return new WaitForSeconds(1f);
@@ -671,7 +680,7 @@ public class SubwayMovement : MonoBehaviour
         {
             yield return new WaitForSeconds(0.5f);
             if(currentStation > 0) StartCoroutine(LostAndFound.AnimationDropNUm());
-            AdsController.UpdatePosters();
+            StartCoroutine(AdsController.UpdatePosters());
 
             if(!atInitailStation) yield return new WaitForSeconds(2f);
             FinalCameraController.ChangeCameraSpeed(normalSpeed);
@@ -715,7 +724,7 @@ public class SubwayMovement : MonoBehaviour
     {
         //current station means the station the train is heading to
 
-        atInitailStation = false;
+        if(LevelManager.stage > 1) atInitailStation = false;
         LocalizedString locString = "Fish/DoYourJob";
         string translation = locString;
         FinalCameraController.fishTalkText.text = translation;

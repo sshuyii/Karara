@@ -806,7 +806,7 @@ public class FinalCameraController : MonoBehaviour
         Debug.Log("有很多包没洗");
         string toSay;
 
-        if(AllMachines.FindSuitableMachine(AllMachines.MachineState.empty)>0)
+        if(AllMachines.FindSuitableMachine(AllMachines.MachineState.empty)>=0)
         {
             toSay = "Wash the bags!";
 

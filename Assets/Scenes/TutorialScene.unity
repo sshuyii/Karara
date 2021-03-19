@@ -124,6 +124,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &10316623 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6255947707619718362, guid: 4e41aad428a574169a42047fca837ffc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1275482316}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &21585880
 GameObject:
   m_ObjectHideFlags: 0
@@ -3097,6 +3109,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 661b817a897a0483c90aeb5a4db33e4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  returnConfirmButton: {fileID: 10316623}
+  returnBG: {fileID: 1275482317}
 --- !u!114 &226004733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4128,6 +4142,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ReturnCloth
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734778403413577359, guid: 4e41aad428a574169a42047fca837ffc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 901119048}
+    - target: {fileID: 6734778403413577359, guid: 4e41aad428a574169a42047fca837ffc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: hideReturnConfirm
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734778403413577359, guid: 4e41aad428a574169a42047fca837ffc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: TutorialClothChanging, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734778403413577359, guid: 4e41aad428a574169a42047fca837ffc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6255947706388716804, guid: 4e41aad428a574169a42047fca837ffc, type: 3}
@@ -7298,6 +7332,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ReturnCloth
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734778403413577359, guid: 4e41aad428a574169a42047fca837ffc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 41452759}
+    - target: {fileID: 6734778403413577359, guid: 4e41aad428a574169a42047fca837ffc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: hideReturnConfirm
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734778403413577359, guid: 4e41aad428a574169a42047fca837ffc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: TutorialClothChanging, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734778403413577359, guid: 4e41aad428a574169a42047fca837ffc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4e41aad428a574169a42047fca837ffc, type: 3}
@@ -14630,6 +14684,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ReturnCloth
       objectReference: {fileID: 0}
+    - target: {fileID: 6734778403413577359, guid: 4e41aad428a574169a42047fca837ffc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 226004730}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4e41aad428a574169a42047fca837ffc, type: 3}
 --- !u!1 &1275482317 stripped
@@ -26497,6 +26556,26 @@ PrefabInstance:
       propertyPath: TutorialManagerNew
       value: 
       objectReference: {fileID: 1522229833}
+    - target: {fileID: 6734778403413577359, guid: 4e41aad428a574169a42047fca837ffc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 732869519}
+    - target: {fileID: 6734778403413577359, guid: 4e41aad428a574169a42047fca837ffc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: hideReturnConfirm
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734778403413577359, guid: 4e41aad428a574169a42047fca837ffc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: TutorialClothChanging, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734778403413577359, guid: 4e41aad428a574169a42047fca837ffc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4e41aad428a574169a42047fca837ffc, type: 3}
 --- !u!1 &6285211433520017251

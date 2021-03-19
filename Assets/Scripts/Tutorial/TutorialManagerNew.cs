@@ -188,6 +188,14 @@ public class TutorialManagerNew : MonoBehaviour
         }
 
 
+        if (inLoop && TutorialCameraController.currentPage == 4)
+        {
+            TutorialCameraController.JumpToPage(3);
+            Debug.Log("what's going on????");
+
+        }
+
+
 
 
         if (TutorialCameraController.reachTarget)
@@ -204,6 +212,7 @@ public class TutorialManagerNew : MonoBehaviour
 
                 forwardOneStep = true;
             }
+            
             else if(inLoop && TutorialCameraController.targetPage == 2)
             {   // 前提
                 Debug.Log("前提");

@@ -13,7 +13,7 @@ public class LevelManager : MonoBehaviour
 {
 
     [SerializeField]
-    private GameObject MapHint,MapTutorialBubble,GoBackButton, MapTutorialBag;
+    private GameObject MapHint,MapTutorialBubble,GoBackButton, MapTutorialBag, transitComic;
 
     [SerializeField]
     private CanvasGroup Map;
@@ -35,8 +35,7 @@ public class LevelManager : MonoBehaviour
     private PathFollower PathFollower;
     
     
-    public GameObject station;
-    public GameObject bagIn;
+    public GameObject station,bagIn;
     public Sprite bagOut;
     private FinalCameraController FinalCameraController;
 
@@ -45,7 +44,7 @@ public class LevelManager : MonoBehaviour
     public GameObject StationDetail;
     public TextMeshProUGUI instructionText;
 
-    public bool isInstruction;
+    public bool isInstruction = false;
     private Vector2 stationV = new Vector2(-50, 80);
 
     public GameObject InstructionScroll, closeInstructionButton;
@@ -65,6 +64,18 @@ public class LevelManager : MonoBehaviour
 
     public int stage = 1;
     FishBossNotification FishBossNotification;
+
+
+    public bool upgradeReadyOrNot = false;
+
+    public bool stageTransiting = false;
+    int comicClick = 0;
+
+    public Sprite[] comics1, comics2;
+
+    List<List<Sprite>> comicList = new List<List<Sprite>>();
+    public bool neverLandF = true;
+
 
 
     void Start()
@@ -101,7 +112,11 @@ public class LevelManager : MonoBehaviour
             //CloseInstruction();
             EndMapTutorial();
         }
-        
+
+        comicList.Add(new List<Sprite>());
+        comicList[0].AddRange(comics1);
+        comicList.Add(new List<Sprite>());
+        comicList[1].AddRange(comics2);
 
     }
 
@@ -109,7 +124,12 @@ public class LevelManager : MonoBehaviour
     void Update()
     {
         //只有滚到底的时候才会显示关闭按钮
-        if(isInstruction&& InstructionScroll.active &&
+
+
+
+
+        //只有滚到底的时候才会显示关闭按钮
+        if (isInstruction&& InstructionScroll.active &&
             InstructionScroll.GetComponent<ScrollRect>().verticalNormalizedPosition < 0.3f)
         {
             closeInstructionButton.GetComponent<Button>().interactable = true;
@@ -120,6 +140,42 @@ public class LevelManager : MonoBehaviour
         
     }
 
+
+    public IEnumerator UpdateStage()
+    {
+        Hide(transitComic.GetComponent<CanvasGroup>());
+        stageTransiting = false;
+        comicClick = 0;
+        upgradeReadyOrNot = false;
+        stageTransiting = false;
+        upgradeReadyOrNot = false;
+        SubwayMovement.pauseBeforeMove = false;
+        stage++;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //ShowRatingSys(true);
+
+
+        yield return null;
+             
+
+    }
+    public void StageTrasiting()
+    {
+        stageTransiting = true;
+        if (stage == 1) Show(transitComic.GetComponent<CanvasGroup>());
+    }
+
+    public void ClickComic()
+    {
+
+        transitComic.GetComponent<Image>().sprite = comicList[stage - 1][comicClick];
+        comicClick++;
+        if (comicClick == comicList[stage - 1].Count) StartCoroutine(UpdateStage());
+        Debug.Log("comic click" + comicClick);
+    }
+    
     private void CheckMatch()
     {
         //todo: 
@@ -176,18 +232,6 @@ public class LevelManager : MonoBehaviour
     // 如果是chap 1 开屏在地铁内显示图片instruction 关闭时用这个
     public void CloseInstruction()
     {
-        //closeInstructionButton.SetActive(false);
-        //isInstruction = false;
-        //FinalCameraController.InstructionDismiss();
-        //StartCoroutine(AnimateFishText(fishText, "See the bags? Time for work!", false, null, Vector2.zero));
-
-        //SubwayMovement.trainStop();
-        //SubwayMovement.timerStay = SubwayMovement.stayTime - 9.9f;
-        //FinalCameraController.enableScroll = true;
-
-
-        //SubwayMovement.trainStop();
-        //SubwayMovement.timerStay = SubwayMovement.stayTime - 0.01f;
 
         if (Practicing) return;
         StationDetail.SetActive(false);
@@ -239,4 +283,7 @@ public class LevelManager : MonoBehaviour
         UIGroup.blocksRaycasts = true;
         UIGroup.interactable = true;
     }
+
+
+
 }

@@ -35,7 +35,7 @@ public class StationForButton : MonoBehaviour
     private List<GameObject> ProfileSelectors;
 
     [SerializeField]
-    private GameObject ProfileSelector;
+    private GameObject ProfileSelector, tabsParentGO;
 
 
 
@@ -67,10 +67,10 @@ public class StationForButton : MonoBehaviour
     private GameObject collectionContent;
 
     [SerializeField]
-    private GameObject collection;
+    private GameObject collection, collection_stage2, collection_stage3;
 
     [SerializeField]
-    private List<GameObject> tabs;
+    private Image tabLogo;
 
     [SerializeField]
     private List<GameObject> tabsBG;
@@ -151,6 +151,8 @@ public class StationForButton : MonoBehaviour
         displayingProfile = false;
         exiting = false;
 
+
+        UpdateCollectionUI();
     }
 
     // Update is called once per frame
@@ -160,7 +162,23 @@ public class StationForButton : MonoBehaviour
         {
             confirmResult.interactable = true;
         }
-    } 
+    }
+
+    public void UpdateCollectionUI()
+    {
+        if (LevelManager.stage == 1) collection = collection_stage2;
+        if (LevelManager.stage == 2) collection = collection_stage3;
+
+        foreach (Transform t in collection.transform.GetComponentInChildren<Transform>())
+        {
+            if (t.gameObject.name == "Collection") collectionContent = t.gameObject;
+        }
+
+        
+        tabsParentGO.transform.SetParent(collection.transform);
+    }
+
+
 
     public void pressStationForButton0()
     {
@@ -186,13 +204,19 @@ public class StationForButton : MonoBehaviour
         PressStationForButton();
     }
 
-    private void PressStationForButton()
+    public void PressStationForButton()
     {
         if (LevelManager.isInstruction || LevelManager.stage == 1) return;
+
         activeSelectorIdx = stationNum * tabPerStation;
         StationDetails();
-        showProfileSelectors();
-        HideProfileWhenCloseStationDetail();
+
+        if(LevelManager.stage > 2)
+        {
+            showProfileSelectors();
+            HideProfileWhenCloseStationDetail();
+        }
+        
     }
 
 
@@ -230,25 +254,34 @@ public class StationForButton : MonoBehaviour
     {
         if (LevelManager.isInstruction || LevelManager.stage == 1) return;
         // * tabPerStation
+
+        Debug.Log("click tab");
         for (int i = 0;i < tabsBG.Count; i++)
         {
             tabsBG[i].GetComponent<Image>().sprite = normalTab;
         }
         tabsBG[tabNum].GetComponent<Image>().sprite = PressedTab;
+        string currentBagOwner = BagsController.stationBagOwners[currDetailedStation][tabNum];
+        tabLogo.sprite = SpriteLoader.NPCDic[currentBagOwner].closeBag;
+
         activeSelectorIdx = stationNum * tabPerStation + tabNum;
 
         // X 的包 不参与用户匹配
-        if (BagsController.stationBagOwners[stationNum][tabNum] != "X")
+        if (LevelManager.stage > 2)
         {
-            ProfileSelector.SetActive(true);
-            showProfileSelectors();
-            
-            if (ShowingProfile) refreshProfile();
-        }
-        else
-        {
-            if (ShowingProfile) InstagramController.clearProfileContent();
-            ProfileSelector.SetActive(false);
+            if (BagsController.stationBagOwners[stationNum][tabNum] != "X")
+            {
+                ProfileSelector.SetActive(true);
+                showProfileSelectors();
+                if (ShowingProfile) refreshProfile();
+
+            }
+            else
+            {
+
+                if (ShowingProfile) InstagramController.clearProfileContent();
+                ProfileSelector.SetActive(false);
+            }
         }
 
         
@@ -271,8 +304,9 @@ public class StationForButton : MonoBehaviour
             
         if ((isDetailed && stationNum == currDetailedStation) || exiting)
         {
-                
+              
            collection.SetActive(false);
+            tabsParentGO.SetActive(false);
            isDetailed = !isDetailed;
 
         }
@@ -281,23 +315,24 @@ public class StationForButton : MonoBehaviour
             if (!isDetailed)
             {
                collection.SetActive(true);
-               isDetailed = !isDetailed;
+                tabsParentGO.SetActive(true);
+                isDetailed = !isDetailed;
             }
 
 
-            
+
 
             ClearCollectionContent();
             currDetailedStation = stationNum;
 
-            
+
             for (int i = 0; i < BagsController.stationBagOwners[stationNum].Count; i++)
             {
-                string currentBagOwner = BagsController.stationBagOwners[currDetailedStation][tabNum+i];
-                tabs[i].transform.GetComponentInChildren<Image>().sprite = bagLogoInCollection[currentBagOwner];
                 tabsBG[i].GetComponent<Image>().sprite = normalTab;
             }
             tabsBG[tabNum].GetComponent<Image>().sprite = PressedTab;
+            string currentBagOwner = BagsController.stationBagOwners[currDetailedStation][tabNum];
+            tabLogo.sprite = SpriteLoader.NPCDic[currentBagOwner].closeBag;
             DisplayCollectionContent(tabNum);
         }
 
@@ -319,14 +354,14 @@ public class StationForButton : MonoBehaviour
         for (int i = 0; i < usedTabNum; i++)
         {
             tabsBG[i].SetActive(true);
-            tabs[i].SetActive(true);
-            
+
+
         }
 
-        for (int i = usedTabNum; i < tabs.Count; i++)
+        for (int i = usedTabNum; i < tabsBG.Count; i++)
         {
             tabsBG[i].SetActive(false);
-            tabs[i].SetActive(false);
+
         }
 
 

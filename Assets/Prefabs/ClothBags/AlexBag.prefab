@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2691879582316776045}
   - component: {fileID: 6281332616034447761}
   - component: {fileID: 1622632599356787081}
-  - component: {fileID: 6600976855998826656}
   - component: {fileID: 1911849397198779274}
   - component: {fileID: 5265563705309419590}
   - component: {fileID: 7102735065598732373}
@@ -81,26 +80,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6600976855998826656
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1613322638505755032}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1da52b48498ce4804a2f3f4fd2994ba1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bagEmptyNum: 0
-  machineEmptyNum: 0
-  car: {fileID: 0}
-  fastForward: 0
-  zRotation: 0
-  bubble: {fileID: 0}
-  fillAmount: 1
-  isFast: 0
 --- !u!114 &1911849397198779274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,6 +94,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 3
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -175,9 +155,12 @@ MonoBehaviour:
   isNoticePrefab: 0
   isReady: 1
   thisBag: {fileID: 1613322638505755032}
+  underMachineNum: -1
+  timeUp: 0
   timer: 0
   totalTime: 0
   myStation: 0
+  isFinished: 0
 --- !u!82 &7102735065598732373
 AudioSource:
   m_ObjectHideFlags: 0

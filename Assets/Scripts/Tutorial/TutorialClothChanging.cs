@@ -227,8 +227,8 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
     public void hideReturnConfirm()
     {
         //cancelReturnButton.SetActive(false);
-        returnBG.SetActive(false);
-        returnConfirmButton.gameObject.SetActive(false);
+        returnClothNotice.SetActive(false);
+        //returnConfirmButton.gameObject.SetActive(false);
     }
     public void showReturnConfirm()
     {

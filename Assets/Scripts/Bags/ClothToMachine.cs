@@ -118,6 +118,8 @@ public class ClothToMachine : MonoBehaviour
 
     void Update()
     {
+        stage = FinalCameraController.LevelManager.stage;
+
         if (SubwayMovement.pauseBeforeMove) return;
 
         timer -= Time.deltaTime;
@@ -162,13 +164,14 @@ public class ClothToMachine : MonoBehaviour
             BagsController.AddTimeUpBags();
             yield return null;
         }
+        else
+        {
+            BagsController.returningBag = this.transform.gameObject;
+            BagsController.ClickReturnYes();
 
+            FinalCameraController.fishTalkText.text = "Return your customers' clothes on time! Such bad memory!";
+        }
 
-        BagsController.returningBag = this.transform.gameObject;
-        BagsController.ClickReturnYes();
-
-        FinalCameraController.fishTalkText.text = "Return your customers' clothes on time! Such bad memory!";
-        //FinalCameraController.FishBossNotification.ShowBubble();
 
         yield return null;
     }
@@ -312,6 +315,7 @@ public class ClothToMachine : MonoBehaviour
 
             AudioManager.PlayAudio(AudioType.Bag_Phase1);
             myImage.sprite = SpriteLoader.NPCDic[this.tag].openBag;
+            secondImage.sprite = SpriteLoader.NPCDic[this.tag].openBag;
 
             if (timeUp) FinalCameraController.FishBossNotification.ShowFish();
             //FinalCameraController.FishBossNotification.ShowFish(); //test
