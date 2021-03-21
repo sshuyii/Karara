@@ -230,8 +230,22 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         returnClothNotice.SetActive(false);
         //returnConfirmButton.gameObject.SetActive(false);
     }
+
+    IEnumerator KararaDeny()
+    {
+        returnClothNotice.SetActive(true);
+
+        //karara摇头
+        TutorialManagerNew.kararaAnimator.SetTrigger("isShaking");
+        //等待两秒之后消失，这两秒内也不能点yes
+        yield return new WaitForSeconds(1f);
+        returnClothNotice.SetActive(false);
+
+    }
+
     public void showReturnConfirm()
     {
+        //出现了归还ui之后再禁止还衣服
         if(TutorialManagerNew.putClothBack)
         {
             if(clothName == 1|| clothName == 2)
@@ -245,9 +259,8 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
                 //todo: 显示karara说一些话，鞋不能还
                 
             }
-            
-            //karara摇头
-            TutorialManagerNew.kararaAnimator.SetTrigger("isShaking");
+           
+            StartCoroutine(KararaDeny());
             return;
         }
 
@@ -272,9 +285,17 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         tapStart = true;
     }
 
+
     public void ReturnCloth()
     {
-        //此时把衣服还到洗衣机里的ui已经出现了
+        ///此时把衣服还到洗衣机里的ui已经出现了，玩家点了yes
+        //如果是已经穿上了工作服和鞋，点yes也不能还了
+        if(TutorialManagerNew.putClothBack)
+        {
+            return;
+        }
+        //鞋无论如何都不能还
+        if(clothName == 3) return;
 
         //界面变化
         //这个script是挂在inventory的衣服UI上的
