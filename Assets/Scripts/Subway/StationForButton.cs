@@ -206,7 +206,9 @@ public class StationForButton : MonoBehaviour
 
     public void PressStationForButton()
     {
-        if (LevelManager.isInstruction || LevelManager.stage == 1) return;
+        //if (LevelManager.isInstruction) return;
+        if (LevelManager.stage == 1 && !LevelManager.stageTransiting) return;
+
 
         activeSelectorIdx = stationNum * tabPerStation;
         StationDetails();
@@ -222,7 +224,8 @@ public class StationForButton : MonoBehaviour
 
     public void CloseStationDetail()
     {
-        if (LevelManager.isInstruction|| LevelManager.stage == 1) return;
+        //if (LevelManager.isInstruction) return;
+        if (LevelManager.stage == 1 && !LevelManager.stageTransiting) return;
         PressStationForButton();
     }
 
@@ -252,7 +255,8 @@ public class StationForButton : MonoBehaviour
 
     public void ClickTab()
     {
-        if (LevelManager.isInstruction || LevelManager.stage == 1) return;
+        //if (LevelManager.isInstruction) return;
+        if (LevelManager.stage == 1 && !LevelManager.stageTransiting) return;
         // * tabPerStation
 
         Debug.Log("click tab");

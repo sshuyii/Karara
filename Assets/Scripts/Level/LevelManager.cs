@@ -13,11 +13,15 @@ public class LevelManager : MonoBehaviour
 {
 
     [SerializeField]
-    private GameObject MapHint,MapTutorialBubble,GoBackButton, MapTutorialBag, transitComic;
+    private GameObject MapHint,MapTutorialBubble,GoBackButton, transitComic,MapCar,MapCar_Tut_S2;
 
     [SerializeField]
     private CanvasGroup Map;
 
+    [SerializeField]
+    private GameObject MapInSubway;
+   
+    
 
 
 
@@ -30,7 +34,6 @@ public class LevelManager : MonoBehaviour
     //public CanvasGroup clear;
     public CanvasGroup subwayCG;
     public CanvasGroup Stations;
-    public GameObject car;
     private CanvasGroup carCG;
     private PathFollower PathFollower;
     
@@ -74,9 +77,10 @@ public class LevelManager : MonoBehaviour
     public Sprite[] comics1, comics2;
 
     List<List<Sprite>> comicList = new List<List<Sprite>>();
-    public bool neverLandF = true;
+    public bool neverGoLandF = true;
 
-
+    public bool neverGoMap = true;
+    public int countStationS2 = 0;
 
     void Start()
     {
@@ -89,8 +93,8 @@ public class LevelManager : MonoBehaviour
 
 
 
-        PathFollower = car.GetComponent<PathFollower>();
-        carCG = car.GetComponent<CanvasGroup>();
+        PathFollower = MapCar.GetComponent<PathFollower>();
+        carCG = MapCar.GetComponent<CanvasGroup>();
 
         int skipInstruction = PlayerPrefs.GetInt("skip",-1);
         if(skipInstruction == 1) skip = true;
@@ -99,11 +103,7 @@ public class LevelManager : MonoBehaviour
 
         if (!skip)
         {
-            isInstruction = true;
-            ShowRatingSys(true);
-            GoBackButton.SetActive(false);
-            FinalCameraController.myCameraState = FinalCameraController.CameraState.Map;
-           
+
         }
         else
         {
@@ -112,6 +112,10 @@ public class LevelManager : MonoBehaviour
             //CloseInstruction();
             EndMapTutorial();
         }
+
+
+        
+
 
         comicList.Add(new List<Sprite>());
         comicList[0].AddRange(comics1);
@@ -125,7 +129,30 @@ public class LevelManager : MonoBehaviour
     {
         //只有滚到底的时候才会显示关闭按钮
 
-
+        if(stage ==2 && countStationS2 < 6 &&  RatingSystem.rating == 0)
+        {
+            
+            RatingSystem.ShowRatingSys(true);
+            Debug.Log("stage 2 结局1");
+        }
+            
+                
+        if(stage == 2 && countStationS2 >= 6)
+        {
+            countStationS2= 0;
+            if(RatingSystem.rating < 5)
+            {
+                RatingSystem.ShowRatingSys(true);
+                Debug.Log("stage 2 结局2");
+            }
+            else
+            {
+                //过于遵守规则
+                Debug.Log("过于遵守规则");
+            }
+  
+            
+        }
 
 
         //只有滚到底的时候才会显示关闭按钮
@@ -148,12 +175,10 @@ public class LevelManager : MonoBehaviour
         comicClick = 0;
         upgradeReadyOrNot = false;
         stageTransiting = false;
-        upgradeReadyOrNot = false;
         SubwayMovement.pauseBeforeMove = false;
         stage++;
 
-        yield return new WaitForSeconds(0.5f);
-
+        
         //ShowRatingSys(true);
 
 
@@ -165,6 +190,7 @@ public class LevelManager : MonoBehaviour
     {
         stageTransiting = true;
         if (stage == 1) Show(transitComic.GetComponent<CanvasGroup>());
+        if (stage == 2) Show(transitComic.GetComponent<CanvasGroup>());
     }
 
     public void ClickComic()
@@ -172,7 +198,13 @@ public class LevelManager : MonoBehaviour
 
         transitComic.GetComponent<Image>().sprite = comicList[stage - 1][comicClick];
         comicClick++;
-        if (comicClick == comicList[stage - 1].Count) StartCoroutine(UpdateStage());
+        if (comicClick == comicList[stage - 1].Count)
+        {
+            // 前置教程
+            if (stage == 1) Tut_S2();
+            if (stage == 2) Tut_S3();
+        }
+
         Debug.Log("comic click" + comicClick);
     }
     
@@ -208,13 +240,11 @@ public class LevelManager : MonoBehaviour
         //quick move 之后
 
         if (!isInstruction) return;
-        StationDetail.SetActive(true);
-
-        MapTutorialBag.SetActive(false);
+        
         HideHint();
         HideBubble();
 
-        Practicing = true;
+        //Practicing = true;
 
 
         Debug.Log("show instruction in map");
@@ -234,11 +264,17 @@ public class LevelManager : MonoBehaviour
     {
 
         if (Practicing) return;
-        StationDetail.SetActive(false);
-        GoBackButton.SetActive(true);
-        MapHint.gameObject.transform.parent = GoBackButton.transform;
-        MapHint.gameObject.transform.localPosition = new Vector3(25.5f, 0, 0);
-        ShowHint();
+        //StationDetail.SetActive(false);
+        //GoBackButton.SetActive(true);
+        
+        if (stageTransiting)
+        {
+            MapHint.gameObject.transform.parent = GoBackButton.transform;
+            MapHint.gameObject.transform.localPosition = new Vector3(25.5f, 0, 0);
+            GoBackButton.SetActive(true);
+            isInstruction = false;
+            ShowHint();
+        }
 
     }
 
@@ -255,6 +291,79 @@ public class LevelManager : MonoBehaviour
         FinalCameraController.myCameraState = FinalCameraController.CameraState.Subway;
         SubwayMovement.trainStop();
         //SubwayMovement.timerStay = SubwayMovement.stayTime - 0.01f;
+    }
+
+    public void Tut_S2()
+    {
+        // map animaiton
+        //// block SCROLLING
+        Hide(transitComic.GetComponent<CanvasGroup>());
+        comicClick = 0;
+        HideHint();
+
+        FinalCameraController.GotoPage(3);
+        Animator myAnim = MapInSubway.GetComponent<Animator>();
+        myAnim.SetTrigger("blingbling");
+        FinalCameraController.enableScroll = false;
+
+    }
+
+    public void Tut_S3()
+    {
+        // map animaiton
+        //// block SCROLLING
+        Hide(transitComic.GetComponent<CanvasGroup>());
+        comicClick = 0;
+        HideHint();
+
+        FinalCameraController.GotoPage(3);
+        Animator myAnim = MapInSubway.GetComponent<Animator>();
+        myAnim.SetTrigger("blingbling");
+        FinalCameraController.enableScroll = false;
+
+    }
+
+
+    public IEnumerator EnterMap_Tut_S2()
+    {
+        
+        isInstruction = true;
+        Animator myAnim = MapInSubway.GetComponent<Animator>();
+        myAnim.SetTrigger("idle");
+
+        FinalCameraController.enableScroll = true;
+
+
+        GoBackButton.SetActive(false);
+        Hide(MapCar.GetComponent<CanvasGroup>());
+        MapCar_Tut_S2.SetActive(true);
+        MapTutorialBubble.SetActive(true);
+
+        yield return new WaitForSeconds(2f);
+
+        MapCar_Tut_S2.SetActive(false);
+        Show(MapCar.GetComponent<CanvasGroup>());
+        ShowHint();
+        
+    }
+
+    public IEnumerator EnterMap_Tut_S3()
+    {
+
+        isInstruction = true;
+        Animator myAnim = MapInSubway.GetComponent<Animator>();
+        myAnim.SetTrigger("idle");
+
+        FinalCameraController.enableScroll = true;
+
+
+        GoBackButton.SetActive(true);
+
+
+        yield return new WaitForSeconds(0.1f);
+
+        ShowHint();
+
     }
 
 

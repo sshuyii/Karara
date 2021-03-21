@@ -343,7 +343,7 @@ public class SubwayMovement : MonoBehaviour
             if (LevelManager.stage > 1 && !atInitailStation) StartCoroutine(trainPause());
             else if (!atInitailStation)
             {
-                StartCoroutine(AdsController.UpdatePosters());
+                AdsController.UpdatePosters();
                 trainMove();
             }
             else
@@ -652,7 +652,7 @@ public class SubwayMovement : MonoBehaviour
             //黑屏结束之后
             yield return new WaitForSeconds(0.5f);
             StartCoroutine(LostAndFound.AnimationDropNUm());
-            StartCoroutine(AdsController.UpdatePosters());
+            AdsController.UpdatePosters();
 
 
             yield return new WaitForSeconds(1f);
@@ -680,7 +680,7 @@ public class SubwayMovement : MonoBehaviour
         {
             yield return new WaitForSeconds(0.5f);
             if(currentStation > 0) StartCoroutine(LostAndFound.AnimationDropNUm());
-            StartCoroutine(AdsController.UpdatePosters());
+            AdsController.UpdatePosters();
 
             if(!atInitailStation) yield return new WaitForSeconds(2f);
             FinalCameraController.ChangeCameraSpeed(normalSpeed);
@@ -728,13 +728,17 @@ public class SubwayMovement : MonoBehaviour
         LocalizedString locString = "Fish/DoYourJob";
         string translation = locString;
         FinalCameraController.fishTalkText.text = translation;
+        if (LevelManager.stage == 2) LevelManager.countStationS2++;
 
-        if(currentStation < 2)
+
+        if (currentStation < 2)
         {
             currentStation++;
+            
         }
         else
         {
+            
             roundNum++;
             currentStation = 0;
         }

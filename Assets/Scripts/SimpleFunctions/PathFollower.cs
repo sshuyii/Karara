@@ -31,7 +31,7 @@ public class PathFollower : MonoBehaviour
     private float instructionMoveSpeed;
 
     public bool isGame;
-    public Image MapTutorialBag;
+    //public Image MapTutorialBag;
     private float fillamount = 1f;
     // Use this for initialization
     private void Start () {
@@ -55,7 +55,7 @@ public class PathFollower : MonoBehaviour
         
         if(isInstruction)//绕一圈
         {
-            QuickMove();
+            //QuickMove();
         }    
         else if (!isInstruction && !isGame)
         {
@@ -73,7 +73,7 @@ public class PathFollower : MonoBehaviour
     {
         instructionMoveSpeed = 500f;
         fillamount -= 0.01f;
-        MapTutorialBag.fillAmount = fillamount;
+        //MapTutorialBag.fillAmount = fillamount;
 
         if (waypointIndex <= waypoints.Length - 1)
         {

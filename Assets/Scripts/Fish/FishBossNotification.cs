@@ -41,6 +41,7 @@ public class FishBossNotification : MonoBehaviour
     public void HideFish()
     {
         FishBossUI.SetActive(false);
+        isActive = false;
         FishText.text = defaultString;
     }
 
@@ -54,6 +55,7 @@ public class FishBossNotification : MonoBehaviour
     public void ShowFish()
     {
         FishBossUI.SetActive(true);
+        isActive = true;
         ClickFishBossUI();
         //auto hide after five seconds;
         StartCoroutine(AutoHide());

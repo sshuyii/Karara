@@ -11,6 +11,7 @@ public class AdsController : MonoBehaviour
 
     public HashSet<string> backgrounds = new HashSet<string>();
     private Dictionary<string, Ad> AdsDic = new Dictionary<string, Ad>();
+    Queue<Ad> AdsWaitinglist = new Queue<Ad>();
     private List<Sprite> poses = new List<Sprite>();
 
 
@@ -55,6 +56,9 @@ public class AdsController : MonoBehaviour
     public int nextAdIdx; //第三个
 
     public int stage1UpperBound;
+    int adsShown = 0;
+
+    public string specificAd;
 
     void Start()
     {
@@ -79,9 +83,21 @@ public class AdsController : MonoBehaviour
             string atbs = "a 1 1 1 1";
             atbs = reader.ReadLine();
             if(atbs == null) atbs = "a 1 1 1 1";
-            AdsDic.Add(newPic.name, new Ad(newPic.name, newPic,atbs));
-
+            Ad newAd = new Ad(newPic.name, newPic, atbs);
+            AdsDic.Add(newPic.name, newAd);
+            AdsWaitinglist.Enqueue(newAd);
         }
+
+
+        //Start from one post
+
+        for(int i = 0; i < nextAdIdx; i++)
+        {
+            AdsWaitinglist.Dequeue();
+            adsShown++;
+        }
+        
+
 
         //writer.Close();
         loadedPics = Resources.LoadAll(PosePath, typeof(Sprite));
@@ -220,46 +236,63 @@ public class AdsController : MonoBehaviour
         usedPoses.Add(currentPoseIdx);
 
         if (usedAds.Count >= stage1UpperBound) FinalCameraController.LevelManager.upgradeReadyOrNot = true;
+        if (currentAd == specificAd) FinalCameraController.LevelManager.upgradeReadyOrNot = true;
     }
 
 
     
-    public IEnumerator UpdatePosters()
+    public void UpdatePosters()
     {
-        int adsNumInSubway = 0;
-        foreach(GameObject ad in AdsInSubway)
+
+        if (adsShown - 2 >= usedAds.Count) return;
+
+        nextAdIdx = -1;
+
+        for(int i = 0; i < AdsInSubway.Length; i++)
         {
-            if (ad.active) adsNumInSubway++;
-        }
+            GameObject nextAdSpot = AdsInSubway[i];
+            SpriteRenderer nextAdRender = nextAdSpot.GetComponent<SpriteRenderer>();
 
-        if (adsNumInSubway -2 >= usedAds.Count) yield break;
-
-      
-
-        if (nextAdIdx < AdsInSubway.Length)
-        {
-            SpriteRenderer renderer = AdsInSubway[nextAdIdx].GetComponent<SpriteRenderer>();
-            Color c = renderer.material.color;
-            c.a = 0f;
-            renderer.material.color = c;
-            AdsInSubway[nextAdIdx].SetActive(true);
-
-            //fade in effect
-            for(float f = 0.05f; f< 1f; f+=0.05f)
+            if (nextAdSpot.active == false)
             {
-                c.a = f;
-                renderer.material.color = c;
-                yield return new WaitForSeconds(0.05f);
-                     
+                nextAdSpot.SetActive(true);
+                AdsWaitinglist.Dequeue();
+                StartCoroutine(RendererFadeIn(nextAdRender));
+                break;
             }
+            else if (AdsDic[nextAdRender.sprite.name].hasTaken)
+            {
+                nextAdIdx = i;
+            }
+            
         }
 
-        
-        nextAdIdx++;
+        if(nextAdIdx > 0)
+        {
+            Ad newAd = AdsWaitinglist.Dequeue();
+            SpriteRenderer r = AdsInSubway[nextAdIdx].GetComponent<SpriteRenderer>();
+            r.sprite = newAd.sprite;
+            StartCoroutine(RendererFadeIn(r));
+        }
 
-        
     }
 
+
+    private IEnumerator RendererFadeIn(Renderer renderer)
+    {
+        Color c = renderer.material.color;
+        c.a = 0f;
+        renderer.material.color = c;
+  
+        //fade in effect
+        for (float f = 0.05f; f < 1f; f += 0.05f)
+        {
+            c.a = f;
+            renderer.material.color = c;
+            yield return new WaitForSeconds(0.05f);
+
+        }
+    }
 
     public int GetNewFollowerNum()
     {
