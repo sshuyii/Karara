@@ -227,7 +227,7 @@ public class TouchController : MonoBehaviour
                         }
                     }
                 }
-                else  if(FinalCameraController.enableScroll)
+                else 
                 {   //It's a tap as the drag distance is less than 20% of the screen height
                     Debug.Log("Tap");
                     myInputState = InputState.Tap;

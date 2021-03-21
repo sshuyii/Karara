@@ -254,7 +254,7 @@ public class FinalCameraController : MonoBehaviour
             }
             else if (transform.position.x > 5 & FishBossNotification.isActive)
             {
-                FishBossNotification.ShowFish();
+                //FishBossNotification.ShowFish();
             }
 
             //Show(subwayBackground);
@@ -497,6 +497,10 @@ public class FinalCameraController : MonoBehaviour
     public void ChangeToSubway()
     {
         if (LevelManager.isInstruction) return;
+        if(LevelManager.stageTransiting)
+        {
+            LevelManager.UpdateStage();
+        }
 
         phone.SetActive(true);
         CameraMovement.atInventory = false;
@@ -632,6 +636,15 @@ public class FinalCameraController : MonoBehaviour
         CancelAllUI(false);
 
         if(LevelManager.stage > 1) CheckInstructionButton.SetActive(true);
+        if(LevelManager.stageTransiting &&  LevelManager.stage == 1)
+        {
+            StartCoroutine(LevelManager.EnterMap_Tut_S2());
+        }
+
+        if (LevelManager.stageTransiting && LevelManager.stage == 2)
+        {
+            StartCoroutine(LevelManager.EnterMap_Tut_S3());
+        }
 
 
         lastCameraState = myCameraState;

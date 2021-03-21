@@ -248,7 +248,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     
    
     private void DropToLostAndFound(){
-        if(FinalCameraController.LevelManager.neverLandF)
+        if(FinalCameraController.LevelManager.neverGoLandF)
         {
             FinalCameraController.ChangeToSubway();
             FinalCameraController.GotoPage(3);
