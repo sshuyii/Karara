@@ -496,11 +496,11 @@ public class FinalCameraController : MonoBehaviour
 
     public void ChangeToSubway()
     {
-        if (LevelManager.isInstruction) return;
-        if(LevelManager.stageTransiting)
-        {
-            LevelManager.UpdateStage();
-        }
+        //if (LevelManager.isInstruction) return;
+        //if(LevelManager.stageTransiting)
+        //{
+        //    LevelManager.UpdateStage();
+        //}
 
         phone.SetActive(true);
         CameraMovement.atInventory = false;

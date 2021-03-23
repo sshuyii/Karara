@@ -168,9 +168,11 @@ public class LevelManager : MonoBehaviour
     }
 
 
-    public IEnumerator UpdateStage()
+    public void UpdateStage()
     {
+        Debug.Log("let's see ");
         Hide(transitComic.GetComponent<CanvasGroup>());
+        isInstruction = false;
         stageTransiting = false;
         comicClick = 0;
         upgradeReadyOrNot = false;
@@ -178,19 +180,29 @@ public class LevelManager : MonoBehaviour
         SubwayMovement.pauseBeforeMove = false;
         stage++;
 
-        
+
         //ShowRatingSys(true);
 
 
-        yield return null;
+        return;
              
 
     }
     public void StageTrasiting()
     {
         stageTransiting = true;
-        if (stage == 1) Show(transitComic.GetComponent<CanvasGroup>());
-        if (stage == 2) Show(transitComic.GetComponent<CanvasGroup>());
+        if (stage == 1)
+        {
+            Show(transitComic.GetComponent<CanvasGroup>());
+            Debug.Log("stransiting 1");
+        }
+
+        if (stage == 2)
+        {
+            Debug.Log("transiting 2");
+            Show(transitComic.GetComponent<CanvasGroup>());
+        }
+
     }
 
     public void ClickComic()
@@ -280,15 +292,12 @@ public class LevelManager : MonoBehaviour
 
     public void EndMapTutorial()
     {
-        if(isInstruction)
+        if(stageTransiting)
         {
-            isInstruction = false;
-            Hide(Map);
-            HideHint();
-            
+            UpdateStage();
         }
 
-        FinalCameraController.myCameraState = FinalCameraController.CameraState.Subway;
+       
         SubwayMovement.trainStop();
         //SubwayMovement.timerStay = SubwayMovement.stayTime - 0.01f;
     }
