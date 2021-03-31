@@ -209,12 +209,15 @@ public class StationForButton : MonoBehaviour
         //if (LevelManager.isInstruction) return;
         if (LevelManager.stage == 1 && !LevelManager.stageTransiting) return;
 
+        
+
 
         activeSelectorIdx = stationNum * tabPerStation;
         StationDetails();
 
-        if(LevelManager.stage > 2)
+        if(LevelManager.stage > 2 || (LevelManager.stage == 2 && LevelManager.isInstruction))
         {
+            Debug.Log("LETS SEE THE TRANSITION!!!");
             showProfileSelectors();
             HideProfileWhenCloseStationDetail();
         }
@@ -308,19 +311,22 @@ public class StationForButton : MonoBehaviour
             
         if ((isDetailed && stationNum == currDetailedStation) || exiting)
         {
+            Debug.Log("EnterStationDetail_Tut_S3 wrong way");
+            if (LevelManager.stage == 2 && LevelManager.isInstruction) return;
               
            collection.SetActive(false);
-            tabsParentGO.SetActive(false);
-           isDetailed = !isDetailed;
+           tabsParentGO.SetActive(false);
+           isDetailed = false;
 
         }
         else
         {
             if (!isDetailed)
             {
+                Debug.Log("EnterStationDetail_Tut_S3");
                collection.SetActive(true);
                 tabsParentGO.SetActive(true);
-                isDetailed = !isDetailed;
+                isDetailed = true;
             }
 
 
@@ -523,6 +529,10 @@ public class StationForButton : MonoBehaviour
         if(EnteringSelection)
 
         {
+            if (LevelManager.stage == 2 && LevelManager.isInstruction)
+            {
+                StartCoroutine(LevelManager.EnterMatch_Tut_S3());
+            }
             int idx = matchedNPCIdx[stationNum][tabNum];
             ProfileUsageState[idx] = "";
             EnterSelectionButton.GetComponent<Image>().sprite = afterEnter;
@@ -532,7 +542,10 @@ public class StationForButton : MonoBehaviour
         else
         {
             //确定选择
-
+            if (LevelManager.stage == 2 && LevelManager.isInstruction)
+            {
+                LevelManager.EndMatch_Tut_S3();
+            }
             int idx = matchedNPCIdx[stationNum][tabNum];
             if(ProfileUsageState[idx] != "")
             {

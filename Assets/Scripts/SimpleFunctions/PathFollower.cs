@@ -53,15 +53,8 @@ public class PathFollower : MonoBehaviour
     private void Update () {
 
         
-        if(isInstruction)//绕一圈
-        {
-            //QuickMove();
-        }    
-        else if (!isInstruction && !isGame)
-        {
-            //myRT.rotation = Quaternion.Euler(Vector3.zero);
-        }
-        else if(isGame)
+       
+        if(isGame)
         {        
             Move();
         }

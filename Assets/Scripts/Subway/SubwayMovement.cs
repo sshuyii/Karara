@@ -166,6 +166,8 @@ public class SubwayMovement : MonoBehaviour
     public bool OpeningProcess = false;
     public bool ClosingProcess = false;
 
+    [Header("Countdown Banner")]
+    public int CountdownOccureStation;
     public GameObject Banner;
     public UnityEngine.UI.Text remainingTime;
     public GameObject BlackScreen;
@@ -178,6 +180,9 @@ public class SubwayMovement : MonoBehaviour
 
     [SerializeField]
     private StationForButton StationForButton;
+
+    // station scroll
+    int ScrollStopAtMachine = -1;
 
     // Start is called before the first frame update
     void Start() 
@@ -308,9 +313,10 @@ public class SubwayMovement : MonoBehaviour
 
         }
 
-        if(!isMoving && !ClosingProcess && NoPosition)
+        if(!isMoving && !OpeningProcess && !ClosingProcess && NoPosition)
         {
             //todo: 门开着就持续试图放包
+            GenerateBag(currentStation);
         }
         
 
@@ -368,7 +374,7 @@ public class SubwayMovement : MonoBehaviour
 
         // banner shows 10s before moving
         // does not work on stage one
-        if (LevelManager.stage > 1 && !atInitailStation && timerStay > stayTime - 10f)
+        if (LevelManager.stage > CountdownOccureStation-1 && !atInitailStation && timerStay > stayTime - 10f)
         {
             if (!Banner.active) Banner.SetActive(true);
             else
@@ -545,6 +551,7 @@ public class SubwayMovement : MonoBehaviour
 
         if (bagNum < 3)
         {
+            NoPosition = false;
             emptyBagPos();
 
 
@@ -552,8 +559,8 @@ public class SubwayMovement : MonoBehaviour
             Button bag = Instantiate(NameToStationBags[stationNum][npcNum], bagPos[firstEmptyPos],
     Quaternion.identity) as Button;
 
-            bag.GetComponent<ClothToMachine>().timer = 4 * stayTime + 3 * moveTime - timerStay;
-            bag.GetComponent<ClothToMachine>().totalTime = 4 * stayTime + 3 * moveTime - timerStay;
+            bag.GetComponent<ClothToMachine>().timer = CalculateBagTime();
+            bag.GetComponent<ClothToMachine>().totalTime = CalculateBagTime();
 
 
 
@@ -588,6 +595,7 @@ public class SubwayMovement : MonoBehaviour
         //如果现在车里不够三个包
         if (bagNum < 3)
         {
+            NoPosition = false;
             emptyBagPos();
 
             //only generate a new bag if there is an empty position
@@ -596,8 +604,8 @@ public class SubwayMovement : MonoBehaviour
             {
                 Button bag = Instantiate(NPCBag, bagPos[firstEmptyPos],
                     Quaternion.identity) as Button;
-                bag.GetComponent<ClothToMachine>().timer = 4 * stayTime + 3 * moveTime - timerStay;
-                bag.GetComponent<ClothToMachine>().totalTime = 4 * stayTime + 3 * moveTime - timerStay;
+                bag.GetComponent<ClothToMachine>().timer = CalculateBagTime();
+                bag.GetComponent<ClothToMachine>().totalTime = CalculateBagTime();
                 bag.GetComponent<ClothToMachine>().myStation = currentStation;
                 string temp = "X";
                 bag.gameObject.transform.tag = temp;
@@ -623,8 +631,8 @@ public class SubwayMovement : MonoBehaviour
 
     public IEnumerator trainPause()
     {
-        float normalSpeed = 0.3f
-;       FinalCameraController.CancelAllUI(false);
+        float normalSpeed = 0.3f;
+        FinalCameraController.CancelAllUI(false);
         FinalCameraController.enableScroll = false;
         Banner.SetActive(false);
         pauseBeforeMove = true;
@@ -643,67 +651,36 @@ public class SubwayMovement : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
         BlackScreen.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
 
-        
-
-
-        if(roundNum > 0)
+        if (LevelManager.UIRateShown && LostAndFound.totalCount > 0)
         {
-            //黑屏结束之后
-            yield return new WaitForSeconds(0.5f);
             StartCoroutine(LostAndFound.AnimationDropNUm());
-            AdsController.UpdatePosters();
-
-
             yield return new WaitForSeconds(1f);
-            FinalCameraController.ChangeCameraSpeed(normalSpeed*0.5f);
-            FinalCameraController.GotoPage(1);
-
-
-            int rbn = 0;
-            for (int i = 2; i >-1; i--)
-            {
-                yield return new WaitForSeconds(0.2f);
-                rbn = BagsController.DropAllBagsInWasher(i);
-            }
-
-            //default speed
-            //FinalCameraController.ChangeCameraSpeed(-1f);
-
-            yield return new WaitForSeconds(1.5f);
-            FinalCameraController.ChangeCameraSpeed(normalSpeed*3f);
-            FinalCameraController.GotoPage(1);
-
-            FinalCameraController.FishTalkAccessFromScript("bag"+bagNum.ToString());
         }
         else
         {
-            yield return new WaitForSeconds(0.5f);
-            if(currentStation > 0) StartCoroutine(LostAndFound.AnimationDropNUm());
             AdsController.UpdatePosters();
-
-            if(!atInitailStation) yield return new WaitForSeconds(2f);
-            FinalCameraController.ChangeCameraSpeed(normalSpeed);
-            FinalCameraController.GotoPage(1);
+            yield return new WaitForSeconds(1f);
         }
 
+        FinalCameraController.ChangeCameraSpeed(normalSpeed * 0.5f);
 
-
-        if(roundNum > 0 && currentStation == 0)
+        if (!LevelManager.FishReturnBagShown)
         {
-            yield return new WaitForSeconds(3f);
-            InstagramController.ShowMatchResultFollower();
-            StationForButton.DisplayMatchResult(roundNum);
+            FinalCameraController.GotoPage(3);
+            if(CountBagInMachine(2)) yield break;
+
+
+            yield return new WaitForSeconds(0.5f);
+            FinalCameraController.GotoPage(2);
+            if (CountBagInMachine(1)) yield break;
+            if (CountBagInMachine(0)) yield break;
 
         }
-        else {
-            yield return new WaitForSeconds(1.5f);
-            EndTrainPause();
 
-        }
-
-
- 
+        ScrollStopAtMachine = 2;
+        StartCoroutine(TrainPauseResume());
 
     }
 
@@ -719,6 +696,51 @@ public class SubwayMovement : MonoBehaviour
         trainMove();
     }
 
+    public bool CountBagInMachine(int machineNum)
+    {
+        int rbn = BagsController.CountAllBagsInWasher(machineNum);
+        if (rbn > 0)
+        {
+            LevelManager.ShowFishReturnBagComic();
+            return true;
+        }
+        return false;
+    }
+
+
+    public IEnumerator TrainPauseResume()
+    {
+        float normalSpeed = 0.3f;
+        FinalCameraController.GotoPage(1);
+
+        for (int i = ScrollStopAtMachine; i > -1; i--)
+        {
+            yield return new WaitForSeconds(0.2f);
+            BagsController.DropAllBagsInWasher(i);
+        }
+
+        FinalCameraController.ChangeCameraSpeed(-1f);
+
+        yield return new WaitForSeconds(1.5f);
+        FinalCameraController.ChangeCameraSpeed(normalSpeed * 3f);
+        FinalCameraController.GotoPage(1);
+
+        if (roundNum > 0 && currentStation == 0)
+        {
+            yield return new WaitForSeconds(3f);
+            InstagramController.ShowMatchResultFollower();
+            StationForButton.DisplayMatchResult(roundNum);
+
+        }
+        else
+        {
+            yield return new WaitForSeconds(1.5f);
+            EndTrainPause();
+
+        }
+
+
+    }
 
     public void trainMove()
     {
@@ -728,7 +750,7 @@ public class SubwayMovement : MonoBehaviour
         LocalizedString locString = "Fish/DoYourJob";
         string translation = locString;
         FinalCameraController.fishTalkText.text = translation;
-        if (LevelManager.stage == 2) LevelManager.countStationS2++;
+        if (LevelManager.stage > 1) LevelManager.countStationS2++;
 
 
         if (currentStation < 2)
@@ -738,8 +760,8 @@ public class SubwayMovement : MonoBehaviour
         }
         else
         {
-            
-            roundNum++;
+
+            if (LevelManager.stage > 1) roundNum++;
             currentStation = 0;
         }
 
@@ -836,6 +858,9 @@ public class SubwayMovement : MonoBehaviour
     }
 
 
-    
+    private float CalculateBagTime()
+    {
+        return (3 * stayTime + 3 * moveTime - timerStay);
+    }
 
 }

@@ -36,7 +36,7 @@ public class BagsController : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-        if (LevelManager.stage == 1 && timer> 10f)
+        if (LevelManager.stage == 1 && timer> 15f)
         {
             timer = 0f;
             CheckBagsStates();
@@ -186,6 +186,21 @@ public class BagsController : MonoBehaviour
         return returnedBagNum;
     }
 
+    public int CountAllBagsInWasher(int washer)
+    {
+        int returnedBagNum = 0;
+        for (int i = 0; i < bagsInCar.Count; i++)
+        {
+            ClothToMachine ctm = bagsInCar[i].GetComponent<ClothToMachine>();
+            if (ctm.underMachineNum == washer && ctm.isFinished && ctm.timeUp)
+            {
+                returnedBagNum++;
+
+            }
+        }
+        return returnedBagNum;
+    }
+
 
     public int DropAllBagsInWasher(int washer)
     {
@@ -206,6 +221,8 @@ public class BagsController : MonoBehaviour
         }
         return returnedBagNum;
     }
+
+
 
     public void AddTimeUpBags()
     {

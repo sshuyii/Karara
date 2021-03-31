@@ -53,19 +53,26 @@ public class AdsController : MonoBehaviour
 
     [SerializeField]
     private GameObject[] AdsInSubway;
+    [Space(20)]
     public int nextAdIdx; //第三个
 
-    public int stage1UpperBound;
     int adsShown = 0;
 
-    public string specificAd;
+
+    
+    [Header("Level Related")]
+    public int S1UpperBound;
+    public int S2UpperBound;
+    LevelManager LevelManager;
+
+
 
     void Start()
     {
         
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
         SpriteLoader = GameObject.Find("---SpriteLoader").GetComponent<SpriteLoader>();
-
+        LevelManager = FinalCameraController.LevelManager;
 
         //StreamWriter writer = new StreamWriter("./file2.txt");
         //StreamReader reader = new System.IO.StreamReader("./file2.txt");
@@ -109,6 +116,9 @@ public class AdsController : MonoBehaviour
 
         wearingClothes[3] = SpriteLoader.defaultClothes[3];
         wearingClothes[2] = SpriteLoader.defaultClothes[2];
+
+
+        S2UpperBound = S1UpperBound + S2UpperBound;
 
     }
 
@@ -235,8 +245,10 @@ public class AdsController : MonoBehaviour
         usedAds.Add(currentAd);
         usedPoses.Add(currentPoseIdx);
 
-        if (usedAds.Count >= stage1UpperBound) FinalCameraController.LevelManager.upgradeReadyOrNot = true;
-        if (currentAd == specificAd) FinalCameraController.LevelManager.upgradeReadyOrNot = true;
+        
+        // update stage step 1: inform levelmanager to start the upgrade
+        if (usedAds.Count >= S1UpperBound && LevelManager.stage == 1) LevelManager.upgradeReadyOrNot = true;
+        if (usedAds.Count >= S2UpperBound && LevelManager.stage == 2) LevelManager.upgradeReadyOrNot = true;
     }
 
 

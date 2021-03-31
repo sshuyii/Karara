@@ -14,7 +14,7 @@ public class LostAndFound : MonoBehaviour
     public List<Cloth> LostAndFoundClothes = new List<Cloth>();
     public List<NPC> ClothesOwners = new List<NPC>();
 
-    int totalCount = 0;
+    public int totalCount = 0;
 
     [SerializeField]
     private TextMeshPro lostFoundNum;
@@ -23,7 +23,7 @@ public class LostAndFound : MonoBehaviour
 
     private bool isShowingNum = false;
 
-    private RatingSystem RatingSys;
+    public RatingSystem RatingSys;
     private InstagramController InstagramController;
 
 
@@ -50,7 +50,7 @@ public class LostAndFound : MonoBehaviour
     {
         if (!isShowingNum)
         {
-            
+            ShaderOff();
             lostFoundNum.SetText(totalCount.ToString());
             lostFoundNum.enabled = true;
             numBubble.SetActive(true);
@@ -129,5 +129,17 @@ public class LostAndFound : MonoBehaviour
         dropNumText.SetActive(false);
         clickLostFound();
 
+    }
+
+    public void ShaderOn()
+    {
+        Animator myAnim = GetComponent<Animator>();
+        myAnim.SetTrigger("blingbling");
+    }
+
+    public void ShaderOff()
+    {
+        Animator myAnim = GetComponent<Animator>();
+        myAnim.SetTrigger("idle");
     }
 }
