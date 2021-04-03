@@ -148,6 +148,18 @@ public class TutorialManagerNew : MonoBehaviour
         inventoryBubbleSR = inventoryBubble.GetComponentsInChildren<SpriteRenderer>()[1];
     }
 
+    IEnumerator LongTap()
+    {
+        //出现鱼教学长按还衣服
+        yield return new WaitForSeconds(1.5f);
+        inventoryFish.SetActive(true);
+
+        //对话框出现3s后消失（暂时
+        yield return new WaitForSeconds(3f);
+        inventoryFish.SetActive(false);    
+    }
+
+    bool longTap = false;
     // Update is called once per frame
     void Update()
     {
@@ -155,7 +167,6 @@ public class TutorialManagerNew : MonoBehaviour
         {
             if (myMachineState == MachineState.Washing)
             {
-
                 CalculateTime();
             }
 
@@ -163,9 +174,16 @@ public class TutorialManagerNew : MonoBehaviour
         }
 
         //在inventory里穿衣服
-        //穿上工作服>>穿上随便哪件工作服+还掉另外一件
-        if(workClothOn && workShoeOn && stepCounter == 10)
+        //穿上工作服>>穿上鞋>>>鱼开始让人还衣服
+        if(isWearingClothNum == 3 && !longTap)
         {           
+            longTap = true;
+            StartCoroutine(LongTap());
+        }
+
+        //还掉鞋之后出现返回地铁按钮
+        if(putClothBack && stepCounter == 10)
+        {
             forwardOneStep = true;
         }
 
@@ -313,7 +331,7 @@ public class TutorialManagerNew : MonoBehaviour
                     ShowInventory();
                     break;
                 case 11:
-                    //穿了工作服和鞋之后就可以显示返回地铁的按钮
+                    //还了鞋之后就可以显示返回地铁的按钮
                     ShowBackButton();
                     //一定是还了一件衣服才能返回的，所以洗衣机里又有衣服了
                     machineFront.sprite = fullImg;
@@ -448,8 +466,8 @@ public class TutorialManagerNew : MonoBehaviour
             HintScreen.SetActive(true);
 
             //身上穿的衣服
-            if(isAlter) {body.sprite = pos0WorkAlter;}
-            else {body.sprite = pos0Work;}            
+            // if(isAlter) {body.sprite = pos0WorkAlter;}
+            // else {body.sprite = pos0Work;}            
             
             everything.sprite = null;
             HintScreen.transform.localPosition = HintPosShutter;
@@ -499,29 +517,34 @@ public class TutorialManagerNew : MonoBehaviour
 
             if(clickTime == 1)
             {
-                //身上穿的衣服
-                if(isAlter) {body.sprite = pos0WorkAlter;}
-                else {body.sprite = pos0Work;}
+                // //身上穿的衣服
+                // if(isAlter) {body.sprite = pos0WorkAlter;}
+                // else {body.sprite = pos0Work;}
+                body.sprite = pos0Work;
 
                 //第一次发的post
                 isInitialPosture = false;
-                if(isAlter) {postKararaImage.sprite = postPose1Alter;}
-                else {postKararaImage.sprite = postPose1;}
+                // if(isAlter) {postKararaImage.sprite = postPose1Alter;}
+                // else {postKararaImage.sprite = postPose1;}
+
+                postKararaImage.sprite = postPose1;
        
             }
             else if(clickTime == 2)
             {   
-                //身上穿的衣服
-                if(isAlter) {body.sprite = pos1WorkAlter;}
-                else {body.sprite = pos1Work;}
+                // //身上穿的衣服
+                // if(isAlter) {body.sprite = pos1WorkAlter;}
+                // else {body.sprite = pos1Work;}
+                body.sprite = pos1Work;
 
 
                 clickTime = 0;
 
                 //第一次发的post
                 isInitialPosture = true;
-                if(isAlter) {postKararaImage.sprite = postPose2Alter;}
-                else {postKararaImage.sprite = postPose2;}
+                // if(isAlter) {postKararaImage.sprite = postPose2Alter;}
+                // else {postKararaImage.sprite = postPose2;}
+                postKararaImage.sprite = postPose2;
             }
 
             Debug.Log("ClickChangePosture 2nd");
@@ -902,7 +925,7 @@ public class TutorialManagerNew : MonoBehaviour
         //点的衣服
         clothSlotTable[slotNum].SetActive(false);
 
-        if(pickedClothNum == 4)
+        if(pickedClothNum == 3)
         {
             CloseMachine();
 
@@ -1008,41 +1031,45 @@ public class TutorialManagerNew : MonoBehaviour
     public void ClickBackButton()
     {
         if (deactiveButtons) return;
-        if(inventoryCloth[3].sprite != workInventory &&
-            inventoryCloth[3].sprite != workAlterInventory) 
-        {
-            //如果两件工作服都没穿的话
-            //todo: 手机震动
-            Handheld.Vibrate();
+        if(!putClothBack) return;
 
-            //todo: 提示不想只穿白帽衫
-            StartCoroutine(KararaTalkInventory(hoodie));
+        // if(inventoryCloth[3].sprite != workInventory &&
+        //     inventoryCloth[3].sprite != workAlterInventory) 
+        // {
+        //     //如果两件工作服都没穿的话
+        //     //todo: 手机震动
+        //     Handheld.Vibrate();
+
+        //     //todo: 提示不想只穿白帽衫
+        //     StartCoroutine(KararaTalkInventory(hoodie));
             
-            return;
-        }
-        else{
-            //如果穿上了其中一件
-            if(inventoryCloth[2].sprite != workShoe)//但是没穿鞋
-            {
-                //todo: 手机震动
-                Handheld.Vibrate();
+        //     return;
+        // }
+        // else{
+        //     //如果穿上了其中一件
+        //     if(inventoryCloth[2].sprite != workShoe)//但是没穿鞋
+        //     {
+        //         //todo: 手机震动
+        //         Handheld.Vibrate();
 
 
-                //todo: 提示不想光脚
-                StartCoroutine(KararaTalkInventory(barefoot));
+        //         //todo: 提示不想光脚
+        //         StartCoroutine(KararaTalkInventory(barefoot));
 
-                return;
-            }
-        }
+        //         return;
+        //     }
+        // }
 
-        //如果有衣服没有还，也不能回到地铁
-        if(!putClothBack) 
-        {
-            //todo: 鱼告诉karara要把衣服都还了
-            StartCoroutine(FishTalkInventory());
+        // //如果有衣服没有还，也不能回到地铁
+        // if(!putClothBack) 
+        // {
+        //     //todo: 鱼告诉karara要把衣服都还了
+        //     StartCoroutine(FishTalkInventory());
             
-            return;
-        }
+        //     return;
+        // }
+
+        //真正回到地铁
         TutorialCameraController.ReturnToApp();
         Hide(Inventory);
 

@@ -9,6 +9,7 @@ public class TutorialClickSweet : MonoBehaviour
 
     public Button returnConfirmButton;
     public GameObject returnBG;
+    public TutorialManagerNew TutorialManagerNew;
 
     void Start()
     {
@@ -24,6 +25,7 @@ public class TutorialClickSweet : MonoBehaviour
     public void ClickSweet()
     {
         this.gameObject.SetActive(false);
+        TutorialManagerNew.isWearingClothNum ++;
     }
 
 

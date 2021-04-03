@@ -61,6 +61,10 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
     private GameObject returnBG,dropClothImage;
     [SerializeField]
     private bool isWorkCloth;
+    [SerializeField]
+    private Animator myAnimator;
+
+
     
 
 	
@@ -125,6 +129,12 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
                 Reset();
 			}
 		}
+
+        //三件衣服都点过了，该还的那件衣服开始闪烁
+        if(TutorialManagerNew.isWearingClothNum == 3 && clothName == 3)
+        {
+            myAnimator.SetBool("isShining", true);
+        }
     }
 
 
@@ -132,71 +142,78 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
     {
         //如果长按
         if(longPress) return;
+        if(TutorialManagerNew.isWearingClothNum > 2) return;
         
 
         //点击inventory里的衣服UI
+        //理论上每件衣服都得点一遍
         // if (deactiveButtons) return;
         Debug.Log("ClickClothInventory");
+        //闪烁动画停止
+        myAnimator.SetBool("isShining", false);
 
         //change Cloth
         if(clothName == 1)
         {   
-            if(TutorialManagerNew.isWearingClothNum != 1)
-            {
-                TutorialManagerNew.isWearingClothNum = 1;
+
+            // if(TutorialManagerNew.isWearingClothNum != 1)
+            // {
+                TutorialManagerNew.isWearingClothNum ++;
+
+                
 
                 TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.workInventory;
                 TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.workSubway;
                 // TutorialManagerNew.postKararaImage.sprite = postPose1;
                 TutorialManagerNew.workClothOn = true;
                 TutorialManagerNew.isAlter = false;
-            }
-            else{
-                //把这件衣服脱了
-                TutorialManagerNew.isWearingClothNum = 0;
+            // }
+            // else{
+            //     //把这件衣服脱了
+            //     TutorialManagerNew.isWearingClothNum = 0;
 
-                TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.transparent;
-                // TutorialManagerNew.inventoryCloth[0].sprite = top;
-                // TutorialManagerNew.inventoryCloth[1].sprite = bottom;
+           //     TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.transparent;
+            //     // TutorialManagerNew.inventoryCloth[0].sprite = top;
+              //     // TutorialManagerNew.inventoryCloth[1].sprite = bottom;
 
-            }
+            // }
         }
-        else if(clothName == 2)
-        {
-            if(TutorialManagerNew.isWearingClothNum != 2)
-            {
-                TutorialManagerNew.isWearingClothNum = 2;
+        // else if(clothName == 2)
+        // {
+        //     // if(TutorialManagerNew.isWearingClothNum != 2)
+        //     // {
 
-                TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.workAlterInventory;
-                TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.workAlterSubway;
-                // TutorialManagerNew.postKararaImage.sprite = postPose1Alter;
-                TutorialManagerNew.workClothOn = true;
-                TutorialManagerNew.isAlter = true;
-            }
-            else{
-                //把这件衣服脱了
-                TutorialManagerNew.isWearingClothNum = 0;
+        //         TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.workAlterInventory;
+        //         TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.workAlterSubway;
+        //         // TutorialManagerNew.postKararaImage.sprite = postPose1Alter;
+        //         TutorialManagerNew.workClothOn = true;
+        //         TutorialManagerNew.isAlter = true;
+        //     // }
+        //     // else{
+        //     //     //把这件衣服脱了
+        //     //     TutorialManagerNew.isWearingClothNum = 0;
 
-                TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.transparent;
-            }
+        //     //     TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.transparent;
+        //     // }
 
-        }
+        // }
         else if(clothName == 3)
         {
-            if(!TutorialManagerNew.isWearingShoe)
-            {
-                TutorialManagerNew.isWearingShoe = true;
+            // if(!TutorialManagerNew.isWearingShoe)
+            // {
+                // TutorialManagerNew.isWearingShoe = true;
+                TutorialManagerNew.isWearingClothNum ++;
 
                 TutorialManagerNew.inventoryCloth[2].sprite = TutorialManagerNew.workShoe;
                 TutorialManagerNew.subwayCloth[2].sprite = TutorialManagerNew.workShoeSubway;
                 TutorialManagerNew.workShoeOn = true;
-            }
-            else{
-                //把鞋脱了
-                TutorialManagerNew.isWearingShoe = false;
+            // }
+            // else{
+            //     //把鞋脱了
+            //     TutorialManagerNew.isWearingShoe = false;
 
-                TutorialManagerNew.inventoryCloth[2].sprite = TutorialManagerNew.transparent;
-            }
+            //     TutorialManagerNew.inventoryCloth[2].sprite = TutorialManagerNew.transparent;
+            // }
         } 
     }
 
@@ -245,34 +262,41 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
 
     public void showReturnConfirm()
     {
-        //出现了归还ui之后再禁止还衣服
-        if(TutorialManagerNew.putClothBack)
+        if(clothName != 3)
         {
-            if(clothName == 1|| clothName == 2)
-            {
-                //todo: 显示karara说一些话，工作服不能还
-
-
-            }
-            else if(clothName == 3){
-                //鞋不可以还
-                //todo: 显示karara说一些话，鞋不能还
-                
-            }
-           
-            StartCoroutine(KararaDeny());
-            return;
-        }
-
-        //鞋无论如何都不能还
-        if(clothName == 3)
-        {
-            //鞋不可以还
-            //todo: 显示karara说一些话，鞋不能还
-
+            //karara摇头
             TutorialManagerNew.kararaAnimator.SetTrigger("isShaking");
             return;
         }
+
+        //出现了归还ui之后再禁止还衣服
+        // if(TutorialManagerNew.putClothBack)
+        // {
+        //     if(clothName == 1|| clothName == 2)
+        //     {
+        //         //todo: 显示karara说一些话，工作服不能还
+
+
+        //     }
+        //     // else if(clothName == 3){
+        //     //     //鞋不可以还
+        //     //     //todo: 显示karara说一些话，鞋不能还
+                
+        //     // }
+           
+        //     StartCoroutine(KararaDeny());
+        //     return;
+        // }
+
+        // 只能还鞋
+        // if(clothName != 3) return
+        // {
+        //     //鞋不可以还
+        //     //todo: 显示karara说一些话，鞋不能还
+
+        //     TutorialManagerNew.kararaAnimator.SetTrigger("isShaking");
+        //     return;
+        // }
 
         //如果是两件衣服中的一件，可以还
         //鞋不可以还
@@ -289,54 +313,59 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
     public void ReturnCloth()
     {
         ///此时把衣服还到洗衣机里的ui已经出现了，玩家点了yes
-        //如果是已经穿上了工作服和鞋，点yes也不能还了
-        if(TutorialManagerNew.putClothBack)
-        {
-            return;
-        }
-        //鞋无论如何都不能还
-        if(clothName == 3) return;
+        //只能还鞋
+        if(clothName != 3) return;
+        myAnimator.SetBool("isShining", false);
 
-        //界面变化
+
         //这个script是挂在inventory的衣服UI上的
         returnClothNotice.SetActive(false);
         longPress = false;
 
         //inventory里的衣服消失
-        GetComponent<Image>().sprite = TutorialManagerNew.transparent;
+        this.gameObject.SetActive(false);
+
+        //inventory里karara身上的鞋消失
+        TutorialManagerNew.inventoryCloth[2].sprite = TutorialManagerNew.transparent;
+
+        //鞋放回洗衣机里
+        TutorialManagerNew.ClothSlotList[2].SetActive(true);
+
+        //可以出现回到地铁的按钮
+        TutorialManagerNew.putClothBack = true;
 
         //确认哪件衣服出现
-        TutorialManagerNew.clothSlotTable[clothName].SetActive(true);
+        // TutorialManagerNew.clothSlotTable[clothName].SetActive(true);
 
-        //Karara身上的衣服消失
-        if(clothName == 1)
-        {   
-            //还了任意一件工作服，就不能还另一件了
-            TutorialManagerNew.putClothBack = true;
-            if(TutorialManagerNew.isWearingClothNum == 1)
-            {
-                //karara身上的衣服消失
-                TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.transparent;
-                TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.transparent;
-                TutorialManagerNew.adsCloth[3].sprite = TutorialManagerNew.transparent;
-            }
-            //放回洗衣机里
-            TutorialManagerNew.ClothSlotList[0].SetActive(true);
-        }
-        else if(clothName == 2)
-        {   
-            //还了任意一件工作服，就不能还另一件了
-            TutorialManagerNew.putClothBack = true;
-            if(TutorialManagerNew.isWearingClothNum == 2)
-            {
-                //karara身上的衣服消失
-                TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.transparent;
-                TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.transparent;
-                TutorialManagerNew.adsCloth[3].sprite = TutorialManagerNew.transparent;
-            }
-            //放回洗衣机里
-            TutorialManagerNew.ClothSlotList[1].SetActive(true);
-        }       
+        // //Karara身上的衣服消失
+        // if(clothName == 1)
+        // {   
+        //     //还了任意一件工作服，就不能还另一件了
+        //     TutorialManagerNew.putClothBack = true;
+        //     if(TutorialManagerNew.isWearingClothNum == 1)
+        //     {
+        //         //karara身上的衣服消失
+        //         TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.transparent;
+        //         TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.transparent;
+        //         TutorialManagerNew.adsCloth[3].sprite = TutorialManagerNew.transparent;
+        //     }
+        //     //放回洗衣机里
+        //     TutorialManagerNew.ClothSlotList[0].SetActive(true);
+        // }
+        // else if(clothName == 2)
+        // {   
+        //     //还了任意一件工作服，就不能还另一件了
+        //     TutorialManagerNew.putClothBack = true;
+        //     if(TutorialManagerNew.isWearingClothNum == 2)
+        //     {
+        //         //karara身上的衣服消失
+        //         TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.transparent;
+        //         TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.transparent;
+        //         TutorialManagerNew.adsCloth[3].sprite = TutorialManagerNew.transparent;
+        //     }
+        //     //放回洗衣机里
+        //     TutorialManagerNew.ClothSlotList[1].SetActive(true);
+        // }
 
 
         //todo: long press but later chose not to return?
