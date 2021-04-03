@@ -68,7 +68,7 @@ public class ClockRotate : MonoBehaviour
     {
         if(!isFast && !SubwayMovement.pauseBeforeMove)
         {
-            fillAmount -= 1 / (3 * (SubwayMovement.stayTime + SubwayMovement.moveTime) + SubwayMovement.stayTime) *
+            fillAmount -= 1 / (2 * (SubwayMovement.stayTime + SubwayMovement.moveTime) + SubwayMovement.stayTime) *
                 Time.deltaTime;
             //            myRectT.Rotate(new Vector3(0, 0, -zRotation * Time.deltaTime));
             if(SubwayMovement.LevelManager.stage > 1) selfImage.fillAmount = fillAmount;

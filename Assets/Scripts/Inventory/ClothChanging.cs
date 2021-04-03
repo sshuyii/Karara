@@ -82,6 +82,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     private float totalTime = -1f;
 
     private AudioManager AudioManager;
+    private LevelManager LevelManager;
     void Start()
     {
         
@@ -95,7 +96,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         AdsController = GameObject.Find("---AdsController").GetComponent<AdsController>();
         InventorySlotMgt = GameObject.Find("---InventoryController").GetComponent<InventorySlotMgt>();
         //AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
-
+        LevelManager = FinalCameraController.LevelManager;
         startPos = transform.position;
 
 
@@ -142,8 +143,6 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
         if(isOccupied && !SubwayMovement.pauseBeforeMove)
         {
-            myFillAmount -= 1 / (3 * (SubwayMovement.stayTime + SubwayMovement.moveTime) + SubwayMovement.stayTime) *
-                Time.deltaTime;
 
             timer -= Time.deltaTime;
             if (FinalCameraController.LevelManager.stage > 1)  myImage.fillAmount = timer/totalTime;
@@ -231,6 +230,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
         if(timer < 0||bagFoundInCar ==false)
         {
+            
             Debug.Log("put l f");
             DropToLostAndFound();
             //Debug.Log("put l f");
@@ -248,19 +248,26 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     
    
     private void DropToLostAndFound(){
-        if(FinalCameraController.LevelManager.neverGoLandF)
+        if(LevelManager.neverGoLandF)
         {
-            FinalCameraController.ChangeToSubway();
-            FinalCameraController.GotoPage(3);
-            StartCoroutine(LostAndFound.AnimationDropNUm());
+            LevelManager.neverGoLandF = false;
+            //FinalCameraController.ChangeToSubway();
+            //FinalCameraController.GotoPage(4);
+            LostAndFound.ShaderOn();
         }
+
+        
+
         currentSprite = GetComponent<Image>().sprite;
         //Debug.Log("丢掉" +currentSprite.name);
         Cloth thisCloth = SpriteLoader.ClothDic[currentSprite.name];
         NPC owner = SpriteLoader.NPCDic[thisCloth.owner];
         LostAndFound.AddClothToList(thisCloth, owner);
-       
+
+        int rate = LostAndFound.RatingSys.rating;
+        LevelManager.CheckUIRateCondition(rate);
     }
+
 
     private void AfterTakeOff(){
         myImage.sprite = startSprite;

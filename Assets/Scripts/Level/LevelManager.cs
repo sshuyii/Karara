@@ -82,6 +82,20 @@ public class LevelManager : MonoBehaviour
     public bool neverGoMap = true;
     public int countStationS2 = 0;
 
+
+    [Header("stage 3")]
+    public GameObject matchButton;
+    public int targetStationS2;
+
+    [Header("UI Rate")]
+    public bool UIRateShown = false;
+
+    [Header("Station Scroll")]
+    public bool FishReturnBagShown = false;
+    public bool LandFinLeaveStation = false;
+    public GameObject FishBagReturnComic;
+    
+
     void Start()
     {
         Resources.UnloadUnusedAssets();
@@ -129,30 +143,8 @@ public class LevelManager : MonoBehaviour
     {
         //只有滚到底的时候才会显示关闭按钮
 
-        if(stage ==2 && countStationS2 < 6 &&  RatingSystem.rating == 0)
-        {
-            
-            RatingSystem.ShowRatingSys(true);
-            Debug.Log("stage 2 结局1");
-        }
-            
-                
-        if(stage == 2 && countStationS2 >= 6)
-        {
-            countStationS2= 0;
-            if(RatingSystem.rating < 5)
-            {
-                RatingSystem.ShowRatingSys(true);
-                Debug.Log("stage 2 结局2");
-            }
-            else
-            {
-                //过于遵守规则
-                Debug.Log("过于遵守规则");
-            }
   
-            
-        }
+    
 
 
         //只有滚到底的时候才会显示关闭按钮
@@ -249,15 +241,21 @@ public class LevelManager : MonoBehaviour
 
     public void ShowInstructionInMap()
     {
-        //quick move 之后
-
+       
         if (!isInstruction) return;
-        
+
+        if(stage == 2 && stageTransiting)
+        {
+            StartCoroutine(EnterStationDetail_Tut_S3());
+        }
+
+
         HideHint();
         HideBubble();
 
         //Practicing = true;
 
+        
 
         Debug.Log("show instruction in map");
     }
@@ -275,11 +273,11 @@ public class LevelManager : MonoBehaviour
     public void CloseInstruction()
     {
 
-        if (Practicing) return;
-        //StationDetail.SetActive(false);
-        //GoBackButton.SetActive(true);
-        
-        if (stageTransiting)
+        //if (Practicing) return;
+        ////StationDetail.SetActive(false);
+        ////GoBackButton.SetActive(true);
+
+        if (stageTransiting && stage == 1)
         {
             MapHint.gameObject.transform.parent = GoBackButton.transform;
             MapHint.gameObject.transform.localPosition = new Vector3(25.5f, 0, 0);
@@ -292,6 +290,8 @@ public class LevelManager : MonoBehaviour
 
     public void EndMapTutorial()
     {
+        // click back to subway button from map
+
         if(stageTransiting)
         {
             UpdateStage();
@@ -325,10 +325,10 @@ public class LevelManager : MonoBehaviour
         comicClick = 0;
         HideHint();
 
+        
         FinalCameraController.GotoPage(3);
         Animator myAnim = MapInSubway.GetComponent<Animator>();
         myAnim.SetTrigger("blingbling");
-        FinalCameraController.enableScroll = false;
 
     }
 
@@ -363,19 +363,102 @@ public class LevelManager : MonoBehaviour
         Animator myAnim = MapInSubway.GetComponent<Animator>();
         myAnim.SetTrigger("idle");
 
-        FinalCameraController.enableScroll = true;
+
+        //car animation
+        myAnim = MapCar.GetComponent<Animator>();
+        myAnim.SetTrigger("blingbling");
 
 
         GoBackButton.SetActive(true);
+        GoBackButton.GetComponent<Button>().enabled = false;
+        yield return null;
+    
+
+    }
+
+    public IEnumerator EnterStationDetail_Tut_S3()
+    {
 
 
-        yield return new WaitForSeconds(0.1f);
+        Debug.Log("LETS SEE THE TRANSITION????");
 
-        ShowHint();
+        Animator myAnim = MapCar.GetComponent<Animator>();
+        myAnim.SetTrigger("idle");
+
+        myAnim = matchButton.GetComponent<Animator>();
+        myAnim.SetTrigger("blingbling");
+
+        yield return null;
+    }
+
+  
+
+    public IEnumerator EnterMatch_Tut_S3()
+    {
+        // called from StationForButton.StationDetail()
+        Debug.Log("?? EnterMatch_Tut_S3");
+        Animator myAnim = matchButton.GetComponent<Animator>();
+        myAnim.SetTrigger("idle");
+
+        yield return new WaitForSeconds(3f);
+
+        myAnim.SetTrigger("blingbling");
 
     }
 
 
+    public void EndMatch_Tut_S3()
+    {
+        // called from StationForButton.StationDetail()
+        //弹窗漫画
+        Debug.Log("?? EndMatch_Tut_S3");
+        GoBackButton.GetComponent<Button>().enabled = true;
+        isInstruction = false;
+        Animator myAnim = matchButton.GetComponent<Animator>();
+        myAnim.SetTrigger("idle");
+
+
+    }
+
+    public IEnumerator CheckUIRateCondition(int rate)
+    {
+        if (stage < 2 || UIRateShown) yield break;
+
+        if((countStationS2 > 0 && countStationS2 < targetStationS2 && rate == 0)||
+           (countStationS2 > targetStationS2))
+        {
+            
+            countStationS2 = -10000;
+            UIRateShown = true;
+
+            FinalCameraController.ChangeToSubway();
+            FinalCameraController.GotoPage(1);
+
+            yield return new WaitForSeconds(1f);
+            RatingSystem.ShowRatingSys(true);
+
+        }
+
+        yield return null;
+
+
+
+    }
+
+    public void ShowFishReturnBagComic()
+    {
+
+        FishReturnBagShown = true;
+        FishBagReturnComic.SetActive(true);
+        // show comic and confirm
+    }
+
+    public void ConfirmFishBagReturnComic()
+    {
+        
+        FishBagReturnComic.SetActive(false);
+        StartCoroutine(SubwayMovement.TrainPauseResume());
+    }
 
     IEnumerator ShowInstruction()
     {
