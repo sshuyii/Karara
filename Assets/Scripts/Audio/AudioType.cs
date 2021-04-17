@@ -26,8 +26,12 @@ public enum AudioType
     Machine_CloseDoor,
     Machine_OpenDoor,
     Bag_Phase1,
+    Bag_Vanish,
     Cloth_Return,
     App_Ring,
     UI_Dialogue,
-    UI_Talk
+    UI_Talk,
+    Poster_Enter,
+    No,
+
 }

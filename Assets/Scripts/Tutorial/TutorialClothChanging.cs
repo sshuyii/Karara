@@ -19,7 +19,7 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
 
     public CanvasGroup Occupied;
 
-    //used for lont tap
+    //used for long tap
     private bool tapStart = false;
         
     public bool isWearing;
@@ -100,6 +100,8 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         currentSprite = GetComponent<Image>().sprite;
         top =  TutorialManagerNew.inventoryCloth[0].sprite;
         bottom = TutorialManagerNew.inventoryCloth[1].sprite;
+        AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
+
 
     }
 
@@ -124,7 +126,7 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
                 //Debug.Log("LongPress");
                 //if (!isWorkCloth) InventorySlotMgt.castLongPress();
                 //新功能
-                if (!isWorkCloth) showReturnConfirm();
+                showReturnConfirm();
                 //if(!isWorkCloth) showReturnConfirm();
                 Reset();
 			}
@@ -152,8 +154,10 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         //闪烁动画停止
         myAnimator.SetBool("isShining", false);
 
+        AudioManager.PlayAudio(AudioType.UI_Dialogue);
+
         //change Cloth
-        if(clothName == 1)
+        if(clothName == 1 && !TutorialManagerNew.workClothOn)
         {   
 
             // if(TutorialManagerNew.isWearingClothNum != 1)
@@ -166,7 +170,7 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
                 TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.workSubway;
                 // TutorialManagerNew.postKararaImage.sprite = postPose1;
                 TutorialManagerNew.workClothOn = true;
-                TutorialManagerNew.isAlter = false;
+                // TutorialManagerNew.isAlter = false;
             // }
             // else{
             //     //把这件衣服脱了
@@ -197,7 +201,7 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         //     // }
 
         // }
-        else if(clothName == 3)
+        else if(clothName == 3 && !TutorialManagerNew.workShoeOn)
         {
             // if(!TutorialManagerNew.isWearingShoe)
             // {
@@ -219,10 +223,10 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
 
 
 
-    public void setFillAmount(float[] timers) {
-        timer = timers[0];
-        totalTime = timers[1];
-    }
+    // public void setFillAmount(float[] timers) {
+    //     timer = timers[0];
+    //     totalTime = timers[1];
+    // }
     public void OnPointerDown(PointerEventData eventData)
 	{
         //AudioManager.PlayAudio(AudioType.UI_Dialogue);
@@ -255,13 +259,15 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         //karara摇头
         TutorialManagerNew.kararaAnimator.SetTrigger("isShaking");
         //等待两秒之后消失，这两秒内也不能点yes
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1f); 
         returnClothNotice.SetActive(false);
-
     }
 
     public void showReturnConfirm()
     {
+        //如果没有把所有衣服都点一遍，不能长按还衣服
+        if(TutorialManagerNew.isWearingClothNum < 3) return;
+
         if(clothName != 3)
         {
             //karara摇头
@@ -401,26 +407,26 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
 
     
    
-    private void DropToLostAndFound(){
-        currentSprite = GetComponent<Image>().sprite;
-        //Debug.Log("丢掉" +currentSprite.name);
-        Cloth thisCloth = SpriteLoader.ClothDic[currentSprite.name];
-        NPC owner = SpriteLoader.NPCDic[thisCloth.owner];
-        LostAndFound.AddClothToList(thisCloth, owner);
+    // private void DropToLostAndFound(){
+    //     currentSprite = GetComponent<Image>().sprite;
+    //     //Debug.Log("丢掉" +currentSprite.name);
+    //     Cloth thisCloth = SpriteLoader.ClothDic[currentSprite.name];
+    //     NPC owner = SpriteLoader.NPCDic[thisCloth.owner];
+    //     LostAndFound.AddClothToList(thisCloth, owner);
        
-    }
+    // }
 
-    private void AfterTakeOff(){
-        myImage.sprite = startSprite;
-        halfTspImg.sprite = startSprite;
-        InventorySlotMgt.occupiedNum -= 1;
+    // private void AfterTakeOff(){
+    //     myImage.sprite = startSprite;
+    //     halfTspImg.sprite = startSprite;
+    //     InventorySlotMgt.occupiedNum -= 1;
 
 
-        isOccupied = false;
-        isWearing = false;
-        myImage.fillAmount = 1;
-        originSlotNum = -1;
-    }
+    //     isOccupied = false;
+    //     isWearing = false;
+    //     myImage.fillAmount = 1;
+    //     originSlotNum = -1;
+    // }
 
 
 
@@ -458,180 +464,180 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
 
     //     }
 
-    //     InventorySlotMgt.wearingNonDefualtClothes[typeIdx] = false;
+    //     InventorySlotMgt.wearingNonDefaultClothes[typeIdx] = false;
 
     // }
 
 
 
 
-    public void ChangeCloth()
+    // public void ChangeCloth()
 
-    {
+    // {
 
-        if (!isOccupied) return;
-        if (longPress) return;
-
-
+    //     if (!isOccupied) return;
+    //     if (longPress) return;
 
 
-        currentSprite = GetComponent<Image>().sprite;
-        Cloth thisCloth = SpriteLoader.ClothDic[currentSprite.name];
+
+
+    //     currentSprite = GetComponent<Image>().sprite;
+    //     Cloth thisCloth = SpriteLoader.ClothDic[currentSprite.name];
        
 
-        int typeIdx;
-        SpriteRenderer[] ImagesToChange;
-        switch (thisCloth.type)
-        {
-            case Cloth.ClothType.Top:
-                ImagesToChange = InventorySlotMgt.TopImages;
-                typeIdx = 0;
+    //     int typeIdx;
+    //     SpriteRenderer[] ImagesToChange;
+    //     switch (thisCloth.type)
+    //     {
+    //         case Cloth.ClothType.Top:
+    //             ImagesToChange = InventorySlotMgt.TopImages;
+    //             typeIdx = 0;
                 
-                break;
-            case Cloth.ClothType.Bottom:
-                ImagesToChange = InventorySlotMgt.BottomImages;
-                typeIdx = 1;
-                break;
-            case Cloth.ClothType.Shoe:
-                ImagesToChange = InventorySlotMgt.ShoeImages;
-                typeIdx = 2;
-                break;
-            case Cloth.ClothType.Everything:
-                ImagesToChange = InventorySlotMgt.EverythingImages;
-                typeIdx = 3;
-                break;
-            default:
-                return;
+    //             break;
+    //         case Cloth.ClothType.Bottom:
+    //             ImagesToChange = InventorySlotMgt.BottomImages;
+    //             typeIdx = 1;
+    //             break;
+    //         case Cloth.ClothType.Shoe:
+    //             ImagesToChange = InventorySlotMgt.ShoeImages;
+    //             typeIdx = 2;
+    //             break;
+    //         case Cloth.ClothType.Everything:
+    //             ImagesToChange = InventorySlotMgt.EverythingImages;
+    //             typeIdx = 3;
+    //             break;
+    //         default:
+    //             return;
 
-        }
-
-
-        isWearing = !isWearing;
-
-        if (isWearing)
-        {
-            if (typeIdx == 3)
-            {
-                HideTopBottom();
-            }
-
-            if(typeIdx <2)HideEverything(typeIdx);
-
-            ChangeInThreeScenes(ImagesToChange, thisCloth, typeIdx);
+    //     }
 
 
-            if (InventorySlotMgt.wearingNonDefualtClothes[typeIdx])
-            {
-                InventorySlotMgt.wearingSlots[typeIdx].GetComponent<ClothChanging>().isWearing = false;
-            }
+    //     isWearing = !isWearing;
 
-            InventorySlotMgt.wearingSlots[typeIdx] = this.transform.gameObject;
-            InventorySlotMgt.wearingNonDefualtClothes[typeIdx] = true;
-            //Debug.Log(thisCloth.name);
-            thisCloth.state = Cloth.ClothState.Wearing;
-        }
-        else
-        {
+    //     if (isWearing)
+    //     {
+    //         if (typeIdx == 3)
+    //         {
+    //             HideTopBottom();
+    //         }
 
-            thisCloth.state = Cloth.ClothState.InventoryNotWear;
+    //         if(typeIdx <2)HideEverything(typeIdx);
+
+    //         ChangeInThreeScenes(ImagesToChange, thisCloth, typeIdx);
 
 
-            if (typeIdx == 3)
-            {
-                ShowDefaultTop();
-                ShowDefaultBottom();
-            }
-            else
-            {
-                Cloth defaultCloth = SpriteLoader.defaultClothes[typeIdx];
-                ChangeInThreeScenes(ImagesToChange, defaultCloth, typeIdx);
-            }
+    //         if (InventorySlotMgt.wearingNonDefaultClothes[typeIdx])
+    //         {
+    //             InventorySlotMgt.wearingSlots[typeIdx].GetComponent<ClothChanging>().isWearing = false;
+    //         }
 
-            InventorySlotMgt.wearingNonDefualtClothes[typeIdx] = false;
+    //         InventorySlotMgt.wearingSlots[typeIdx] = this.transform.gameObject;
+    //         InventorySlotMgt.wearingNonDefaultClothes[typeIdx] = true;
+    //         //Debug.Log(thisCloth.name);
+    //         thisCloth.state = Cloth.ClothState.Wearing;
+    //     }
+    //     else
+    //     {
 
-        }
-    }
-
-    private void ChangeInThreeScenes(SpriteRenderer[] ImagesToChange, Cloth cloth, int typeIdx)
-    {
-
-        ImagesToChange[0].sprite = cloth.spritesInScenes[0];
-        ImagesToChange[1].sprite = cloth.spritesInScenes[1];
-        AdsController.ChangeClothInAds(typeIdx, cloth);
-
-    }
-
-    private void HideTopBottom()
-    {
-        InventorySlotMgt.TopImages[0].sprite = TutorialManagerNew.transparent;
-        InventorySlotMgt.TopImages[1].sprite = TutorialManagerNew.transparent;
-        AdsController.TakeOffInAds(1);
-
-        InventorySlotMgt.BottomImages[0].sprite = TutorialManagerNew.transparent;
-        InventorySlotMgt.BottomImages[1].sprite = TutorialManagerNew.transparent;
-        AdsController.TakeOffInAds(2);
+    //         thisCloth.state = Cloth.ClothState.InventoryNotWear;
 
 
-        if (InventorySlotMgt.wearingNonDefualtClothes[0])
-        {
-            InventorySlotMgt.wearingSlots[0].GetComponent<ClothChanging>().isWearing = false;
-            InventorySlotMgt.wearingNonDefualtClothes[0] = false;
-        }
+    //         if (typeIdx == 3)
+    //         {
+    //             ShowDefaultTop();
+    //             ShowDefaultBottom();
+    //         }
+    //         else
+    //         {
+    //             Cloth defaultCloth = SpriteLoader.defaultClothes[typeIdx];
+    //             ChangeInThreeScenes(ImagesToChange, defaultCloth, typeIdx);
+    //         }
 
-        if (InventorySlotMgt.wearingNonDefualtClothes[1])
-        {
-            InventorySlotMgt.wearingSlots[1].GetComponent<ClothChanging>().isWearing = false;
-            InventorySlotMgt.wearingNonDefualtClothes[1] = false;
-        }
+    //         InventorySlotMgt.wearingNonDefaultClothes[typeIdx] = false;
+
+    //     }
+    // }
+
+    // private void ChangeInThreeScenes(SpriteRenderer[] ImagesToChange, Cloth cloth, int typeIdx)
+    // {
+
+    //     ImagesToChange[0].sprite = cloth.spritesInScenes[0];
+    //     ImagesToChange[1].sprite = cloth.spritesInScenes[1];
+    //     AdsController.ChangeClothInAds(typeIdx, cloth);
+
+    // }
+
+    // private void HideTopBottom()
+    // {
+    //     InventorySlotMgt.TopImages[0].sprite = TutorialManagerNew.transparent;
+    //     InventorySlotMgt.TopImages[1].sprite = TutorialManagerNew.transparent;
+    //     AdsController.TakeOffInAds(1);
+
+    //     InventorySlotMgt.BottomImages[0].sprite = TutorialManagerNew.transparent;
+    //     InventorySlotMgt.BottomImages[1].sprite = TutorialManagerNew.transparent;
+    //     AdsController.TakeOffInAds(2);
 
 
-    }
+    //     if (InventorySlotMgt.wearingNonDefaultClothes[0])
+    //     {
+    //         InventorySlotMgt.wearingSlots[0].GetComponent<ClothChanging>().isWearing = false;
+    //         InventorySlotMgt.wearingNonDefaultClothes[0] = false;
+    //     }
 
-    private void HideEverything(int typeIdx)
+    //     if (InventorySlotMgt.wearingNonDefaultClothes[1])
+    //     {
+    //         InventorySlotMgt.wearingSlots[1].GetComponent<ClothChanging>().isWearing = false;
+    //         InventorySlotMgt.wearingNonDefaultClothes[1] = false;
+    //     }
 
-    {
+
+    // }
+
+    // private void HideEverything(int typeIdx)
+
+    // {
         
 
-        if (InventorySlotMgt.wearingNonDefualtClothes[3]||InventorySlotMgt.isWorkingCloth)
-        {
+    //     if (InventorySlotMgt.wearingNonDefaultClothes[3]||InventorySlotMgt.isWorkingCloth)
+    //     {
             
-            InventorySlotMgt.EverythingImages[0].sprite = TutorialManagerNew.transparent;
-            InventorySlotMgt.EverythingImages[1].sprite = TutorialManagerNew.transparent;
-            AdsController.TakeOffInAds(3);
+    //         InventorySlotMgt.EverythingImages[0].sprite = TutorialManagerNew.transparent;
+    //         InventorySlotMgt.EverythingImages[1].sprite = TutorialManagerNew.transparent;
+    //         AdsController.TakeOffInAds(3);
 
 
-            if (InventorySlotMgt.wearingNonDefualtClothes[3])InventorySlotMgt.wearingSlots[3].GetComponent<ClothChanging>().isWearing = false;
-            InventorySlotMgt.wearingNonDefualtClothes[3] = false;
-            ShowDefaultBottom();
-            ShowDefaultTop();
-            InventorySlotMgt.isWorkingCloth = false;
-        }
+    //         if (InventorySlotMgt.wearingNonDefaultClothes[3])InventorySlotMgt.wearingSlots[3].GetComponent<ClothChanging>().isWearing = false;
+    //         InventorySlotMgt.wearingNonDefaultClothes[3] = false;
+    //         ShowDefaultBottom();
+    //         ShowDefaultTop();
+    //         InventorySlotMgt.isWorkingCloth = false;
+    //     }
 
 
-    }
+    // }
 
-    private void ShowDefaultTop()
-    {
-        Cloth defaultCloth = SpriteLoader.defaultClothes[0];
-        ChangeInThreeScenes(InventorySlotMgt.TopImages, defaultCloth, 0);
-        InventorySlotMgt.wearingNonDefualtClothes[0] = false;
+    // private void ShowDefaultTop()
+    // {
+    //     Cloth defaultCloth = SpriteLoader.defaultClothes[0];
+    //     ChangeInThreeScenes(InventorySlotMgt.TopImages, defaultCloth, 0);
+    //     InventorySlotMgt.wearingNonDefaultClothes[0] = false;
 
-    }
+    // }
 
-    private void ShowDefaultBottom()
-    {
-        Cloth defaultCloth = SpriteLoader.defaultClothes[1];
-        ChangeInThreeScenes(InventorySlotMgt.BottomImages, defaultCloth, 1);
-        InventorySlotMgt.wearingNonDefualtClothes[1] = false;
+    // private void ShowDefaultBottom()
+    // {
+    //     Cloth defaultCloth = SpriteLoader.defaultClothes[1];
+    //     ChangeInThreeScenes(InventorySlotMgt.BottomImages, defaultCloth, 1);
+    //     InventorySlotMgt.wearingNonDefaultClothes[1] = false;
 
-    }
+    // }
 
 
     // private void ShowDefaultShoe()
     // {
     //     Cloth defaultCloth = SpriteLoader.defaultClothes[2];
     //     ChangeInThreeScenes(InventorySlotMgt.ShoeImages, defaultCloth, 2);
-    //     InventorySlotMgt.wearingNonDefualtClothes[2] = false;
+    //     InventorySlotMgt.wearingNonDefaultClothes[2] = false;
     // }
 
 //     public void ChangeWorkCloth()
@@ -649,7 +655,7 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
 //         Cloth workingCloth = SpriteLoader.ClothDic["work"];
 //         ChangeInThreeScenes(InventorySlotMgt.EverythingImages, workingCloth, 3);
 
-//         if (InventorySlotMgt.wearingNonDefualtClothes[3])
+//         if (InventorySlotMgt.wearingNonDefaultClothes[3])
 //         {
 //             InventorySlotMgt.wearingSlots[3].GetComponent<ClothChanging>().isWearing = false;
 //         }

@@ -22,6 +22,7 @@ public class TutorialManagerNew : MonoBehaviour
     public bool forwardOneStep;
     private bool AdClick1stTime = true;
     private bool allowScroll = false;
+    [SerializeField]
     private bool machineOpen = false;
     private bool timerStop = false;
     private bool isFirstOpen = true;
@@ -57,7 +58,7 @@ public class TutorialManagerNew : MonoBehaviour
         HintPosShutter, HintPosInsBack, ParticlePos1, KararaAInScreen1Pos;
 
     [SerializeField]
-    private Sprite initialBody, pos0Body, pos1Body, pos0Under, pos1Under, pos0Work, pos1Work, pos0WorkAlter, pos1WorkAlter,openBag, fullImg, emptyImg, EmojiOpenDoor, unhappyFace, happyFace,
+    private Sprite initialBody, pos0Body, pos1Body, pos0Under, pos1Under, pos0Work, pos1Work, pos0WorkAlter, pos1WorkAlter,openBag, closeBag, fullImg, emptyImg, EmojiOpenDoor, unhappyFace, happyFace,
         EmojiCloth, EmojiHappy, EmojiUnhappy, openDoor, closeDoor, cameraBGFull, postPose1, postPose2, postPose1Alter, postPose2Alter;
 
     [SerializeField]
@@ -196,7 +197,6 @@ public class TutorialManagerNew : MonoBehaviour
                 Flashlight.alpha = 0;
                 flashing = false;
             }
-
         }
 
         //在screen1永远不显示fish scream
@@ -243,7 +243,6 @@ public class TutorialManagerNew : MonoBehaviour
                     HintUI.SetActive(true);
                 }
 
-
                 TutorialCameraController.targetPage = 1;
             }
             else if (inLoop && TutorialCameraController.targetPage == 1)
@@ -268,11 +267,6 @@ public class TutorialManagerNew : MonoBehaviour
             }
             
                 TutorialCameraController.targetPage = -1;
-
-
-
-
-
         }
 
         //if(currentFT.isPlaying)
@@ -332,7 +326,7 @@ public class TutorialManagerNew : MonoBehaviour
                     break;
                 case 11:
                     //还了鞋之后就可以显示返回地铁的按钮
-                    ShowBackButton();
+                    StartCoroutine(ShowBackButton());
                     //一定是还了一件衣服才能返回的，所以洗衣机里又有衣服了
                     machineFront.sprite = fullImg;
 
@@ -357,6 +351,8 @@ public class TutorialManagerNew : MonoBehaviour
                     break;
 
                 case 16:
+                    //鱼说完还包之后从screen1跳转到screen2
+                    StartCoroutine(ReturnPrep());
                     //ReturnPrep();
                     break;
 
@@ -367,15 +363,8 @@ public class TutorialManagerNew : MonoBehaviour
                     // StartCoroutine(ShowComic());
                     StartCoroutine(AddFans());
                     break;
-
-
-
             }
-
-
         }
-
-
     }
 
     private void CalculateTime()
@@ -415,7 +404,8 @@ public class TutorialManagerNew : MonoBehaviour
     public void ClickAd()
     {
         if (deactiveButtons) return;
-
+        
+        AudioManager.PlayAudio(AudioType.Poster_Enter);
 
         Debug.Log("ClickAd");
         if (AdClick1stTime)
@@ -425,12 +415,25 @@ public class TutorialManagerNew : MonoBehaviour
         }
         else
         {
+            if(stepCounter != 12) 
+            {
+                //todo:可能要替换成其他的，比如震动一下，鱼说一句话
+                //这几个能到screen 4的阶段都在显示scream
+                return;
+            }
             Shutter.SetActive(true);
             Hint2D.SetActive(false);
             forwardOneStep = true;
         }
+    }
 
-
+    IEnumerator ShowShutterHint()
+    {
+        yield return new WaitForSeconds(8f);
+        if(!flashing)
+        {           
+            HintScreen.SetActive(true);
+        }
     }
 
     private void ChangeHintPos(Vector3 pos,int orderChange)
@@ -463,7 +466,9 @@ public class TutorialManagerNew : MonoBehaviour
             Posture.SetActive(true);
             Show(CameraBackground);
             CameraBackground.GetComponent<Image>().sprite = cameraBGFull;
-            HintScreen.SetActive(true);
+
+            StartCoroutine(ShowShutterHint());
+
 
             //身上穿的衣服
             // if(isAlter) {body.sprite = pos0WorkAlter;}
@@ -507,11 +512,13 @@ public class TutorialManagerNew : MonoBehaviour
                 AdClick1stTime = false;
                 Hint2D.SetActive(false);
                 forwardOneStep = true;
+
+               
                 //reset clickTime for 2nd time
                 clickTime = 0;
             }
         }
-        else
+        else if(stepCounter == 13)
         {
             clickTime ++;
 
@@ -554,6 +561,10 @@ public class TutorialManagerNew : MonoBehaviour
 
     IEnumerator BackToSubway()
     {
+        //出现fish喊话
+        Show(scream);
+        yield return new WaitForSeconds(0.5f);
+
         KararaA.SetActive(true);
         yield return new WaitForSeconds(0.5f);
         Hide(CameraBackground);
@@ -567,6 +578,9 @@ public class TutorialManagerNew : MonoBehaviour
         Show(scream);
         TutorialCameraController.allowScroll = true;
         TutorialCameraController.targetPage = targetPage;
+
+        yield return new WaitForSeconds(1f);
+
         scrollTeaching = true;
         ScrollHint.SetActive(true);
 
@@ -661,36 +675,53 @@ public class TutorialManagerNew : MonoBehaviour
 
         if(bagClick == 1)
         {
-            AudioManager.AdjustPitch(AudioType.Bag_Phase1, 0.5f);
+            // AudioManager.AdjustPitch(AudioType.Bag_Phase1, 0.5f);
             AudioManager.PlayAudio(AudioType.Bag_Phase1);
             StartCoroutine(BeforeWash());
         }
 
         else if(bagClick == 2)
         {
-            AudioManager.AdjustPitch(AudioType.Bag_Phase1, 0.6f);
+            // AudioManager.AdjustPitch(AudioType.Bag_Phase1, 0.6f);
             AudioManager.PlayAudio(AudioType.Bag_Phase1);
             ThrowClothToMachine();
         }
         else
         {
-            AudioManager.PlayAudio(AudioType.Bag_Phase1);
             if (inLoop)
             {
+                //du地一声
+                AudioManager.PlayAudio(AudioType.No);
                 bagClick = 2;
                 StartCoroutine(ChangeFace());
             }
 
             else if(returning)
             {
-                ShowReturnNotice();
+                //todo:还包的声音
+                AudioManager.PlayAudio(AudioType.Bag_Phase1);
+                HintUI.SetActive(false);
+                StartCoroutine(ShowReturnNotice());
             }
             else
             {
                 bagClick = 2;
+
             }
         }
     }
+
+    IEnumerator ShowReturnNotice()
+    {
+        yield return new WaitForSeconds(0.2f);
+        MachineDoor.sprite = openDoor;
+
+        yield return new WaitForSeconds(0.2f);
+
+        Notice.SetActive(true);    
+    }
+
+
     private IEnumerator ChangeFace()
     {
         Debug.Log("change face");
@@ -735,7 +766,7 @@ public class TutorialManagerNew : MonoBehaviour
 
 
 
-   private void ThrowClothToMachine()
+    private void ThrowClothToMachine()
     {
         Debug.Log("ThrowClothToMachine");
 
@@ -759,15 +790,21 @@ public class TutorialManagerNew : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
 
         MachineDoor.sprite = closeDoor;
+        AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
+
         forwardOneStep = true;
 
     }
 
     public void ClickMachine()
     {
-        if (deactiveButtons) return;
-        if (stepCounter < 5) return;//确保在没进行到洗衣机的时候洗衣机不能点
-
+        if (deactiveButtons||stepCounter < 5) //确保在没进行到洗衣机的时候洗衣机不能点
+        {
+            //播放“du”声音
+            AudioManager.PlayAudio(AudioType.No);
+            return;
+        }
+        
         switch (myMachineState)
         {
             case MachineState.Empty:
@@ -787,6 +824,7 @@ public class TutorialManagerNew : MonoBehaviour
 
                 break;
             case MachineState.Finish:
+                if(deactiveButtons) return;
                 if (!machineOpen) OpenMachine();
                 else CloseMachine();
 
@@ -795,6 +833,7 @@ public class TutorialManagerNew : MonoBehaviour
                 {
                     Show(scream);
                     FishTalk("Open2ndTime", true);
+
                 }
                 break;
         }
@@ -815,53 +854,123 @@ public class TutorialManagerNew : MonoBehaviour
 
     public void OpenMachine()
     {
-        machineOpen = !machineOpen;
-        // AudioManager.PlayAudio(AudioType.Machine_OpenDoor);
+        machineOpen = true;
+        deactiveButtons = true;//打开过程有一定时间，到时间前不可再次点击
+
+        AudioManager.PlayAudio(AudioType.Machine_OpenDoor);
 
         if (isFirstOpen)
         {
             Debug.Log("isFirstOpen and open machine");
-            deactiveButtons = true;
 
-            OpenDoor();
-
-            isFirstOpen = false;
-            forwardOneStep = true;
+            StartCoroutine(OpenCloseDoor(0.2f));
         }
         else if(inLoop)
         {
             Debug.Log("in loop and open machine");
-            OpenDoor();
+            StartCoroutine(OpenDoor(0.2f));
 
-            Hint2D.SetActive(true);
+            // Hint2D.SetActive(true);
             KararaTalk(EmojiCloth);
-            ChangeHintPos(ClothUIPos, 0);
+            // ChangeHintPos(ClothUIPos, 0);
             //forwardOneStep = true;
 
         }
         else {
-
             // MachineDoor.sprite = openDoor;
-            OpenDoor();
+            StartCoroutine(OpenDoor(0.3f));
 
         }
     }
 
+    IEnumerator OpenCloseDoor(float time)
+    {
+         ///门打开后出现一下衣服，立即关上
+        machineOccupied.SetActive(false);
+        MachineDoor.sprite = openDoor;
+        AudioManager.PlayAudio(AudioType.Machine_OpenDoor);
+
+        yield return new WaitForSeconds(time);
+
+        ClothUI.SetActive(true);
+        ClothUiAnimator.SetTrigger("AfterPop");
+        
+        yield return new WaitForSeconds(5*time);
+
+        MachineDoor.sprite = closeDoor;
+        AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
+
+        machineOpen = false;
+        ClothUI.SetActive(false);
+
+        deactiveButtons = false;//打开过程有一定时间，到时间前不可再次点击
+        isFirstOpen = false;
+        forwardOneStep = true;
+
+    }
+
+     IEnumerator OpenDoor(float time)
+    {
+        ///播放开门动画，出现对话框
+        machineOccupied.SetActive(false);
+        MachineDoor.sprite = openDoor;
+
+        HintUI.SetActive(false);
+        if (deactiveButtons)
+        {
+            Hint2D.SetActive(false);
+        }
+
+        yield return new WaitForSeconds(time);
+
+        ClothUI.SetActive(true);
+        ClothUiAnimator.SetTrigger("AfterPop");
+        
+        yield return new WaitForSeconds(time);//等动画播完
+
+        deactiveButtons = false;//打开过程有一定时间，到时间前不可再次点击
+    }
+
+
+
+    IEnumerator CloseDoor(float time)
+    {
+        ///播放关门动画，出现对话框
+        //直接关上，窗口没有动画
+        deactiveButtons = true;
+        AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
+
+
+        machineOccupied.SetActive(true);
+        KararaTalk(EmojiOpenDoor);
+        // ClothUiAnimator.SetTrigger("StartClose");
+        ClothUI.SetActive(false);
+
+        HintUI.SetActive(true);
+        Hint2D.SetActive(false);
+
+        yield return new WaitForSeconds(time);
+
+        MachineDoor.sprite = closeDoor;
+        deactiveButtons = false;
+        
+    }
+
+
     public void CloseMachine()
     {
-        machineOpen = !machineOpen;
+        machineOpen = false;
 
         // AudioManager.PlayAudio(AudioType.Machine_OpenDoor);
         if (inLoop)
         {
             if (Hint2D.active) Hint2D.SetActive(false);
-            CloseDoor();
+            StartCoroutine(CloseDoor(0.1f));
         }
         else
         {
-            machineOccupied.SetActive(true);
-            MachineDoor.sprite = closeDoor;
-            ClothUI.SetActive(false);        
+            StartCoroutine(CloseDoor(0.1f));
+
         }
     }
 
@@ -927,24 +1036,40 @@ public class TutorialManagerNew : MonoBehaviour
 
         if(pickedClothNum == 3)
         {
-            CloseMachine();
-
             machineOccupied.SetActive(false);
             machineFront.sprite = emptyImg;
 
             Hint2D.SetActive(false);
             HintUI.SetActive(false);
-        
-            inLoop = false;
-            forwardOneStep = true;
 
-            //fish continue talking
-            Show(scream);
-            FishTalk("NoTouchCloth", true);
+            inLoop = false;
+
+            StartCoroutine(PickedAllCloth(0.2f));
         }
     }
 
+    IEnumerator PickedAllCloth(float time)
+    {
+        ///衣服UI和背景直接消失，洗衣机里的衣服直接消失，提示直接消失，等一段时间后门关上
+        deactiveButtons = true;
 
+        // KararaTalk(EmojiOpenDoor);
+        ClothUI.SetActive(false);
+
+        yield return new WaitForSeconds(time);
+
+        MachineDoor.sprite = closeDoor;
+        AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
+        machineOpen = false;
+
+
+        deactiveButtons = false;
+        forwardOneStep = true;
+        //fish continue talking
+        Show(scream);
+        FishTalk("NoTouchCloth", true);
+
+    }
 
 
     IEnumerator JumpToFish()
@@ -955,7 +1080,8 @@ public class TutorialManagerNew : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
 
         Show(scream);
-        CloseMachine();
+        // CloseMachine();
+
         HintUI.SetActive(false);
         yield return new WaitForSeconds(0.3f);
 
@@ -993,7 +1119,6 @@ public class TutorialManagerNew : MonoBehaviour
         Hint2D.SetActive(false);
         forwardOneStep = true;
         Hide(scream);
-
     }
 
 
@@ -1006,9 +1131,13 @@ public class TutorialManagerNew : MonoBehaviour
 
     
 
-    private void ShowBackButton()
+    IEnumerator ShowBackButton()
     {
+        yield return new WaitForSeconds(0.5f);
         InventoryBackButton.SetActive(true);
+
+        yield return new WaitForSeconds(0.5f);
+
         HintScreen.transform.localPosition = HintPosBackButton;
     }
     
@@ -1071,9 +1200,12 @@ public class TutorialManagerNew : MonoBehaviour
 
         //真正回到地铁
         TutorialCameraController.ReturnToApp();
+
         Hide(Inventory);
 
         HintScreen.SetActive(false);
+
+        TutorialCameraController.JumpToPage(4);
 
         //karara现在穿着工作服啦
         GameObject.Find("PlayerEverythingSubway").GetComponent<SpriteRenderer>().enabled = true;
@@ -1105,15 +1237,14 @@ public class TutorialManagerNew : MonoBehaviour
         TutorialCameraController.allowScroll = true;
         TutorialCameraController.targetPage = 4;
 
-        ScrollHint.SetActive(true);
-        ScrollHint.transform.localRotation = new Quaternion(0,0,180,0);
-        foreach (Transform child in ScrollHint.transform)
-        {
-            child.localRotation = new Quaternion(0, 0, 180, 0);
-        }
+        //暂时不用教第二次滑动
+        // ScrollHint.SetActive(true);
+        // ScrollHint.transform.localRotation = new Quaternion(0,0,180,0);
+        // foreach (Transform child in ScrollHint.transform)
+        // {
+        //     child.localRotation = new Quaternion(0, 0, 180, 0);
+        // }
     }
-
-
 
 
     public void ClickShutter()
@@ -1164,72 +1295,94 @@ public class TutorialManagerNew : MonoBehaviour
         // Show(FloatingUI);
         // Particle.SetActive(true);
 
-        TutorialCameraController.JumpToPage(2);//从ins回到subway scene直接跳转到包在的页面
+        TutorialCameraController.JumpToPage(1);//从ins回到subway scene直接跳转到包在的页面
         yield return new WaitForSeconds(0.6f);
 
         //show hint arrow
-        ReturnPrep();
+        // ReturnPrep();
 
         // Particle.SetActive(false);
         
-        Show(scream);
+        // Show(scream);
         //ScrollHint.transform.localRotation = new Quaternion(0, 0, 0, 0);
         //ScrollHint.SetActive(true);
 
-        forwardLater = true;
+        forwardLater = true;//为true则说完话之后stepCounter向前进1
         FishTalk("ReturnBag", true);
     }
 
 
-    private void ReturnPrep()
+    IEnumerator ReturnPrep()
     {
+        yield return new WaitForSeconds(2f);//鱼说完话后等两秒
+
+        TutorialCameraController.GotoPage(2);
+        yield return new WaitForSeconds(1f);
+
         HintUI.SetActive(true);
         HintUI.transform.localPosition = HintPosBag;
         returning = true;
-        
     }
 
-    private void ShowReturnNotice()
-    {
-        Notice.SetActive(true);
-        HintUI.SetActive(false);
-
-        StartCoroutine(AddFans());
-    }
+ 
     IEnumerator PreReturn()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
 
-        MachineDoor.sprite = openDoor;
-
-        yield return new WaitForSeconds(0.5f);
+        //衣服消失
+        ClothUI.SetActive(false);//有ui的话也消失
         machineFront.sprite = emptyImg;
+        yield return new WaitForSeconds(0.2f);
 
+        //关门
+        MachineDoor.sprite = closeDoor;
+        AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
+
+
+        yield return new WaitForSeconds(0.2f);
+
+        //包合上
+        clothBag.GetComponent<Image>().sprite = closeBag;
+
+        yield return new WaitForSeconds(0.2f);
+
+        //包消失
+        clothBag.SetActive(false);
+        AudioManager.PlayAudio(AudioType.Bag_Vanish);
+
+
+        TutorialCameraController.allowScroll = false;
         yield return new WaitForSeconds(0.5f);
 
-        MachineDoor.sprite = closeDoor;
         forwardOneStep = true;
-
     }
 
     public void ReturnYes()
     {
+        //ui消失
         Notice.SetActive(false);
         HintUI.SetActive(false);
 
-        clothBag.SetActive(false);
-
-        TutorialCameraController.allowScroll = false;
         StartCoroutine(PreReturn());
-
     }
 
     public void ReturnNo()
     {
+        //ui消失
         Notice.SetActive(false);
-        HintUI.SetActive(true);
+
+        StartCoroutine(ReturnNoAfter());
 
         bagClick = 2;
+    }
+    IEnumerator ReturnNoAfter()
+    {
+        yield return new WaitForSeconds(0.3f);
+
+        //关门
+        HintUI.SetActive(true);
+        MachineDoor.sprite = closeDoor;
+        AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
     }
 
 
@@ -1304,41 +1457,6 @@ public class TutorialManagerNew : MonoBehaviour
     {
         Show(Comic);
     }
-
-
-    private void OpenDoor()
-    {
-        machineOccupied.SetActive(false);
-        MachineDoor.sprite = openDoor;
-        ClothUI.SetActive(true);
-        ClothUiAnimator.SetTrigger("AfterPop");
-
-        HintUI.SetActive(false);
-
-        if (deactiveButtons)
-        {
-            Hint2D.SetActive(false);
-        }
-    }
-
-
-
-    private void CloseDoor()
-    {
-        machineOccupied.SetActive(true);
-        MachineDoor.sprite = closeDoor;
-        KararaTalk(EmojiOpenDoor);
-        ClothUI.SetActive(false);
-        ClothUiAnimator.SetTrigger("StartClose");
-
-
-
-        HintUI.SetActive(true);
-        Hint2D.SetActive(false);
-    }
-
-
-
 
     public void Hide(CanvasGroup UIGroup)
     {

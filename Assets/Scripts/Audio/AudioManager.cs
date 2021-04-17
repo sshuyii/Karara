@@ -8,13 +8,18 @@ public class AudioManager : MonoBehaviour
 
     public AudioTrack[] m_Tracks;
     Dictionary<AudioType, AudioTrack> m_AudioTable = new Dictionary<AudioType, AudioTrack>();
+    
     List<AudioType> ArrivingList = new List<AudioType> { AudioType.Subway_Arriving_1, AudioType.Subway_Arriving_2 }; //刹车声
 
     List<AudioType> StayingList= new List<AudioType> { AudioType.Subway_Staying_1, AudioType.Subway_Staying_2,
                                         AudioType.Subway_Staying_3,AudioType.Subway_Staying_4}; //站内开门后
+
     List<AudioType> PreMovingList = new List<AudioType> { AudioType.Subway_PreMoving_1, AudioType.Subway_PreMoving_2,
                                         AudioType.Subway_PreMoving_3, AudioType.Subway_PreMoving_4};
+
     List<AudioType> MovingList = new List<AudioType> { AudioType.Subway_Moving_1, AudioType.Subway_Moving_2 };
+
+
 
     System.Random random = new System.Random();
 

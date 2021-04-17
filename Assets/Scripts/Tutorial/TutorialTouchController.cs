@@ -280,12 +280,12 @@ public class TutorialTouchController : MonoBehaviour
             {
                 case "front":
                     Debug.Log("hit front");
-                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                    // AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickMachine();
                     break;
                 case "full":
                     Debug.Log("hit front");
-                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                    // AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickMachine();
                     break;
                 case "phone":
