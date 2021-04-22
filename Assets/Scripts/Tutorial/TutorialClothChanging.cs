@@ -111,7 +111,7 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         if (pointerDown)
 		{
             //取消已经生成的所有ui界面
-            for(int i = 0; i < 4; i++)
+            for(int i = 0; i < TutorialManagerNew.ReturnNoticeList.Count; i++)
             {            
                 TutorialManagerNew.ReturnNoticeList[i].SetActive(false);
             }
@@ -131,12 +131,6 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
                 Reset();
 			}
 		}
-
-        //三件衣服都点过了，该还的那件衣服开始闪烁
-        if(TutorialManagerNew.isWearingClothNum == 3 && clothName == 3)
-        {
-            myAnimator.SetBool("isShining", true);
-        }
     }
 
 
@@ -163,8 +157,6 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
             // if(TutorialManagerNew.isWearingClothNum != 1)
             // {
                 TutorialManagerNew.isWearingClothNum ++;
-
-                
 
                 TutorialManagerNew.inventoryCloth[3].sprite = TutorialManagerNew.workInventory;
                 TutorialManagerNew.subwayCloth[3].sprite = TutorialManagerNew.workSubway;
@@ -201,7 +193,7 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         //     // }
 
         // }
-        else if(clothName == 3 && !TutorialManagerNew.workShoeOn)
+        else if(clothName == 2 && !TutorialManagerNew.workShoeOn)
         {
             // if(!TutorialManagerNew.isWearingShoe)
             // {
@@ -268,7 +260,7 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         //如果没有把所有衣服都点一遍，不能长按还衣服
         if(TutorialManagerNew.isWearingClothNum < 3) return;
 
-        if(clothName != 3)
+        if(clothName != 2)
         {
             //karara摇头
             TutorialManagerNew.kararaAnimator.SetTrigger("isShaking");
@@ -320,7 +312,7 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
     {
         ///此时把衣服还到洗衣机里的ui已经出现了，玩家点了yes
         //只能还鞋
-        if(clothName != 3) return;
+        if(clothName != 2) return;
         myAnimator.SetBool("isShining", false);
 
 

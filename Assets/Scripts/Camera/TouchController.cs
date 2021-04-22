@@ -322,7 +322,7 @@ public class TouchController : MonoBehaviour
             DoInventory doIvt = hit.transform.gameObject.GetComponent<DoInventory>();
             if (doIvt != null)
             {
-                AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                // AudioManager.PlayAudio(AudioType.UI_Dialogue);
                 RaycastHitResult[0] = "doIvt";
                 RaycastHitResult[1] = doIvt.slotNum.ToString();
                 //Debug.Log("do inventory!");
@@ -332,7 +332,7 @@ public class TouchController : MonoBehaviour
             WasherController wc = hit.transform.gameObject.GetComponentInParent<WasherController>();
             if (wc != null)
             {
-                AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                // AudioManager.PlayAudio(AudioType.UI_Dialogue);
                 RaycastHitResult[0] = "washer";
                 RaycastHitResult[1] = wc.number.ToString();
                 return RaycastHitResult;

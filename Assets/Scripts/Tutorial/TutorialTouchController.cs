@@ -180,8 +180,6 @@ public class TutorialTouchController : MonoBehaviour
                         isLongTap = false;
                     }
                 }
-
-
             }
             else if (touch.phase == TouchPhase.Ended) //check if the finger is removed from the screen
             {
@@ -296,17 +294,17 @@ public class TutorialTouchController : MonoBehaviour
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickClothUI(1);
                     break;
-                case "workClothAlter_Slot2":
+                // case "workClothAlter_Slot2":
+                //     AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                //     TutorialManagerNew.ClickClothUI(2);
+                    break;
+                case "workShoe_Slot2":
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickClothUI(2);
                     break;
-                case "workShoe_Slot3":
+                case "otherInBag_Slot3":
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickClothUI(3);
-                    break;
-                case "otherInBag_Slot4":
-                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
-                    TutorialManagerNew.ClickClothUI(4);
                     break;
                 case "PlayerBodySubway":
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
