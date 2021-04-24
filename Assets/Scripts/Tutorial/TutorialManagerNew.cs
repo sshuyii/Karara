@@ -928,9 +928,12 @@ public class TutorialManagerNew : MonoBehaviour
         yield return new WaitForSeconds(time);
 
         ClothUI.SetActive(true);
-        ClothUiAnimator.SetTrigger("AfterPop");
+        ClothUiAnimator.SetTrigger("StartClosing");
         
-        yield return new WaitForSeconds(5*time);
+        float Twait = ClothUiAnimator.GetCurrentAnimatorClipInfo(0).Length;
+        Debug.Log("TWait: " + Twait);
+        yield return new WaitForSeconds(Twait);
+   
 
         MachineDoor.sprite = closeDoor;
         AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
@@ -963,7 +966,7 @@ public class TutorialManagerNew : MonoBehaviour
         yield return new WaitForSeconds(time);
 
         ClothUI.SetActive(true);
-        ClothUiAnimator.SetTrigger("AfterPop");
+        ClothUiAnimator.SetTrigger("StartShowing");
         
         yield return new WaitForSeconds(time);//等动画播完
 

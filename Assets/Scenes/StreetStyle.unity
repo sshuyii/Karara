@@ -3642,7 +3642,7 @@ PrefabInstance:
     - target: {fileID: 7327655921379541934, guid: bd4f25b2dc3aa3541960b1a2ee7e1daa,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7733774880606703679, guid: bd4f25b2dc3aa3541960b1a2ee7e1daa,
         type: 3}
@@ -20166,6 +20166,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Machine2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7327655921379541934, guid: bd4f25b2dc3aa3541960b1a2ee7e1daa,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7733774880606703679, guid: bd4f25b2dc3aa3541960b1a2ee7e1daa,
         type: 3}
