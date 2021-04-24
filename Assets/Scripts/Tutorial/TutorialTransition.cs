@@ -24,12 +24,10 @@ public class TutorialTransition : MonoBehaviour
     [SerializeField]    
     private float citySpeed;
 
-    [Header("Camera Movement")]
-
     private GameObject MainCamera;
     private RectTransform CameraRT;
 
-    public int TransitionStage = 1;
+    public int TransitionStage = 0;
     [SerializeField]    
     private float cameraSpeed;
     [SerializeField]    
@@ -40,6 +38,8 @@ public class TutorialTransition : MonoBehaviour
     public bool forwardOneStep = false;
 
     private float startTime;
+
+    public CanvasGroup TransparentButton;
 
 
     // Start is called before the first frame update
@@ -52,12 +52,20 @@ public class TutorialTransition : MonoBehaviour
         //教程最开始，镜头拉远
         CameraRT = MainCamera.GetComponent<RectTransform>();
         CameraRT.position = new Vector3(33f, 0, -10f);
+
+        StartCoroutine(WaitForLoading(2f));
+    }
+
+    IEnumerator WaitForLoading(float waitDuration)
+    {
+        yield return new WaitForSeconds(waitDuration);
+        TransitionStage ++;
     }
 
     // Update is called once per frame
     void Update()
     {
-        print("Start time = " + startTime);
+        // print("Start time = " + startTime);
         startTime += Time.deltaTime;
 
         if(TransitionStage == 1)
