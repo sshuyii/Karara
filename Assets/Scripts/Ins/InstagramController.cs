@@ -166,15 +166,7 @@ public class InstagramController : MonoBehaviour
     void Update()
     {
        
-        
-        //enable new posters for chapter one
-        //when player is not in subway4
-        if (!FinalCameraController.isTutorial)
-        {
 
-            
-
-        }
 
     }
 
@@ -191,19 +183,41 @@ public class InstagramController : MonoBehaviour
         }
     }
 
-
+    public void ClickProfilePhoto(string name)
+    {
+        Debug.Log("Click Profile Photo "+name);
+        FinalCameraController.MainPageToSub();
+        clearProfileContent();
+        displayProfileContent(name);
+    }
     public void displayProfileContent(string name)
     {
         
         //todo: 这里暂时用的只有两个人的post
-        List<Sprite> selectedList = SpriteLoader.NPCDic[name].shownPosts;
+        
+         NPC thisNPC = SpriteLoader.NPCDic[name];
+        List<Sprite> selectedList = thisNPC.shownPosts;
+
 
         foreach (Sprite sprt in selectedList)
         {
-            GameObject newObject = new GameObject("c");
-            newObject.AddComponent<Image>();
-            newObject.transform.parent = profileContent.transform;
-            newObject.GetComponent<Image>().sprite = sprt;
+
+            GameObject newPost = Instantiate(PosturePostPrefabNew, profileContent.transform);
+        
+            var profile = newPost.transform.Find("ProfilePhoto").gameObject;
+            var profileName = newPost.transform.Find("ProfileName").gameObject.GetComponent<TextMeshProUGUI>();
+        
+            profile.GetComponent<Image>().sprite = thisNPC.profile;
+            profileName.text = thisNPC.name;
+            newPost.transform.Find("Post").gameObject.GetComponent<Image>().sprite = sprt;
+
+            newPost.transform.SetAsFirstSibling();
+            Debug.Log("shown photot: " + sprt);
+
+            // GameObject newObject = new GameObject("c");
+            // newObject.AddComponent<Image>();
+            // newObject.transform.parent = profileContent.transform;
+            // newObject.GetComponent<Image>().sprite = sprt;
         }
 
     }
@@ -225,51 +239,38 @@ public class InstagramController : MonoBehaviour
     public void AddInsPost(string NPCName, Sprite postImg)
     {
         GameObject newPost = Instantiate(PosturePostPrefabNew, postParent.transform);
-        //set parent(probably a better way to do
-        //newPost.transform.parent = postParent.transform;
-        //newPost.transform.localScale = new Vector3(140,140,1);
- 
-
+        
         NPC thisNPC = SpriteLoader.NPCDic[NPCName];
-        var profile = newPost.transform.Find("ProfilePhoto").gameObject.GetComponent<Image>();
+        var profile = newPost.transform.Find("ProfilePhoto").gameObject;
         var profileName = newPost.transform.Find("ProfileName").gameObject.GetComponent<TextMeshProUGUI>();
-        profile.sprite = thisNPC.profile;
+        profile.GetComponent<Button>().onClick.AddListener( () => ClickProfilePhoto(NPCName));
+        profile.GetComponent<Image>().sprite = thisNPC.profile;
         profileName.text = thisNPC.name;
         newPost.transform.Find("Post").gameObject.GetComponent<Image>().sprite = postImg;
-        //move to the first of the list
-        //postList.Insert(0, newPost);
-        
-
 
         newPost.transform.SetAsFirstSibling();
         
+        if(NPCName == "Karara") thisNPC.Add2KararaPostList(postImg);
     }
 
-
+    private Texture2D texture2Save;
+    private int savedPhotoCount = 0;
+    [Tooltip("Remember to turn it to TRUE before run on iPhone")]
+    public bool RunOnRealPhone = false;
     public void SavePhoto()
     {
-
         
-
-        GameObject newObject = Instantiate(savedPhotoPrefab,albumContent.transform);
-        newObject.transform.Find("Photo").gameObject.GetComponent<Image>().sprite = PicInSavePage.sprite;
-        newObject.GetComponentInChildren<Button>().onClick.AddListener(CheckOnePicture);
-        newObject.GetComponentInChildren<Button>().onClick.AddListener(AudioManager.UIButtonClicked);
-        newObject.transform.name = countTakenPhotos.ToString();
-        //Debug.Log("这个的名字" + newObject.transform.name);
-
-        AllTakenPhotos.Add(PicInSavePage.sprite);
-        countTakenPhotos++;
-
-        FinalCameraController.ChangeToApp();
-        FinalCameraController.MainPageToAlbum();
+        if(RunOnRealPhone) NativeToolkit.SaveImage(texture2Save,"KARARA" + savedPhotoCount.ToString());
+        else Debug.Log("save image KARARA" + savedPhotoCount.ToString());
+        savedPhotoCount++;
     }
 
    
-
-    public void SetSavePage(Sprite photo)
+    
+    public void SetSavePage(Sprite photo, Texture2D texture)
     {
         PicInSavePage.sprite = photo;
+        texture2Save = texture;
     }
 
 
@@ -377,19 +378,19 @@ public class InstagramController : MonoBehaviour
     }
 
 
-    public void RepeatPostureOrBG(int conditon )
+    public void RepeatPostureOrBG(int condition )
     {
         
-        if (conditon == 1)
+        if (condition == 1)
         {
             Explanation.sprite = repeatPosture;
-            sendButton.interactable = false;
+            //sendButton.interactable = false;
 
         }
-        else if (conditon ==2)
+        else if (condition ==2)
         {
             Explanation.sprite = repeatBG;
-            sendButton.interactable = false;
+            //sendButton.interactable = false;
         }
         else
         {
@@ -397,10 +398,18 @@ public class InstagramController : MonoBehaviour
             Explanation.sprite = transparent;
         }
 
+        if(condition == 1 || condition == 2) Unfollow();
 
 
 
+    }
 
+    private void Unfollow()
+    {
+        //random number
+        int randomNum = Random.Range(3, 8);
+        fansNum -= randomNum;
+        followerNum_UI.SetText(fansNum.ToString());
     }
 
 }

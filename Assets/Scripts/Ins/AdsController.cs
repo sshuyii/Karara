@@ -267,6 +267,7 @@ public class AdsController : MonoBehaviour
 
             if (nextAdSpot.active == false)
             {
+                
                 nextAdSpot.SetActive(true);
                 AdsWaitinglist.Dequeue();
                 StartCoroutine(RendererFadeIn(nextAdRender));

@@ -43,7 +43,7 @@ public class AllMachines : MonoBehaviour
     public List<GameObject> WashingMachines = new List<GameObject>();
     public List<GameObject> FakeMachines = new List<GameObject>();
 
-    private List<WasherController> WasherControllerList = new List<WasherController>();
+    public List<WasherController> WasherControllerList = new List<WasherController>();
 
     public int washTime;
 
@@ -151,7 +151,7 @@ public class AllMachines : MonoBehaviour
             {
                 wc.shut = 0;
                 // Hide(ClothUI);
-                wc.MachineFold();
+                StartCoroutine(wc.MachineFold());
                 //ClothUiAnimator.SetBool("isUnfold",false);
 
                 //change door to closed sprite

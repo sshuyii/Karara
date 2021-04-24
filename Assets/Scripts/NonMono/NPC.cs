@@ -47,7 +47,7 @@ public class NPC
             allPosts.Add((Sprite)pics[i]);
         }
 
-        shownPosts = allPosts;
+        // shownPosts = allPosts;
         //Debug.Log("图片地址"+openBag.name);
 
     }
@@ -57,8 +57,15 @@ public class NPC
     {
         name = "Karara";
         profile = Resources.Load<Sprite>("Images/Karara/Profile/karara_s_glow");
+        shownPosts.Add((Sprite) Resources.Load("Images/Poster/Background/Chapt1/poster_chapt1_2",typeof(Sprite)));
+        allPosts.Add(shownPosts[0]);
     }
-
+    public void Add2KararaPostList(Sprite sprt)
+    {
+        if(name!= "Karara") return;
+        shownPosts.Add(sprt);
+        allPosts.Add(sprt);
+    }
     public Sprite PostPic()
     {
         if (allPosts.Count == 0) return profile;

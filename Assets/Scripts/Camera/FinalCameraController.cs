@@ -21,7 +21,7 @@ public class FinalCameraController : MonoBehaviour
     private InstagramController InstagramController;
 
     public CanvasGroup disableInputCG, ChapterOneEndComic, Mask, TakePhoto, fishShoutCG,
-        ChapterOneFailCG, Inventory, SubwayMap,inventory, appBackground, albumBackground, albumCG, albumDetailCG, frontPage, SavingPage;
+        ChapterOneFailCG, Inventory, SubwayMap,inventory, appBackground, albumBackground, albumCG, albumDetailCG, frontPage, SavingPage, subPage;
     public int entryTime = 1;
     public bool ChapterOneEnd;
 
@@ -63,7 +63,7 @@ public class FinalCameraController : MonoBehaviour
     public bool lateReturnComic;
     public GameObject setting;
 
-    public ScrollRect mainpageScrollRect,albumScrollRect;
+    public ScrollRect mainpageScrollRect,albumScrollRect,MPsubScrollRect;
     public bool enableScroll = true;
 
     private BagsController BagsController;
@@ -80,7 +80,8 @@ public class FinalCameraController : MonoBehaviour
         SavingPage,
         Post,
         Album,
-        AlbumDetail
+        AlbumDetail,
+        MainpageSub
     }
 
     public AppState lastAppState;
@@ -143,6 +144,7 @@ public class FinalCameraController : MonoBehaviour
     void Start()
     {
 
+        Debug.Log("PERSISTENT:" + Application.persistentDataPath);  
         if (!isTutorial)
         {
             setting.SetActive(false);
@@ -153,8 +155,6 @@ public class FinalCameraController : MonoBehaviour
 
         CameraMovement = transform.gameObject.GetComponent<CameraMovement>();
 
-        //myHSS = GameObject.Find("Horizontal Scroll Snap").GetComponent<CameraMovement>();
-        //subwayScrollRect = GameObject.Find("Horizontal Scroll Snap").GetComponent<ScrollRect>();
         InstagramController = GameObject.Find("---InstagramController").GetComponent<InstagramController>();
         RatingSys = GameObject.Find("FloatingUI").GetComponent<RatingSystem>();
         inventorySlotMgt = GameObject.Find("---InventoryController").GetComponent<InventorySlotMgt>();
@@ -162,26 +162,16 @@ public class FinalCameraController : MonoBehaviour
         BagsController = GameObject.Find("---BagsController").GetComponent<BagsController>();
         FishTextManager = GameObject.Find("---FishTextManager").GetComponent<FishTextManager>();
         FishBossNotification.HideFish();
-        //pageList.Add(RetroPage);
-        //pageList.Add(KararaPage);
-        //pageList.Add(DesignerPage);
+   
 
-
-        // Hide(fishTalk);
         fishTalk.SetActive(false);
         Hide(frontPage);
-        //Hide(postpage);
-        //HideAllPersonalPages();
         Hide(TakePhoto);
-        //Hide(Posture);
         Posture.SetActive(false);
 
 
 
         fishTalkText = fishTalk.gameObject.GetComponentInChildren<TextMeshPro>();
-        //hide the UIs when click Karara
-        //clothCG.SetActive(false);
-        //messageCG.SetActive(false);
         Hide(Inventory);
         Hide(fishShoutCG);
 
@@ -481,6 +471,14 @@ public class FinalCameraController : MonoBehaviour
 
             myAppState = AppState.Mainpage;
         }
+        else if (myAppState == AppState.MainpageSub)
+        {
+            ReturnFromSub();
+        }
+        else if (myAppState == AppState.SavingPage)
+        {
+            //to do 待定
+        }
     }
 
 
@@ -592,7 +590,46 @@ public class FinalCameraController : MonoBehaviour
         myAppState = AppState.Album;
     }
 
+    private bool FromMatch2Sub = false;
+    public void ReturnFromSub()
+    {
+        if(FromMatch2Sub) SubToMatch();
+        else SubToMainPage(); 
+    }
 
+    public void MatchToSub()
+    {
+        StartCoroutine(ScrollToTop(MPsubScrollRect));
+        Show(frontPage);
+        Show(appBackground);
+        myAppState = AppState.MainpageSub;
+        FromMatch2Sub = true;
+    }
+
+    public void SubToMatch()
+    {
+
+        Hide(frontPage);
+        Hide(appBackground);
+        FromMatch2Sub = false;
+    }
+
+    public void MainPageToSub()
+    {
+        StartCoroutine(ScrollToTop(MPsubScrollRect));
+        Show(subPage);
+        Hide(frontPage);
+        myAppState = AppState.MainpageSub;
+    }
+
+
+    public void SubToMainPage()
+    {
+        StartCoroutine(ScrollToTop(mainpageScrollRect));
+        Show(frontPage);
+        Hide(subPage);
+        myAppState = AppState.Mainpage;
+    }
     public void AlbumToMainPage()
     {
         StartCoroutine(ScrollToTop(mainpageScrollRect));

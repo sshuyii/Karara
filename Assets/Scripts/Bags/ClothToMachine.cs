@@ -71,7 +71,7 @@ public class ClothToMachine : MonoBehaviour
 
     int stage;
 
-
+    ValueEditor ValueEditor;
     void Start()
     {
         //find the horizontal scroll snap script
@@ -93,7 +93,7 @@ public class ClothToMachine : MonoBehaviour
         RatingSys = GameObject.Find("FloatingUI").GetComponent<RatingSystem>();
         SpriteLoader = GameObject.Find("---SpriteLoader").GetComponent<SpriteLoader>();
         BagsController = GameObject.Find("---BagsController").GetComponent<BagsController>();
-
+        ValueEditor = GameObject.Find("---ValueEditor").GetComponent<ValueEditor>();
         AllMachines = ClothInMachineController.GetComponent<AllMachines>();
 
         myAnimator = this.transform.gameObject.GetComponent<Animator>();
@@ -187,22 +187,16 @@ public class ClothToMachine : MonoBehaviour
 
         
 
-        myAnimator.SetTrigger("Disappear");
+        
         FinalCameraController.returnMachineNum = underMachineNum;
         AllMachines.ClearMahine(underMachineNum);
         SpriteLoader.NPCDic[tag].usedIdx.Clear();
 
-        yield return new WaitForSeconds(0.9f);
+        float Twait = ValueEditor.TimeRelated.openWasherDelay1 + ValueEditor.TimeRelated.openWasherDelay2;
+        myAnimator.SetTrigger("Disappear");
 
-
-        //if (SubwayMovement.pauseBeforeMove == false)
-        //{
-        //    cameraMovement.currentPage = 1;
-        //    yield return new WaitForSeconds(0.2f);
-        //    FinalCameraController.fishTalk.SetActive(false);
-        //    FinalCameraController.fishTalkText.text = "Return your customers' clothes on time! Such bad memory!";
-        //    FinalCameraController.lateReturnComic = false;
-        //}
+        Twait = myAnimator.GetCurrentAnimatorClipInfo(0).Length;
+        yield return new WaitForSeconds(Twait);
 
 
         if (!timeUp)
@@ -212,7 +206,6 @@ public class ClothToMachine : MonoBehaviour
         }
 
 
-        BagsController.RemoveBag(thisBag);
         Destroy(thisBag);
         AllMachines.isReturning = false;
         Destroy(this);
@@ -329,21 +322,11 @@ public class ClothToMachine : MonoBehaviour
         else if (hitTime > 1)
         {
             AudioManager.PlayAudio(AudioType.Bag_Phase1);
-            //Debug.Log("third bag hit ");
             isFinished = AllMachines.FinishedOrNot(underMachineNum);
             if (isFinished && !FinalCameraController.alreadyNotice)
             {
-                AllMachines.currentBag = this.gameObject;
-                if (FinalCameraController.isTutorial)
-                {
-                    //do something
-
-                }
-                else
-                {
-                    if(underMachineNum ==1) BagsController.ShowReturnNotice(thisBag,true);
-                    else BagsController.ShowReturnNotice(thisBag, false);
-                }
+                if(underMachineNum ==1) BagsController.ShowReturnNotice(thisBag,true);
+                else BagsController.ShowReturnNotice(thisBag, false);
             }
             hitTime++;
         }

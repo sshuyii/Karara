@@ -16,11 +16,12 @@ public class BagsController : MonoBehaviour
     // Start is called before the first frame update
 
     float timer; //for check bag status periodicly 
+    AllMachines washers;
     void Start()
     {
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
         LevelManager = GameObject.Find("---LevelManager").GetComponent<LevelManager>();
-
+        washers = FinalCameraController.AllMachines;
 
         stationBagOwners.Add(new List<string>());
         stationBagOwners.Add(new List<string>());
@@ -104,12 +105,16 @@ public class BagsController : MonoBehaviour
         bagsInCar.Remove(bag);
     }
 
-
+    
     public void ShowReturnNotice(GameObject bag,bool flip)
     {
         returnNotice.SetActive(true);
         returningBag = bag;
         FinalCameraController.alreadyNotice = true;
+        int washerNum = returningBag.GetComponent<ClothToMachine>().underMachineNum;
+        WasherController wc = washers.WasherControllerList[washerNum];
+        wc.DoorImage.sprite = washers.openedDoor;
+        wc.Occupied.SetActive(false);
 
         if(flip)
         {
@@ -130,6 +135,14 @@ public class BagsController : MonoBehaviour
         returnNotice.SetActive(false);
         FinalCameraController.alreadyNotice = false;
 
+        if(returningBag != null)
+        {
+            int washerNum = returningBag.GetComponent<ClothToMachine>().underMachineNum;
+            WasherController wc = washers.WasherControllerList[washerNum];
+            wc.DoorImage.sprite = washers.closedDoor;
+            wc.Occupied.SetActive(true);
+        }
+        
        
         foreach (Transform child in returnNotice.transform)
         {

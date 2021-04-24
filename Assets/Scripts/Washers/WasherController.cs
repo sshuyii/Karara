@@ -10,7 +10,7 @@ using TMPro;
 using System;
 public class WasherController : MonoBehaviour
 {
-
+    private ValueEditor ValueEditor;
     public int number;
 
     public GameObject empty;
@@ -87,6 +87,7 @@ public class WasherController : MonoBehaviour
         SpriteLoader = GameObject.Find("---SpriteLoader").GetComponent<SpriteLoader>();
         AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
         SubwayMovement = GameObject.Find("---StationController").GetComponent<SubwayMovement>();
+        ValueEditor = GameObject.Find("---ValueEditor").GetComponent<ValueEditor>();
 
         washingSound = AllMachines.gameObject.GetComponent<AudioSource>();
         
@@ -122,33 +123,7 @@ public class WasherController : MonoBehaviour
 
         UpdateProgressBar();
         
-        //if (Mathf.RoundToInt(timer / 60) < 10)
-        //{
-        //    if (Mathf.RoundToInt(realTimer % 60) < 10)
-        //    {
-        //        timerNum.text = "0" + Mathf.RoundToInt(realTimer / 60).ToString() + ":" + "0" +
-        //                        Mathf.RoundToInt(realTimer % 60).ToString();
-        //    }
-        //    else
-        //    {
-        //        timerNum.text = "0" + Mathf.RoundToInt(realTimer / 60).ToString() + ":" +
-        //                        Mathf.RoundToInt(realTimer % 60).ToString();
-        //    }
-        //}
-        //else
-        //{
-        //    if (Mathf.RoundToInt(realTimer % 60) < 10)
-        //    {
-        //        timerNum.text = Mathf.RoundToInt(realTimer / 60).ToString() + ":" + "0" +
-        //                        Mathf.RoundToInt(realTimer % 60).ToString();
-        //    }
-        //    else
-        //    {
-        //        timerNum.text = Mathf.RoundToInt(realTimer / 60).ToString() + ":" +
-        //                        Mathf.RoundToInt(realTimer % 60).ToString();
-        //    }
-        //}
-       
+ 
                 
         //close all ui if swipping the screen
         if (FinalCameraController.isSwipping && !FinalCameraController.isTutorial)
@@ -203,10 +178,8 @@ public class WasherController : MonoBehaviour
                 //finish
                 
 
-
-
                 myAnimator.SetBool("isWashing", false);
-                //lightAnimator.SetBool("isWashing", false);
+
                 
                 Occupied.SetActive(true);
 
@@ -248,11 +221,13 @@ public class WasherController : MonoBehaviour
         progressBar.fillAmount = timer/AllMachines.washTime;
         
     }
-    public void MachineUnfold()
+    public IEnumerator MachineUnfold()
     {
         
         pressOK = false;
         FinalCameraController.machineOpen = true;
+        FinalCameraController.DisableInput(true);
+
         //disable any input
         //
         if (isFirstOpen) {
@@ -263,36 +238,49 @@ public class WasherController : MonoBehaviour
         }
 
         //@@@
-        StartCoroutine(ShowClothUI());
-        FinalCameraController.machineOpen = false;
-        FinalCameraController.DisableInput(false);
-
+        FinalCameraController.alreadyClothUI = true;
+        FinalCameraController.currentClothUI = ClothUI;
         DoorImage.sprite = AllMachines.openedDoor;
         Occupied.SetActive(false);
 
 
+        Animator ac = ClothUI.GetComponent<Animator>();
+        ac.SetTrigger("StartShowing");
+        
+
+        FinalCameraController.machineOpen = false;
+        FinalCameraController.DisableInput(false);
+
+        pressOK = true;
+
+        yield return null;
+
     }
-    
-    public void MachineFold()
+    //关门！
+    public IEnumerator MachineFold()
     {
         pressOK = false;
         FinalCameraController.machineOpen = true;
         FinalCameraController.DisableInput(true);
 
-        StartCoroutine(HideClothUI());
+        Animator ac = ClothUI.GetComponent<Animator>();
+        ac.SetTrigger("StartClosing");
       
-        Occupied.SetActive(true);
+        float Twait = ac.GetCurrentAnimatorClipInfo(0).Length;
+        Debug.Log("TWait: " + Twait);
+        yield return new WaitForSeconds(Twait);
+
         
+        FinalCameraController.alreadyClothUI = false;
         FinalCameraController.machineOpen = false;
         FinalCameraController.DisableInput(false);
+        pressOK = true;
 
         DoorImage.sprite = AllMachines.closedDoor;
-        Occupied.SetActive(true);
+        
+        if (clothNum == 0) Occupied.SetActive(false);
+        else Occupied.SetActive(true);
 
-        if (clothNum == 0){
-            Occupied.SetActive(false);
-        }
-       
     }
     
     public void CancelPanel()
@@ -321,10 +309,9 @@ public class WasherController : MonoBehaviour
             else if (myMachineState == AllMachines.MachineState.full)
             {
 
-            //washingSound.Play();
-            AudioManager.PlayAudio(AudioType.Machine_OnOff);
-            AudioManager.PlayAudio(AudioType.Machine_Washing);
-            ClickStart();
+                AudioManager.PlayAudio(AudioType.Machine_OnOff);
+                AudioManager.PlayAudio(AudioType.Machine_Washing);
+                ClickStart();
             }
             else if (myMachineState == AllMachines.MachineState.finished)
             {
@@ -336,12 +323,7 @@ public class WasherController : MonoBehaviour
                 }            
             }
 
-//        }
-//        else
-//        {
-//            //todo: play a sound indicating there's no cloth in the machine
-//        }
-//        }
+
     }
 
     IEnumerator CannotClickFor1s()
@@ -362,13 +344,13 @@ public class WasherController : MonoBehaviour
         if (shut == 0)
         {
             shut = 1;
-            MachineUnfold();
+            StartCoroutine(MachineUnfold());
 
         }
         else if (shut == 1)
         {
             shut = 0;
-            MachineFold();
+            StartCoroutine(MachineFold());
 
         }
     }
@@ -397,22 +379,7 @@ public class WasherController : MonoBehaviour
         }
     }
 
-    IEnumerator ShowClothUI(){
-        Debug.Log("show cloth ui");
-        ClothUI.SetActive(true);
-        yield return new WaitForSeconds(0.5f);
-        ClothUI.GetComponent<Animator>().SetTrigger("AfterPop");
-        FinalCameraController.alreadyClothUI = true;
-        FinalCameraController.currentClothUI = ClothUI;
-        pressOK = true;
-    }
-    IEnumerator HideClothUI(){
-        ClothUI.GetComponent<Animator>().SetTrigger("StartClose");
-        yield return new WaitForSeconds(0.5f);
-        ClothUI.SetActive(false);
-        FinalCameraController.alreadyClothUI = false;
-        pressOK = true;
-    }
+
 
     
 
@@ -493,13 +460,10 @@ public class WasherController : MonoBehaviour
        
     public void ResetMachine(){
 
-        Debug.Log("from " + transform.tag + " to untagge");
         currentCustomer = "";
         transform.tag ="Untagged";
-        myMachineState = AllMachines.MachineState.empty;
         isFirstOpen = true;
         clothNum = 4;
-        //lightAnimator.SetBool("Reset",true);
         
         timer = 0;
 
@@ -534,17 +498,18 @@ public class WasherController : MonoBehaviour
     {
 
 
-        emptyImage.enabled = false;
-        fullImage.enabled = true;
+        myMachineState = AllMachines.MachineState.full;
         DoorImage.sprite = AllMachines.openedDoor;
 
-
-        yield return new WaitForSeconds(0.5f);
-
+        yield return new WaitForSeconds(ValueEditor.TimeRelated.openWasherDelay1);
         
-        DoorImage.sprite = AllMachines.closedDoor;
+        emptyImage.enabled = false;
+        fullImage.enabled = true;
+        
+        yield return new WaitForSeconds(ValueEditor.TimeRelated.openWasherDelay2);
 
-        myMachineState = AllMachines.MachineState.full;
+        DoorImage.sprite = AllMachines.closedDoor;
+        
 
     }
 
@@ -552,13 +517,18 @@ public class WasherController : MonoBehaviour
     {
 
         Occupied.SetActive(false);
+        myMachineState = AllMachines.MachineState.empty;
+        DoorImage.sprite = AllMachines.openedDoor;
+
+        yield return new WaitForSeconds(ValueEditor.TimeRelated.openWasherDelay1);
+
         emptyImage.enabled = true;
         fullImage.enabled = false;
 
-        DoorImage.sprite = AllMachines.openedDoor;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(ValueEditor.TimeRelated.openWasherDelay2);
 
         DoorImage.sprite = AllMachines.closedDoor;
+        Occupied.SetActive(false);
         Light.sprite = statusEmpty;
     }
 }

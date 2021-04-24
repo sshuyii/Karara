@@ -325,7 +325,8 @@ public class LevelManager : MonoBehaviour
         comicClick = 0;
         HideHint();
 
-        
+        // todo: 看看该不该蹦出来漫画
+        FinalCameraController.ChangeToSubway();
         FinalCameraController.GotoPage(3);
         Animator myAnim = MapInSubway.GetComponent<Animator>();
         myAnim.SetTrigger("blingbling");

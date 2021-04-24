@@ -280,13 +280,13 @@ public class StationForButton : MonoBehaviour
             {
                 ProfileSelector.SetActive(true);
                 showProfileSelectors();
-                if (ShowingProfile) refreshProfile();
+                // if (ShowingProfile) refreshProfile();
 
             }
             else
             {
 
-                if (ShowingProfile) InstagramController.clearProfileContent();
+                // if (ShowingProfile) InstagramController.clearProfileContent();
                 ProfileSelector.SetActive(false);
             }
         }
@@ -420,12 +420,15 @@ public class StationForButton : MonoBehaviour
 
     private void ExpandProfile(string name)
     {
+        bool matchedCorrect = CheckMatchState(name);
+        if(matchedCorrect) return;
+
         //todo: tab变色
         displayingProfile = true;
         displayingBag = false;
-        ClearCollectionContent();
+        // ClearCollectionContent();
         InstagramController.displayProfileContent(name);
-
+        FinalCameraController.MatchToSub();
     }
 
 
@@ -566,7 +569,13 @@ public class StationForButton : MonoBehaviour
     }
 
     
-
+    private bool CheckMatchState(string currentProfile)
+    {
+        int idx = matchedNPCIdx[stationNum][tabNum];
+        string TrueOwner = NPCNames[idx];
+        Debug.Log("True owner: " + TrueOwner + " current Profile: " + currentProfile);
+        return (TrueOwner == currentProfile);
+    }
     private void GetMatchResult()
     {
         //clear content first

@@ -223,7 +223,8 @@ public class ScreenshotHandler : MonoBehaviour
         Texture2D sprites = CropImage();
         Rect rec = new Rect(0, 0, sprites.width, sprites.height);
         Sprite thisPhoto = Sprite.Create(sprites, rec, new Vector2(0, 0), 100f);
-        InstagramController.SetSavePage(thisPhoto);
+
+        InstagramController.SetSavePage(thisPhoto,sprites);
 
 
     }

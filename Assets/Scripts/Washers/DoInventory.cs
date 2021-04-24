@@ -61,7 +61,7 @@ public class DoInventory : MonoBehaviour
             if (WasherController.clothNum == 0)
             {
                 WasherController.shut = 0;
-                WasherController.MachineFold();
+                StartCoroutine(WasherController.MachineFold());
             }
 
 
@@ -80,7 +80,7 @@ public class DoInventory : MonoBehaviour
             
             InventorySlotMgt.ShowInventoryFullNotice();
             WasherController.shut = 0;
-            WasherController.MachineFold();
+            StartCoroutine(WasherController.MachineFold());
         }
 
         yield return null;
