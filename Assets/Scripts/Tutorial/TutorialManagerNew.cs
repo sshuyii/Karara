@@ -74,7 +74,7 @@ public class TutorialManagerNew : MonoBehaviour
     private Image postKararaImage;
 
     [SerializeField]
-    private Animator shoeAnimator, followerAnimator;
+    private Animator shoeAnimator, followerAnimator, phoneAnimator;
 
     public SpriteRenderer[] subwayCloth, inventoryCloth, adsCloth;
 
@@ -182,6 +182,7 @@ public class TutorialManagerNew : MonoBehaviour
 
         if(TutorialTransition.TransitionStage == 3)
         {
+            Hide(TutorialTransition.TransparentButton);
             MainCamera.GetComponent<Camera>().orthographicSize = 5;
             MainCamera.GetComponent<RectTransform>().position = new Vector3(17.5f, 0, -10f);
             TutorialTransition.trainWithWindow.SetActive(false);
@@ -873,8 +874,11 @@ public class TutorialManagerNew : MonoBehaviour
 
     IEnumerator StopTimerAndForward()
     {
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(1.5f);
+        phoneAnimator.SetTrigger("isCharged");
 
+        //todo：直接按clip长度走，不用每次都改具体时间？
+        yield return new WaitForSeconds(2f);
         //提示手机动画
         //考虑一下出现手机动画的时机，目前是洗衣机转一会儿之后才出现
         phoneAnimation.SetActive(true);
