@@ -95,7 +95,7 @@ public class LevelManager : MonoBehaviour
     public bool LandFinLeaveStation = false;
     public GameObject FishBagReturnComic;
     
-
+    public GameObject LostAndFoundReturnComic,waypoint1;
     void Start()
     {
         Resources.UnloadUnusedAssets();
@@ -279,11 +279,14 @@ public class LevelManager : MonoBehaviour
 
         if (stageTransiting && stage == 1)
         {
+            ShowHint();
             MapHint.gameObject.transform.parent = GoBackButton.transform;
-            MapHint.gameObject.transform.localPosition = new Vector3(25.5f, 0, 0);
+            MapHint.gameObject.transform.localPosition = new Vector3(20f, 0, 0);
             GoBackButton.SetActive(true);
             isInstruction = false;
-            ShowHint();
+            MapCar_Tut_S2.SetActive(false);
+            Show(MapCar.GetComponent<CanvasGroup>());
+            
         }
 
     }
@@ -328,6 +331,9 @@ public class LevelManager : MonoBehaviour
         // todo: 看看该不该蹦出来漫画
         FinalCameraController.ChangeToSubway();
         FinalCameraController.GotoPage(3);
+
+        
+
         Animator myAnim = MapInSubway.GetComponent<Animator>();
         myAnim.SetTrigger("blingbling");
 
@@ -351,9 +357,8 @@ public class LevelManager : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
 
-        MapCar_Tut_S2.SetActive(false);
-        Show(MapCar.GetComponent<CanvasGroup>());
         ShowHint();
+        MapTutorialBubble.SetActive(false);
         
     }
 
@@ -366,8 +371,10 @@ public class LevelManager : MonoBehaviour
 
 
         //car animation
-        myAnim = MapCar.GetComponent<Animator>();
-        myAnim.SetTrigger("blingbling");
+        MapHint.gameObject.transform.parent = waypoint1.transform;
+        MapHint.gameObject.transform.localPosition = new Vector3(40f, -30f, 0);
+
+        ShowHint();
 
 
         GoBackButton.SetActive(true);
@@ -388,6 +395,7 @@ public class LevelManager : MonoBehaviour
 
         myAnim = matchButton.GetComponent<Animator>();
         myAnim.SetTrigger("blingbling");
+        HideHint();
 
         yield return null;
     }
@@ -459,6 +467,16 @@ public class LevelManager : MonoBehaviour
         
         FishBagReturnComic.SetActive(false);
         StartCoroutine(SubwayMovement.TrainPauseResume());
+    }
+
+    public void ShowLFReturnComic()
+    {
+
+        LostAndFoundReturnComic.SetActive(true);
+    }
+    public void ConfirmLFReturnComic()
+    {
+        LostAndFoundReturnComic.SetActive(false);
     }
 
     IEnumerator ShowInstruction()

@@ -14,7 +14,7 @@ public class InstagramController : MonoBehaviour
     public List<GameObject> postList = new List<GameObject>();
 
     //public CalculateInventory CalculateInventory;
-    private FinalCameraController FinalCameraController;
+    public FinalCameraController FinalCameraController;
     private AdsController AdsController;
 
     private SubwayMovement SubwayMovement;
@@ -138,6 +138,7 @@ public class InstagramController : MonoBehaviour
 
 
     // Start is called before the first frame update
+    LevelManager LevelManager;
     void Start()
     {
 
@@ -154,7 +155,7 @@ public class InstagramController : MonoBehaviour
         SpriteLoader = GameObject.Find("---SpriteLoader").GetComponent<SpriteLoader>();
         AdsController = GameObject.Find("---AdsController").GetComponent<AdsController>();
         AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
-
+        LevelManager = GameObject.Find("---LevelManager").GetComponent<LevelManager>();
 
         PosturePostImageList = originalPosture.GetComponentsInChildren<SpriteRenderer>();
 
@@ -313,6 +314,7 @@ public class InstagramController : MonoBehaviour
 
     public void RefreshPost(string maxOwner, int rating)
     {
+        if(LevelManager.stage <= 2) return;
         storedName = maxOwner;
         storedRating = rating;
 
@@ -331,6 +333,7 @@ public class InstagramController : MonoBehaviour
 
     public void RefreshPost()
     {
+        if(LevelManager.stage <= 2) return;
         redDot.SetActive(true);
         waitingForRefresh = false;
 

@@ -19,8 +19,10 @@ public class DoInventory : MonoBehaviour
     //a list that stores UI location
     private Sprite currentSprite;
     public int slotNum;
+    
     private TouchController TouchController;
     // Start is called before the first frame update
+    private int washerNum ;
     void Start()
     {
         InventoryController = GameObject.Find("---InventoryController");
@@ -29,6 +31,8 @@ public class DoInventory : MonoBehaviour
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
         TouchController =  GameObject.Find("---TouchController").GetComponent<TouchController>();
 
+        washerNum = GetComponentInParent<WasherController>().number;
+        
 //        selfButton.onClick.AddListener(AddClothToInventory);
 
     }
@@ -39,14 +43,16 @@ public class DoInventory : MonoBehaviour
 
 // @@@
         if(TouchController.myInputState == TouchController.InputState.Tap){
-            if(TouchController.RaycastHitResult[0] == "doIvt" && Int32.Parse(TouchController.RaycastHitResult[1]) == slotNum){
-                Debug.Log("get hit slot #" + slotNum.ToString());
-                StartCoroutine(AddClothToInventory());     
+            int number;
+            if(Int32. TryParse( TouchController.RaycastHitResult[0], out number))
+            {
+                if(number == washerNum && Int32.Parse(TouchController.RaycastHitResult[1]) == slotNum) 
+                    AddClothToInventory();
             }
         }
     }
 
-    public IEnumerator AddClothToInventory()
+    public void AddClothToInventory()
     {
         WasherController = GetComponentInParent<WasherController>();
 
@@ -62,17 +68,15 @@ public class DoInventory : MonoBehaviour
             {
                 WasherController.shut = 0;
                 StartCoroutine(WasherController.MachineFold());
+
             }
 
-
             currentSprite = GetComponent<SpriteRenderer>().sprite;
-
             InventorySlotMgt.AddClothToInventory(currentSprite.name, slotNum);
-
-            Debug.Log("NOT FULL");
 
             GetComponent<SpriteRenderer>().enabled = false;
             GetComponent<BoxCollider2D>().enabled = false;
+   
         }
 
         else if (InventorySlotMgt.occupiedNum > 5 && !InventorySlotMgt.showingFullNotice)
@@ -83,7 +87,6 @@ public class DoInventory : MonoBehaviour
             StartCoroutine(WasherController.MachineFold());
         }
 
-        yield return null;
     }
     
            

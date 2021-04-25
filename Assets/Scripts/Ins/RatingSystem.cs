@@ -6,7 +6,7 @@ public class RatingSystem : MonoBehaviour
 {
 
     int upperBound = 5;
-    int lowerBound = 1;
+    int lowerBound = 0;
     public int rating = 5;
 
     public GameObject[] stars;
@@ -15,9 +15,10 @@ public class RatingSystem : MonoBehaviour
     private GameObject particleEffect,StoreRating;
 
     // Start is called before the first frame update
+    LevelManager LevelManager;
     void Start()
     {
-        
+        LevelManager = GameObject.Find("---LevelManager").GetComponent<LevelManager>();
     }
 
     // Update is called once per frame
@@ -94,7 +95,7 @@ public class RatingSystem : MonoBehaviour
             stars[i].SetActive(false);
         }
 
-        StartCoroutine(ParticleEffect()); 
+        if(LevelManager.stage > 3)StartCoroutine(ParticleEffect()); 
 
 
     }

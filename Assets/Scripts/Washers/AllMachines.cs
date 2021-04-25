@@ -58,7 +58,9 @@ public class AllMachines : MonoBehaviour
         bagUnder,
         full,
         washing,
-        finished
+        finished,
+
+        noninteractable
     }
 
 
@@ -82,6 +84,10 @@ public class AllMachines : MonoBehaviour
         
     }
 
+    public void SetWasherAsNoninteractable(int idx)
+    {
+        WasherControllerList[idx].myMachineState = MachineState.noninteractable;
+    }
     public int FindSuitableMachine(MachineState neededState)
     {
         int machine = -1;
@@ -123,7 +129,8 @@ public class AllMachines : MonoBehaviour
     }
 
     public bool FinishedOrNot(int idx) {
-        if (WasherControllerList[idx].myMachineState == MachineState.finished) return true;
+        if (WasherControllerList[idx].myMachineState == MachineState.finished 
+            || WasherControllerList[idx].myMachineState == MachineState.noninteractable) return true;
         else return false;
     }
 
@@ -156,7 +163,7 @@ public class AllMachines : MonoBehaviour
 
                 //change door to closed sprite
                 wc.DoorImage.sprite = closedDoor;
-                wc.Occupied.SetActive(true);
+                if(wc.myMachineState == MachineState.finished || wc.myMachineState== MachineState.noninteractable)wc.Occupied.SetActive(true);
             }
         }
     }

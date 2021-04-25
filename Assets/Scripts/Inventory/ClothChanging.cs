@@ -139,13 +139,14 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	
 		}
 
+        
 
 
-        if(isOccupied && !SubwayMovement.pauseBeforeMove)
+        if(isOccupied && !SubwayMovement.pauseBeforeMove && FinalCameraController.LevelManager.stage > 1)
         {
 
             timer -= Time.deltaTime;
-            if (FinalCameraController.LevelManager.stage > 1)  myImage.fillAmount = timer/totalTime;
+            myImage.fillAmount = timer/totalTime;
         }
 
     }
@@ -251,12 +252,11 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         if(LevelManager.neverGoLandF)
         {
             LevelManager.neverGoLandF = false;
-            //FinalCameraController.ChangeToSubway();
-            //FinalCameraController.GotoPage(4);
+            LevelManager.ShowLFReturnComic();
             LostAndFound.ShaderOn();
         }
 
-        
+         
 
         currentSprite = GetComponent<Image>().sprite;
         //Debug.Log("丢掉" +currentSprite.name);

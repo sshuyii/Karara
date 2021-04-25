@@ -185,7 +185,8 @@ public class FinalCameraController : MonoBehaviour
     {
         inventorySlotMgt.CloseAllUI();
         if (!clickMachine) AllMachines.CloseAllMachines();
-        BagsController.ClickReturnNo();
+        BagsController.HideNotice();
+        
         InstructionDismiss();
 
         Hide(TakePhoto);
@@ -544,7 +545,7 @@ public class FinalCameraController : MonoBehaviour
         //Hide(postpage);
 
 
-        if (InstagramController.waitingForRefresh) InstagramController.RefreshPost();
+        if (InstagramController.waitingForRefresh && LevelManager.stage > 2) InstagramController.RefreshPost();
 
     }
 

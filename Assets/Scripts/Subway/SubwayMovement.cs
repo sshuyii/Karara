@@ -183,6 +183,7 @@ public class SubwayMovement : MonoBehaviour
 
     // station scroll
     int ScrollStopAtMachine = -1;
+    ValueEditor ValueEditor;
 
     // Start is called before the first frame update
     void Start() 
@@ -192,7 +193,7 @@ public class SubwayMovement : MonoBehaviour
         BagsController = GameObject.Find("---BagsController").GetComponent<BagsController>();
         AdsController = GameObject.Find("---AdsController").GetComponent<AdsController>();
         AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
-        
+        ValueEditor= GameObject.Find("---ValueEditor").GetComponent<ValueEditor>();
 
 
         if (!FinalCameraController.isTutorial)
@@ -347,7 +348,7 @@ public class SubwayMovement : MonoBehaviour
         {
             timerStay = 0f;
             if (LevelManager.stage > 1 && !atInitailStation) StartCoroutine(trainPause());
-            else if (!atInitailStation)
+            else if (LevelManager.stage > 2 && !atInitailStation)
             {
                 AdsController.UpdatePosters();
                 trainMove();
@@ -374,7 +375,8 @@ public class SubwayMovement : MonoBehaviour
 
         // banner shows 10s before moving
         // does not work on stage one
-        if (LevelManager.stage > CountdownOccureStation-1 && !atInitailStation && timerStay > stayTime - 10f)
+        if (LevelManager.stage > CountdownOccureStation-1 && !atInitailStation && timerStay > stayTime - 10f
+            && !LevelManager.upgradeReadyOrNot)
         {
             if (!Banner.active) Banner.SetActive(true);
             else
@@ -486,8 +488,9 @@ public class SubwayMovement : MonoBehaviour
 
         if (LevelManager.stage < 2) return; // 如果stage 1 只产生包，不考虑其他
 
-        if (roundNum > 0) LostAndFound.DropLostFoundClothes(currentStation); //转完一圈 丢衣服+更post
-        else if (!atInitailStation) InstagramController.RefreshPost("", FinalCameraController.RatingSys.rating);
+        //衣服丢太快可能不能满足UI RATE 出现条件
+        if (roundNum > 2) LostAndFound.DropLostFoundClothes(currentStation); //转完一圈 丢衣服+更post
+        else if (LevelManager.stage >2 && !atInitailStation) InstagramController.RefreshPost("", FinalCameraController.RatingSys.rating);
 
 
     }
@@ -558,9 +561,8 @@ public class SubwayMovement : MonoBehaviour
 
             Button bag = Instantiate(NameToStationBags[stationNum][npcNum], bagPos[firstEmptyPos],
     Quaternion.identity) as Button;
+            bag.GetComponent<ClothToMachine>().SetTime(CalculateBagTime(),CalculateDelayTime());
 
-            bag.GetComponent<ClothToMachine>().timer = CalculateBagTime();
-            bag.GetComponent<ClothToMachine>().totalTime = CalculateBagTime();
 
 
 
@@ -604,8 +606,7 @@ public class SubwayMovement : MonoBehaviour
             {
                 Button bag = Instantiate(NPCBag, bagPos[firstEmptyPos],
                     Quaternion.identity) as Button;
-                bag.GetComponent<ClothToMachine>().timer = CalculateBagTime();
-                bag.GetComponent<ClothToMachine>().totalTime = CalculateBagTime();
+                bag.GetComponent<ClothToMachine>().SetTime(CalculateBagTime(),CalculateDelayTime());
                 bag.GetComponent<ClothToMachine>().myStation = currentStation;
                 string temp = "X";
                 bag.gameObject.transform.tag = temp;
@@ -639,7 +640,7 @@ public class SubwayMovement : MonoBehaviour
 
         if(FinalCameraController.alreadyNotice)
         {
-            BagsController.ClickReturnNo();
+            BagsController.HideNotice();
             
         }
 
@@ -671,7 +672,6 @@ public class SubwayMovement : MonoBehaviour
             FinalCameraController.GotoPage(3);
             if(CountBagInMachine(2)) yield break;
 
-
             yield return new WaitForSeconds(0.5f);
             FinalCameraController.GotoPage(2);
             if (CountBagInMachine(1)) yield break;
@@ -679,7 +679,7 @@ public class SubwayMovement : MonoBehaviour
 
         }
 
-        ScrollStopAtMachine = 2;
+        
         StartCoroutine(TrainPauseResume());
 
     }
@@ -701,31 +701,39 @@ public class SubwayMovement : MonoBehaviour
         int rbn = BagsController.CountAllBagsInWasher(machineNum);
         if (rbn > 0)
         {
-            LevelManager.ShowFishReturnBagComic();
+            ScrollStopAtMachine = machineNum;
+
+            StartCoroutine(ShowFishReturnBagComic());
             return true;
         }
         return false;
     }
 
+    public IEnumerator ShowFishReturnBagComic()
+    {
+        yield return new WaitForSeconds(ValueEditor.TimeRelated.fishReturnBagDelay);
+        LevelManager.ShowFishReturnBagComic();
+    }
 
     public IEnumerator TrainPauseResume()
     {
         float normalSpeed = 0.3f;
         FinalCameraController.GotoPage(1);
 
+        FinalCameraController.ChangeCameraSpeed(normalSpeed * 0.5f);
         for (int i = ScrollStopAtMachine; i > -1; i--)
         {
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(ValueEditor.TimeRelated.scrollPage2and3Delay);
             BagsController.DropAllBagsInWasher(i);
         }
 
         FinalCameraController.ChangeCameraSpeed(-1f);
 
         yield return new WaitForSeconds(1.5f);
-        FinalCameraController.ChangeCameraSpeed(normalSpeed * 3f);
+        FinalCameraController.ChangeCameraSpeed(normalSpeed);
         FinalCameraController.GotoPage(1);
 
-        if (roundNum > 0 && currentStation == 0)
+        if (LevelManager.stage >2 && roundNum > 0 && currentStation == 0)
         {
             yield return new WaitForSeconds(3f);
             InstagramController.ShowMatchResultFollower();
@@ -860,7 +868,13 @@ public class SubwayMovement : MonoBehaviour
 
     private float CalculateBagTime()
     {
-        return (3 * stayTime + 3 * moveTime - timerStay);
+        // return (3 * stayTime + 3 * moveTime - timerStay);
+        return (2 * stayTime + 3 * moveTime);
+    }
+
+    private float CalculateDelayTime()
+    {
+        return stayTime - timerStay;
     }
 
 }

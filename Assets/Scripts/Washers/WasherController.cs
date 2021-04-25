@@ -142,16 +142,16 @@ public class WasherController : MonoBehaviour
            //todo: 滑动关闭ClothUI & cloth buttons
             
 
-            if(clothNum > 0)
-            {
-                emptyImage.enabled = false;
-                fullImage.enabled = true;
-            }
-            else if (clothNum == 0)
-            {
-                emptyImage.enabled = true;
-                fullImage.enabled = false;
-            }
+            // if(clothNum > 0)
+            // {
+            //     emptyImage.enabled = false;
+            //     fullImage.enabled = true;
+            // }
+            // else if (clothNum == 0)
+            // {
+            //     emptyImage.enabled = true;
+            //     fullImage.enabled = false;
+            // }
         }
         
         //if click a bag of cloth, put them into the machine and start washing
@@ -265,11 +265,11 @@ public class WasherController : MonoBehaviour
 
         Animator ac = ClothUI.GetComponent<Animator>();
         ac.SetTrigger("StartClosing");
-      
-        float Twait = ac.GetCurrentAnimatorClipInfo(0).Length;
-        Debug.Log("TWait: " + Twait);
-        yield return new WaitForSeconds(Twait);
+ 
 
+        float Twait = (float)ac.GetCurrentAnimatorClipInfo(0).Length;
+        yield return new WaitForSeconds(Twait);
+        
         
         FinalCameraController.alreadyClothUI = false;
         FinalCameraController.machineOpen = false;
@@ -278,8 +278,8 @@ public class WasherController : MonoBehaviour
 
         DoorImage.sprite = AllMachines.closedDoor;
         
-        if (clothNum == 0) Occupied.SetActive(false);
-        else Occupied.SetActive(true);
+        if (clothNum == 0 ) Occupied.SetActive(false);
+        else if(myMachineState == AllMachines.MachineState.finished || myMachineState == AllMachines.MachineState.noninteractable) Occupied.SetActive(true);
 
     }
     
@@ -303,25 +303,35 @@ public class WasherController : MonoBehaviour
         //        if (clothNum == 0 && shut == 0) //if there's no cloth in the door, don't let it open
         //        {
         if (myMachineState == AllMachines.MachineState.bagUnder)
-            {
+        {
+            return;
+        }
+        else if (myMachineState == AllMachines.MachineState.full)
+        {
 
-            }
-            else if (myMachineState == AllMachines.MachineState.full)
-            {
-
-                AudioManager.PlayAudio(AudioType.Machine_OnOff);
-                AudioManager.PlayAudio(AudioType.Machine_Washing);
-                ClickStart();
-            }
-            else if (myMachineState == AllMachines.MachineState.finished)
-            {
+            AudioManager.PlayAudio(AudioType.Machine_OnOff);
+            AudioManager.PlayAudio(AudioType.Machine_Washing);
+            ClickStart();
+        }            
+        else if (myMachineState == AllMachines.MachineState.finished)
+        {
                 
-                if(pressOK)
-                {
+            if(pressOK)
+            {
                     //Debug.Log("machine " + number.ToString() + " clickMachine()");
                     clickMachine();
-                }            
-            }
+            }            
+        }
+        else if ( myMachineState == AllMachines.MachineState.noninteractable)
+        {   
+            string talk = "Return bags on time!";
+            FinalCameraController.fishTalkText.text = talk;
+            FinalCameraController.FishBossNotification.ShowFish(talk);
+        }
+
+
+     
+        
 
 
     }
@@ -460,6 +470,7 @@ public class WasherController : MonoBehaviour
        
     public void ResetMachine(){
 
+        StartCoroutine(CollectClothese());
         currentCustomer = "";
         transform.tag ="Untagged";
         isFirstOpen = true;
@@ -467,7 +478,7 @@ public class WasherController : MonoBehaviour
         
         timer = 0;
 
-        StartCoroutine(CollectClothese());
+
         
                 
     }
@@ -516,11 +527,6 @@ public class WasherController : MonoBehaviour
     public IEnumerator CollectClothese()
     {
 
-        Occupied.SetActive(false);
-        myMachineState = AllMachines.MachineState.empty;
-        DoorImage.sprite = AllMachines.openedDoor;
-
-        yield return new WaitForSeconds(ValueEditor.TimeRelated.openWasherDelay1);
 
         emptyImage.enabled = true;
         fullImage.enabled = false;
@@ -528,7 +534,8 @@ public class WasherController : MonoBehaviour
         yield return new WaitForSeconds(ValueEditor.TimeRelated.openWasherDelay2);
 
         DoorImage.sprite = AllMachines.closedDoor;
-        Occupied.SetActive(false);
+        
         Light.sprite = statusEmpty;
+        myMachineState = AllMachines.MachineState.empty;
     }
 }

@@ -27,8 +27,12 @@ public class ValueEditor : MonoBehaviour
     {
         // open washer's door -> delay1 -> full image occures -> delay 2 -> close door 
         public float openWasherDelay1,openWasherDelay2;
-
+        public float fishNotificationDisplay,fishNotificationPeriod;
         public float ClothUIDelay;
+
+        public float fishReturnBagDelay;
+
+        public float scrollPage2and3Delay;
 
 
     }

@@ -169,9 +169,10 @@ public class StationForButton : MonoBehaviour
         if (LevelManager.stage == 1) collection = collection_stage2;
         if (LevelManager.stage == 2) collection = collection_stage3;
 
+       
         foreach (Transform t in collection.transform.GetComponentInChildren<Transform>())
         {
-            if (t.gameObject.name == "Collection") collectionContent = t.gameObject;
+            if (t.gameObject.name == "CollectionContent") collectionContent = t.gameObject;
         }
 
         

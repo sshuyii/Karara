@@ -31,19 +31,23 @@ public class LostAndFound : MonoBehaviour
     public GameObject dropNumText;
     
     
-
+    private FinalCameraController FinalCameraController;
     // Start is called before the first frame update
     void Start()
     {
         
         RatingSys = GameObject.Find("FloatingUI").GetComponent<RatingSystem>();
         InstagramController = GameObject.Find("---InstagramController").GetComponent<InstagramController>();
+        FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-       
+       if(isShowingNum && FinalCameraController.mySubwayState != FinalCameraController.SubwayState.Four)
+       {
+           clickLostFound();
+       }
     }
 
     public void clickLostFound()

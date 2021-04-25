@@ -17,10 +17,12 @@ public class BagsController : MonoBehaviour
 
     float timer; //for check bag status periodicly 
     AllMachines washers;
+    ValueEditor ValueEditor;
     void Start()
     {
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
         LevelManager = GameObject.Find("---LevelManager").GetComponent<LevelManager>();
+        ValueEditor = GameObject.Find("---ValueEditor").GetComponent<ValueEditor>();
         washers = FinalCameraController.AllMachines;
 
         stationBagOwners.Add(new List<string>());
@@ -37,7 +39,7 @@ public class BagsController : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-        if (LevelManager.stage == 1 && timer> 15f)
+        if (LevelManager.stage == 1 && timer> ValueEditor.TimeRelated.fishNotificationPeriod)
         {
             timer = 0f;
             CheckBagsStates();
@@ -113,6 +115,7 @@ public class BagsController : MonoBehaviour
         FinalCameraController.alreadyNotice = true;
         int washerNum = returningBag.GetComponent<ClothToMachine>().underMachineNum;
         WasherController wc = washers.WasherControllerList[washerNum];
+        
         wc.DoorImage.sprite = washers.openedDoor;
         wc.Occupied.SetActive(false);
 
@@ -130,20 +133,10 @@ public class BagsController : MonoBehaviour
 
     }
 
-    public void ClickReturnNo() {
-
+    public void HideNotice()
+    {
         returnNotice.SetActive(false);
         FinalCameraController.alreadyNotice = false;
-
-        if(returningBag != null)
-        {
-            int washerNum = returningBag.GetComponent<ClothToMachine>().underMachineNum;
-            WasherController wc = washers.WasherControllerList[washerNum];
-            wc.DoorImage.sprite = washers.closedDoor;
-            wc.Occupied.SetActive(true);
-        }
-        
-       
         foreach (Transform child in returnNotice.transform)
         {
             if (child.name == "BG")
@@ -152,15 +145,26 @@ public class BagsController : MonoBehaviour
                 return;
             }
         }
+    }
+    public void ClickReturnNo(bool DropBagOrNot) {
+        HideNotice();
+
+        if(returningBag != null && !DropBagOrNot)
+        {
+            int washerNum = returningBag.GetComponent<ClothToMachine>().underMachineNum;
+            WasherController wc = washers.WasherControllerList[washerNum];
+            wc.DoorImage.sprite = washers.closedDoor;
+            if(wc.clothNum > 0) wc.Occupied.SetActive(true);
+        }
+        
 
     }
 
     public void ClickReturnYes() {
         StartCoroutine(returningBag.GetComponent<ClothToMachine>().returnClothYes());
         bagsInCar.Remove(returningBag);
-        FinalCameraController.alreadyNotice = false;
 
-        ClickReturnNo();
+        ClickReturnNo(true);
     }
 
 
@@ -193,6 +197,9 @@ public class BagsController : MonoBehaviour
                 returnedBagNum++;
                 //Debug.Log("bags in 3 returning");
                 returningBag = bagsInCar[i];
+                int washerNum = returningBag.GetComponent<ClothToMachine>().underMachineNum;
+                WasherController wc = washers.WasherControllerList[washerNum];
+                if(wc.clothNum > 0) wc.Occupied.SetActive(true);
                 ClickReturnYes();
             }
         }
@@ -229,6 +236,9 @@ public class BagsController : MonoBehaviour
                 returnedBagNum++;
                 //Debug.Log("bags in 2 returning");
                 returningBag = bagsInCar[i];
+                int washerNum = returningBag.GetComponent<ClothToMachine>().underMachineNum;
+                WasherController wc = washers.WasherControllerList[washerNum];
+                if(wc.clothNum > 0) wc.Occupied.SetActive(true);
                 ClickReturnYes();
             }
         }

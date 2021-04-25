@@ -21,12 +21,12 @@ public class FishBossNotification : MonoBehaviour
     string defaultString;
 
   
-
+    ValueEditor ValueEditor;
     void Start()
     {
         myAnimator = transform.gameObject.GetComponent<Animator>();
         FishBossUI = transform.gameObject;
-
+        ValueEditor = GameObject.Find("---ValueEditor").GetComponent<ValueEditor>();
         defaultString = FishText.text;
 
 
@@ -40,7 +40,8 @@ public class FishBossNotification : MonoBehaviour
 
     public void HideFish()
     {
-        FishBossUI.SetActive(false);
+        // FishBossUI.SetActive(false);
+        FishBossUI.transform.GetComponent<CanvasGroup>().alpha = 0f;
         isActive = false;
         FishText.text = defaultString;
     }
@@ -48,15 +49,21 @@ public class FishBossNotification : MonoBehaviour
     public void ShowFish(string content)
     {
         FishText.text = content;
-        ShowFish();
+        StartCoroutine(ShowFish());
     }
 
 
-    public void ShowFish()
+    public IEnumerator ShowFish()
     {
-        FishBossUI.SetActive(true);
+        FishBossUI.transform.GetComponent<CanvasGroup>().alpha = 1f;
         isActive = true;
         ClickFishBossUI();
+
+        
+        yield return new WaitForSeconds(ValueEditor.TimeRelated.fishNotificationDisplay);
+        ClickFishBossUI();
+        FishBossUI.transform.GetComponent<CanvasGroup>().alpha = 0f;
+        isActive = false;
         //auto hide after five seconds;
 
     }
@@ -67,7 +74,7 @@ public class FishBossNotification : MonoBehaviour
     {
         isOut = !isOut;
         Debug.Log("clickFish");
-        myAnimator.SetTrigger("MoveOut");
+        // myAnimator.SetTrigger("MoveOut");
         
     }
 

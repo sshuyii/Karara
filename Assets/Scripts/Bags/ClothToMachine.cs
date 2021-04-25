@@ -54,6 +54,7 @@ public class ClothToMachine : MonoBehaviour
     private float remainTime;
     public float totalTime;
     private float fillAmount;
+    private float delayTime;
 
     private NPC owner;
     public int myStation;
@@ -122,9 +123,16 @@ public class ClothToMachine : MonoBehaviour
 
         if (SubwayMovement.pauseBeforeMove) return;
 
-        timer -= Time.deltaTime;
-        if (stage > 1) myImage.fillAmount = timer / totalTime;
-        // todo: why timer < 2f
+        if (stage > 1) 
+        {
+            if(delayTime > 0) delayTime -= Time.deltaTime;
+            else
+            {
+                timer -= Time.deltaTime;
+                myImage.fillAmount = timer / totalTime;
+            }
+
+        }        // todo: why timer < 2f
 
 
         if (!timeUp && timer < 0f)
@@ -132,7 +140,7 @@ public class ClothToMachine : MonoBehaviour
             timeUp = true;
             Debug.Log("包包过期！！");
 
-            if (stage > 1)
+            if (stage > 1 && hitTime <=  1)
             {
                 GameObject overdue = Instantiate(AllMachines.Overdue, this.gameObject.transform.position,
                         Quaternion.identity);
@@ -166,23 +174,26 @@ public class ClothToMachine : MonoBehaviour
         }
         else
         {
-            BagsController.returningBag = this.transform.gameObject;
-            BagsController.ClickReturnYes();
-
-            FinalCameraController.fishTalkText.text = "Return your customers' clothes on time! Such bad memory!";
+            AllMachines.SetWasherAsNoninteractable(underMachineNum);
+            
         }
 
 
         yield return null;
     }
 
-
+    public void SetTime(float Ttotal, float TDelay)
+    {
+        totalTime = Ttotal;
+        timer = Ttotal;
+        delayTime = TDelay;
+    }
 
     public IEnumerator returnClothYes ()
     {
         AudioManager.PlayAudio(AudioType.Cloth_Return);
         AllMachines.isReturning = true;
-        FinalCameraController.ChangeToSubway();
+        // FinalCameraController.ChangeToSubway();
         FinalCameraController.alreadyNotice = false;
 
         
@@ -205,7 +216,7 @@ public class ClothToMachine : MonoBehaviour
             RatingSys.AddStars();
         }
 
-
+        yield return new WaitForSeconds(Twait);
         Destroy(thisBag);
         AllMachines.isReturning = false;
         Destroy(this);
@@ -237,7 +248,6 @@ public class ClothToMachine : MonoBehaviour
         //if (!timeUp) RatingSys.AddStars();
 
 
-
         Destroy(thisBag);
 
         //todo:subway movement remove bags in car
@@ -252,10 +262,7 @@ public class ClothToMachine : MonoBehaviour
 
     public void returnClothNo()
     {
-
-        AllMachines.returnNotice.SetActive(false);
-        FinalCameraController.alreadyNotice = false;
-
+        BagsController.ClickReturnNo(false);
     }
 
 
@@ -310,7 +317,7 @@ public class ClothToMachine : MonoBehaviour
             myImage.sprite = SpriteLoader.NPCDic[this.tag].openBag;
             secondImage.sprite = SpriteLoader.NPCDic[this.tag].openBag;
 
-            if (timeUp) FinalCameraController.FishBossNotification.ShowFish();
+            if (timeUp) StartCoroutine(FinalCameraController.FishBossNotification.ShowFish());
             //FinalCameraController.FishBossNotification.ShowFish(); //test
 
             AllMachines.SetMachineAsFull(underMachineNum);
