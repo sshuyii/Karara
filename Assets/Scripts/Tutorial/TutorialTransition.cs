@@ -2,36 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using UnityEditor;
+using UnityEditor.EditorTools;
 using UnityEngine;
 
 public class TutorialTransition : MonoBehaviour
 {
-    [Header("Train Movement")]
-    [SerializeField]    
-    private GameObject subwayTrain;
-    [SerializeField]
-    private int stopX;
-    [SerializeField]
-    private float speed;
+    // [Header("City Movement")]
 
-    [Header("City Movement")]
-    [SerializeField]
-    private GameObject city;
-
-    [SerializeField]    
-    private int cityStopX;
-
-    [SerializeField]    
-    private float citySpeed;
-
-    private GameObject MainCamera;
+    private Camera MainCamera;
     private RectTransform CameraRT;
 
-    public int TransitionStage = 0;
-    [SerializeField]    
-    private float cameraSpeed;
-    [SerializeField]    
+    [SerializeField]
     private float cameraStopX;
+    [SerializeField]
+    private float cameraSpeed;
+
+    public int TransitionStage = 0;
+
 
     public GameObject trainWithWindow;
 
@@ -41,13 +29,16 @@ public class TutorialTransition : MonoBehaviour
 
     public CanvasGroup TransparentButton;
 
+    [SerializeField]
+    private ScrollingBackground ScrollingBackground;
+
 
     // Start is called before the first frame update
     void Start()
     {
         trainWithWindow.SetActive(false);
 
-        MainCamera = GameObject.Find("Main Camera");
+        MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
 
         //教程最开始，镜头拉远
         CameraRT = MainCamera.GetComponent<RectTransform>();
@@ -56,10 +47,13 @@ public class TutorialTransition : MonoBehaviour
         StartCoroutine(WaitForLoading(2f));
     }
 
+    
     IEnumerator WaitForLoading(float waitDuration)
     {
         yield return new WaitForSeconds(waitDuration);
         TransitionStage ++;
+
+        ScrollingBackground.start = true;
     }
 
     // Update is called once per frame
@@ -68,48 +62,30 @@ public class TutorialTransition : MonoBehaviour
         // print("Start time = " + startTime);
         startTime += Time.deltaTime;
 
-        if(TransitionStage == 1)
-        {
-            if(subwayTrain.transform.position.x > stopX)
-            {
-                if(startTime < 2f)
-                {                
-                    subwayTrain.transform.position += new Vector3 (-3* speed, 0, 0);
-                }            
-                else{
-                    subwayTrain.transform.position += new Vector3 (-speed, 0, 0);
-                }
-            }
-
-            if(city.transform.position.x > cityStopX)
-            {
-                city.transform.position += new Vector3 (-citySpeed, 0, 0);
-
-            }
-        }
-        else if(TransitionStage == 2)
-        {
-            if(CameraRT.position.x < cameraStopX)
-            {
-                CameraRT.position += new Vector3(cameraSpeed, 0,0);
-            }   
-        }
-
         if(forwardOneStep)
         {
             TransitionStage ++;
             forwardOneStep = false;
             startTime = 0;//计时归零
+
             if(TransitionStage == 2)
             {
                 SetStage2();
                 ResetStage1();
             }
-            
         }
 
-        
+        //第二阶段：中等大小地铁
+        if(TransitionStage == 2)
+        {
+            if(CameraRT.position.x < cameraStopX)
+            {
+                CameraRT.position += new Vector3(cameraSpeed, 0, 0);
+                startTime = 0;//计时归零
+            }
+        }
     }
+
 
     private void SetStage2()
     {
@@ -122,19 +98,26 @@ public class TutorialTransition : MonoBehaviour
 
     private void ResetStage1()
     {
-        subwayTrain.SetActive(false);
-        city.SetActive(false);
+        ScrollingBackground.enabled = false;
+
+        
+        SpriteRenderer[] SRList = GetComponentsInChildren<SpriteRenderer>();
+        foreach (SpriteRenderer sr in SRList)
+        {
+            sr.enabled = false;
+        }
     }
 
     public void ClickToProceed()
     {
-        if(startTime < 3f)
+        if(startTime < 1.5f)
         {
             return;
         }
         else if(startTime < 5f)
         {
             if(TransitionStage == 1) return;
+
         }
         forwardOneStep = true;
          

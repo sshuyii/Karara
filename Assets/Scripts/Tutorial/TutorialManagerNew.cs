@@ -182,6 +182,7 @@ public class TutorialManagerNew : MonoBehaviour
 
         if(TutorialTransition.TransitionStage == 3)
         {
+            print("TutorialTransition =" + 3 );
             Hide(TutorialTransition.TransparentButton);
             MainCamera.GetComponent<Camera>().orthographicSize = 5;
             MainCamera.GetComponent<RectTransform>().position = new Vector3(17.5f, 0, -10f);
