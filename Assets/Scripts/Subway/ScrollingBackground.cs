@@ -6,8 +6,7 @@ public class ScrollingBackground : MonoBehaviour
 {
     [SerializeField]
     private GameObject[] levels;
-    [SerializeField]
-    private Vector3[] speed;
+    public Vector3[] speed;
 
     private Camera MainCamera;
     private Vector2 screenBounds;
@@ -76,14 +75,17 @@ public class ScrollingBackground : MonoBehaviour
             GameObject firstChild = children[1].gameObject;
             GameObject lastChild = children[children.Length - 1].gameObject;
             float halfObjectWidth = lastChild.GetComponent<SpriteRenderer>().bounds.extents.x - choke;
-            //如果firstChild的末端都还没进入摄像机，先不要调位置
-            if(firstChild.transform.position.x + halfObjectWidth > MainCamera.transform.position.x + screenBounds.x) return;
             if(MainCamera.transform.position.x + screenBounds.x > lastChild.transform.position.x)
             {
+                //如果firstChild的末端都还没进入摄像机，先不要调位置
+
+                if(firstChild.transform.position.x + halfObjectWidth > MainCamera.transform.position.x + screenBounds.x) return;
+
                 firstChild.transform.SetAsLastSibling();
                 firstChild.transform.position = new Vector3(lastChild.transform.position.x + halfObjectWidth * 2, lastChild.transform.position.y, lastChild.transform.position.z);
 
             }else if(MainCamera.transform.position.x - screenBounds.x < firstChild.transform.position.x){
+
                 lastChild.transform.SetAsFirstSibling();
                 lastChild.transform.position = new Vector3(firstChild.transform.position.x - halfObjectWidth* 2, firstChild.transform.position.y, firstChild.transform.position.z);
             }

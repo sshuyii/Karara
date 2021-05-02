@@ -18,6 +18,9 @@ public class TutorialTransition : MonoBehaviour
     [SerializeField]
     private float cameraSpeed;
 
+    public GameObject TrainStart;
+    public float TrainSpeed;
+
     public int TransitionStage = 0;
 
 
@@ -32,6 +35,8 @@ public class TutorialTransition : MonoBehaviour
     [SerializeField]
     private ScrollingBackground ScrollingBackground;
 
+    private float trainStartWidth;
+    private Vector3 screenBounds;
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +50,12 @@ public class TutorialTransition : MonoBehaviour
         CameraRT.position = new Vector3(33f, 0, -10f);
 
         StartCoroutine(WaitForLoading(2f));
+
+        //get the size of trainStart and camera
+        screenBounds = MainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, MainCamera.transform.position.z))
+            - MainCamera.transform.position;
+        trainStartWidth = TrainStart.GetComponent<SpriteRenderer>().bounds.size.x;
+
     }
 
     
@@ -74,9 +85,22 @@ public class TutorialTransition : MonoBehaviour
                 ResetStage1();
             }
         }
+        
 
+
+        if(TransitionStage == 1){
+            TrainStart.transform.position += ScrollingBackground.speed[0];
+            //如果第一节车厢已经从镜头前出去了，销毁
+            if(TrainStart)
+            {
+                if(TrainStart.transform.position.x + trainStartWidth < CameraRT.position.x - screenBounds.x)
+                {
+                    Destroy(TrainStart);
+                }
+            }
+        }
         //第二阶段：中等大小地铁
-        if(TransitionStage == 2)
+        else if(TransitionStage == 2)
         {
             if(CameraRT.position.x < cameraStopX)
             {
