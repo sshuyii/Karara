@@ -928,8 +928,8 @@ public class TutorialManagerNew : MonoBehaviour
 
         yield return new WaitForSeconds(time);
 
-        ClothUI.SetActive(true);
-        ClothUiAnimator.SetTrigger("StartClosing");
+        // ClothUI.SetActive(true);
+        ClothUiAnimator.SetTrigger("StartShowing");
         
         float Twait = ClothUiAnimator.GetCurrentAnimatorClipInfo(0).Length;
         Debug.Log("TWait: " + Twait);
@@ -940,7 +940,8 @@ public class TutorialManagerNew : MonoBehaviour
         AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
 
         machineOpen = false;
-        ClothUI.SetActive(false);
+        // ClothUI.SetActive(false);
+        ClothUiAnimator.SetTrigger("CloseImmediantly");
 
         deactiveButtons = false;//打开过程有一定时间，到时间前不可再次点击
         isFirstOpen = false;
@@ -966,7 +967,7 @@ public class TutorialManagerNew : MonoBehaviour
         }
         yield return new WaitForSeconds(time);
 
-        ClothUI.SetActive(true);
+        // ClothUI.SetActive(true);
         ClothUiAnimator.SetTrigger("StartShowing");
         
         yield return new WaitForSeconds(time);//等动画播完
@@ -986,11 +987,11 @@ public class TutorialManagerNew : MonoBehaviour
 
         machineOccupied.SetActive(true);
         KararaTalk(EmojiOpenDoor);
-        // ClothUiAnimator.SetTrigger("StartClose");
-        ClothUI.SetActive(false);
-
+        ClothUiAnimator.SetTrigger("StartClosing");
+        // ClothUI.SetActive(false);
+        float t =  ClothUiAnimator.GetCurrentAnimatorClipInfo(0).Length;
     
-        yield return new WaitForSeconds(time);
+        yield return new WaitForSeconds(t);
 
         MachineDoor.sprite = closeDoor;
 
@@ -1104,7 +1105,8 @@ public class TutorialManagerNew : MonoBehaviour
         deactiveButtons = true;
 
         // KararaTalk(EmojiOpenDoor);
-        ClothUI.SetActive(false);
+        ClothUI.GetComponent<Animator>().SetTrigger("CloseImmediantly");
+        // ClothUI.SetActive(false);
 
         yield return new WaitForSeconds(time);
 
@@ -1375,7 +1377,8 @@ public class TutorialManagerNew : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
 
         //衣服消失
-        ClothUI.SetActive(false);//有ui的话也消失
+        // ClothUI.SetActive(false);//有ui的话也消失
+        ClothUI.GetComponent<Animator>().SetTrigger("CloseImmediantly");
         machineFront.sprite = emptyImg;
         yield return new WaitForSeconds(0.2f);
 

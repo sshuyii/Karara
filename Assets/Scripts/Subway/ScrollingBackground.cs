@@ -62,7 +62,7 @@ public class ScrollingBackground : MonoBehaviour
             g.transform.SetParent(obj.transform);
             g.transform.localPosition = new Vector3(objectWidth * i, 0, 0);
             g.name = obj.name + i;
-            Destroy(g.GetComponent<BackgroundMovement>());
+            Destroy(g.GetComponent<BackgroundMoving>());
         }
         Destroy(clone);
         Destroy(obj.GetComponent<SpriteRenderer>());

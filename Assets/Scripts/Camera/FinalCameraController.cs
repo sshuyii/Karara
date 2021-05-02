@@ -601,8 +601,12 @@ public class FinalCameraController : MonoBehaviour
     public void MatchToSub()
     {
         StartCoroutine(ScrollToTop(MPsubScrollRect));
-        Show(frontPage);
+        Show(subPage);
         Show(appBackground);
+        Hide(frontPage);
+        Hide(SubwayMap);
+        lastCameraState = myCameraState;
+        myCameraState = CameraState.App;
         myAppState = AppState.MainpageSub;
         FromMatch2Sub = true;
     }
@@ -610,8 +614,10 @@ public class FinalCameraController : MonoBehaviour
     public void SubToMatch()
     {
 
-        Hide(frontPage);
+        Hide(subPage);
         Hide(appBackground);
+        lastCameraState = myCameraState;
+        myCameraState = CameraState.Map;
         FromMatch2Sub = false;
     }
 

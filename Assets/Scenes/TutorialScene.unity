@@ -9198,7 +9198,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b24041bf2ecdd49e7b075e364ff2f847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: -0.08
 --- !u!1 &826663689
 GameObject:
   m_ObjectHideFlags: 0
@@ -22444,6 +22443,8 @@ MonoBehaviour:
       clip: {fileID: 8300000, guid: 2ce71875255a94c819c9e1d87e36e74c, type: 3}
     - m_type: 19
       clip: {fileID: 8300000, guid: f1b9fff1ab21c45dca95efe9fafe0374, type: 3}
+    - m_type: 28
+      clip: {fileID: 8300000, guid: f1b9fff1ab21c45dca95efe9fafe0374, type: 3}
   - source: {fileID: 859400901}
     audio:
     - m_type: 8
@@ -25160,6 +25161,8 @@ Animation:
   m_Animations:
   - {fileID: 7400000, guid: c02533a525490405ba82f651c51af81a, type: 2}
   - {fileID: 7400000, guid: 69fb07cadd8da4d3fbe9da1c1016da5e, type: 2}
+  - {fileID: 7400000, guid: bded34e7a20614702b06c2b16881dbc1, type: 2}
+  - {fileID: 7400000, guid: 3918d2ec0e7cc480ea5872e0b5c7b3e6, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
