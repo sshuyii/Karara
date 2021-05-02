@@ -187,10 +187,12 @@ public class InstagramController : MonoBehaviour
     public void ClickProfilePhoto(string name)
     {
         Debug.Log("Click Profile Photo "+name);
-        FinalCameraController.MainPageToSub();
+        FinalCameraController.MatchToSub();
         clearProfileContent();
         displayProfileContent(name);
     }
+
+
     public void displayProfileContent(string name)
     {
         
