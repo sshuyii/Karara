@@ -49,15 +49,20 @@ public class TutorialManagerNew : MonoBehaviour
     TextMeshProUGUI followerNumText;
 
     [SerializeField]
-    private GameObject Exclamation, Posture, Phone,Hint2D, HintUI, HintScreen, ScrollHint, clothBag,machineFull, machineEmpty, phoneAnimation, changePostureButton,
+    private GameObject Exclamation, Posture, Phone, HintUI, ScrollHint, clothBag, machineFull, machineEmpty, phoneAnimation, changePostureButton,
         machineOccupied, ClothUI, KararaC, KararaB, KararaA, EmojiBubble, InventoryBackButton, Ins, Shutter, Notice, FishTalkButton, inventoryBubble, inventoryFish;
 
+    public GameObject Hint2D, HintScreen;
     [SerializeField]
     private CanvasGroup CameraBackground, scream, Inventory, Flashlight, FloatingUI, RedDot, Comic;
 
     [SerializeField]
-    private Vector3 HintPosPoster, HintPosCamera, HintPosBag, MachinePos, ClothUIPos, HintPosKarara, HintPosBackButton,
+    private Vector3 HintPosPoster, HintPosCamera, HintPosBag, MachinePos, ClothUIPos1, HintPosKarara, HintPosBackButton,
         HintPosShutter, HintPosInsBack, ParticlePos1, KararaAInScreen1Pos;
+
+    private Vector3[] ClothUIPos = new Vector3[3];
+    private Vector3[] InventoryUIPos = new Vector3[3];
+    public GameObject[] ClothUIPosObject, InventoryUIPosObject;
 
     [SerializeField]
     private Sprite initialBody, pos0Body, pos1Body, pos0Under, pos1Under, pos0Work, pos1Work, pos0WorkAlter, pos1WorkAlter,openBag, closeBag, fullImg, emptyImg, EmojiOpenDoor, unhappyFace, happyFace,
@@ -80,7 +85,7 @@ public class TutorialManagerNew : MonoBehaviour
 
 
     public Sprite workInventory, workSubway, workAds0, workAds1,workAlterInventory, workAlterSubway, workAds2, workShoe, workShoeSubway,
-        hoodie, barefoot, transparent;
+        hoodie, barefoot, transparent, SlipperInventory;
 
     private float KararaPosX = -39f;
 
@@ -127,6 +132,8 @@ public class TutorialManagerNew : MonoBehaviour
     public TutorialTransition TutorialTransition;
     void Start()
     {
+        clothBag.SetActive(false);//不然会显示在地铁外面
+
         //Set Camera position and size in stage 3  
         TutorialCameraController = GameObject.Find("Main Camera").GetComponent<TutorialCameraController>();
         MainCamera = GameObject.Find("Main Camera");
@@ -153,10 +160,18 @@ public class TutorialManagerNew : MonoBehaviour
         //所有洗衣机里的衣服
         for(int i = 0; i < ClothSlotList.Count; i++)
         {
-            clothSlotTable.Add(i+1, ClothSlotList[i]);
+            clothSlotTable.Add(i, ClothSlotList[i]);
         }
 
         inventoryBubbleSR = inventoryBubble.GetComponentsInChildren<SpriteRenderer>()[1];
+
+        for(int i = 0; i < ClothUIPosObject.Length; i++)
+        {   
+            ClothUIPos[i] = ClothUIPosObject[i].transform.position;
+
+            InventoryUIPos[i] = InventoryUIPosObject[i].GetComponent<RectTransform>().position;
+
+        }
 
     }
 
@@ -170,9 +185,13 @@ public class TutorialManagerNew : MonoBehaviour
 
         shoeAnimator.SetBool("isShining", true);
 
+        //箭头出现在
+        HintScreen.SetActive(true);
+        HintScreen.transform.position = InventoryUIPos[1];
+
         //对话框出现3s后消失（暂时
         yield return new WaitForSeconds(3f);
-        inventoryFish.SetActive(false);    
+        inventoryFish.SetActive(false);
     }
 
     bool longTap = false;
@@ -182,6 +201,16 @@ public class TutorialManagerNew : MonoBehaviour
 
         if(TutorialTransition.TransitionStage == 3)
         {
+            //set inactive
+            if(TutorialTransition.TrainStart)
+            {
+                TutorialTransition.TrainStart.SetActive(false);
+            }
+            TutorialTransition.ResetStage1();
+            clothBag.SetActive(true);
+
+
+
             print("TutorialTransition =" + 3 );
             Hide(TutorialTransition.TransparentButton);
             MainCamera.GetComponent<Camera>().orthographicSize = 5;
@@ -899,6 +928,11 @@ public class TutorialManagerNew : MonoBehaviour
         {
             Debug.Log("isFirstOpen and open machine");
 
+            //箭头在第一件没被拿走的衣服上
+            ChangeHintPos(ClothUIPos[0], 0);
+            Hint2D.SetActive(false);
+
+
             StartCoroutine(OpenCloseDoor(0.2f));
         }
         else if(inLoop)
@@ -906,11 +940,7 @@ public class TutorialManagerNew : MonoBehaviour
             Debug.Log("in loop and open machine");
             StartCoroutine(OpenDoor(0.2f));
 
-            // Hint2D.SetActive(true);
             KararaTalk(EmojiCloth);
-            // ChangeHintPos(ClothUIPos, 0);
-            //forwardOneStep = true;
-
         }
         else {
             // MachineDoor.sprite = openDoor;
@@ -942,6 +972,7 @@ public class TutorialManagerNew : MonoBehaviour
         machineOpen = false;
         // ClothUI.SetActive(false);
         ClothUiAnimator.SetTrigger("CloseImmediantly");
+        HintScreen.SetActive(false);
 
         deactiveButtons = false;//打开过程有一定时间，到时间前不可再次点击
         isFirstOpen = false;
@@ -971,7 +1002,8 @@ public class TutorialManagerNew : MonoBehaviour
         ClothUiAnimator.SetTrigger("StartShowing");
         
         yield return new WaitForSeconds(time);//等动画播完
-
+        
+        Hint2D.SetActive(true);
         deactiveButtons = false;//打开过程有一定时间，到时间前不可再次点击
     }
 
@@ -1021,7 +1053,6 @@ public class TutorialManagerNew : MonoBehaviour
         else
         {
             StartCoroutine(CloseDoor(0.1f));
-
         }
     }
 
@@ -1072,6 +1103,7 @@ public class TutorialManagerNew : MonoBehaviour
         HintUI.transform.localPosition = MachinePos;
     }
 
+    bool[] clothUIAvailable = {true, true, true};
   
     public void ClickClothUI(int slotNum)
     {
@@ -1084,9 +1116,21 @@ public class TutorialManagerNew : MonoBehaviour
         pickedClothNum ++;
         //点的衣服
         clothSlotTable[slotNum].SetActive(false);
+        clothUIAvailable[slotNum] = false; 
+
+        for(int i = 0; i < clothUIAvailable.Length; i++)
+        {
+            if(clothUIAvailable[i])
+            {
+                ChangeHintPos(ClothUIPos[i], 0);
+                break;
+            }
+        }
 
         if(pickedClothNum == 3)
         {
+            // ChangeHintPos(ClothUIPos1, 0);
+
             machineOccupied.SetActive(false);
             machineFront.sprite = emptyImg;
 
@@ -1209,42 +1253,6 @@ public class TutorialManagerNew : MonoBehaviour
         if (deactiveButtons) return;
         if(!putClothBack) return;
 
-        // if(inventoryCloth[3].sprite != workInventory &&
-        //     inventoryCloth[3].sprite != workAlterInventory) 
-        // {
-        //     //如果两件工作服都没穿的话
-        //     //todo: 手机震动
-        //     Handheld.Vibrate();
-
-        //     //todo: 提示不想只穿白帽衫
-        //     StartCoroutine(KararaTalkInventory(hoodie));
-            
-        //     return;
-        // }
-        // else{
-        //     //如果穿上了其中一件
-        //     if(inventoryCloth[2].sprite != workShoe)//但是没穿鞋
-        //     {
-        //         //todo: 手机震动
-        //         Handheld.Vibrate();
-
-
-        //         //todo: 提示不想光脚
-        //         StartCoroutine(KararaTalkInventory(barefoot));
-
-        //         return;
-        //     }
-        // }
-
-        // //如果有衣服没有还，也不能回到地铁
-        // if(!putClothBack) 
-        // {
-        //     //todo: 鱼告诉karara要把衣服都还了
-        //     StartCoroutine(FishTalkInventory());
-            
-        //     return;
-        // }
-
         //真正回到地铁
         TutorialCameraController.ReturnToApp();
 
@@ -1254,8 +1262,9 @@ public class TutorialManagerNew : MonoBehaviour
 
         TutorialCameraController.JumpToPage(4);
 
-        //karara现在穿着工作服啦
+        //karara现在穿着工作服和拖鞋啦
         GameObject.Find("PlayerEverythingSubway").GetComponent<SpriteRenderer>().enabled = true;
+
         KararaC.SetActive(true);
         forwardOneStep = true;
     }

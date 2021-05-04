@@ -89,10 +89,11 @@ public class TutorialTransition : MonoBehaviour
 
 
         if(TransitionStage == 1){
-            TrainStart.transform.position += ScrollingBackground.speed[0];
             //如果第一节车厢已经从镜头前出去了，销毁
             if(TrainStart)
             {
+                TrainStart.transform.position += ScrollingBackground.speed[0];
+
                 if(TrainStart.transform.position.x + trainStartWidth < CameraRT.position.x - screenBounds.x)
                 {
                     Destroy(TrainStart);
@@ -116,11 +117,11 @@ public class TutorialTransition : MonoBehaviour
         trainWithWindow.SetActive(true);
 
             MainCamera.GetComponent<Camera>().orthographicSize = 9;
-            CameraRT.position = new Vector3(-4f, 3f, -10f);
+            CameraRT.position = new Vector3(-4f, 2f, -10f);
 
     }
 
-    private void ResetStage1()
+    public void ResetStage1()
     {
         ScrollingBackground.enabled = false;
 

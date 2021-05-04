@@ -127,6 +127,8 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
                 //if (!isWorkCloth) InventorySlotMgt.castLongPress();
                 //新功能
                 showReturnConfirm();
+                TutorialManagerNew.HintScreen.SetActive(false);
+
                 //if(!isWorkCloth) showReturnConfirm();
                 Reset();
 			}
@@ -201,7 +203,7 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
                 TutorialManagerNew.isWearingClothNum ++;
 
                 TutorialManagerNew.inventoryCloth[2].sprite = TutorialManagerNew.workShoe;
-                TutorialManagerNew.subwayCloth[2].sprite = TutorialManagerNew.workShoeSubway;
+                // TutorialManagerNew.subwayCloth[2].sprite = TutorialManagerNew.workShoeSubway;//最终还会穿回拖鞋
                 TutorialManagerNew.workShoeOn = true;
             // }
             // else{
@@ -323,11 +325,11 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         //inventory里的衣服消失
         this.gameObject.SetActive(false);
 
-        //inventory里karara身上的鞋消失
-        TutorialManagerNew.inventoryCloth[2].sprite = TutorialManagerNew.transparent;
+        //inventory里karara身上的鞋回到拖鞋
+        TutorialManagerNew.inventoryCloth[2].sprite = TutorialManagerNew.SlipperInventory;
 
         //鞋放回洗衣机里
-        TutorialManagerNew.ClothSlotList[2].SetActive(true);
+        TutorialManagerNew.ClothSlotList[1].SetActive(true);
 
         //可以出现回到地铁的按钮
         TutorialManagerNew.putClothBack = true;

@@ -67,7 +67,7 @@ public class ScrollingBackground : MonoBehaviour
         Destroy(obj.GetComponent<SpriteRenderer>());
     }
 
-    void repositionChildObject(GameObject obj)
+    void repositionChildObject(GameObject obj, int i)
     {
         Transform[] children = obj.GetComponentsInChildren<Transform>();
         if(children.Length > 1)
@@ -75,7 +75,8 @@ public class ScrollingBackground : MonoBehaviour
             GameObject firstChild = children[1].gameObject;
             GameObject lastChild = children[children.Length - 1].gameObject;
             float halfObjectWidth = lastChild.GetComponent<SpriteRenderer>().bounds.extents.x - choke;
-            if(MainCamera.transform.position.x + screenBounds.x > lastChild.transform.position.x)
+            if(MainCamera.transform.position.x + screenBounds.x > lastChild.transform.position.x
+                && speed[i].x < 0f)
             {
                 //如果firstChild的末端都还没进入摄像机，先不要调位置
 
@@ -84,7 +85,13 @@ public class ScrollingBackground : MonoBehaviour
                 firstChild.transform.SetAsLastSibling();
                 firstChild.transform.position = new Vector3(lastChild.transform.position.x + halfObjectWidth * 2, lastChild.transform.position.y, lastChild.transform.position.z);
 
-            }else if(MainCamera.transform.position.x - screenBounds.x < firstChild.transform.position.x){
+            }else if(MainCamera.transform.position.x - screenBounds.x < firstChild.transform.position.x
+                && speed[i].x > 0f){
+
+                // //如果lastChild的末端都还没进入摄像机，先不要调位置
+                // if(lastChild.transform.position.x + halfObjectWidth < MainCamera.transform.position.x - screenBounds.x) return;
+                // //如果lastChild的前端也没进入摄像机，不要调位置
+                // if(lastChild.transform.position.x - halfObjectWidth > MainCamera.transform.position.x + screenBounds.x) return;
 
                 lastChild.transform.SetAsFirstSibling();
                 lastChild.transform.position = new Vector3(firstChild.transform.position.x - halfObjectWidth* 2, firstChild.transform.position.y, firstChild.transform.position.z);
@@ -93,9 +100,15 @@ public class ScrollingBackground : MonoBehaviour
     } 
 
     private void LateUpdate() {
-        foreach(GameObject obj in levels){
-            repositionChildObject(obj);
-            // print("reposition");
+
+        for(int i = 0; i < levels.Length; i++)
+        {
+            repositionChildObject(levels[i], i);
         }
+
+        // foreach(GameObject obj in levels){
+        //     repositionChildObject(obj);
+        //     // print("reposition");
+        // }
     }
 }
