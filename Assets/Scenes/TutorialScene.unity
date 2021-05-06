@@ -3478,8 +3478,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 226004732}
-        m_TargetAssemblyTypeName: TutorialClickSweet, Assembly-CSharp
+      - m_Target: {fileID: 1522229833}
+        m_TargetAssemblyTypeName: TutorialManagerNew, Assembly-CSharp
         m_MethodName: ClickSweet
         m_Mode: 1
         m_Arguments:
@@ -3964,7 +3964,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: f695db14217b44d4297f4e2465766479, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3984,7 +3984,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 270643600}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.71, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1566559903}
@@ -9577,7 +9577,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815345622}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.18, y: -2.47, z: 0}
+  m_LocalPosition: {x: 8.18, y: -2.8600001, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 1566559903}
@@ -17059,7 +17059,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1399318641}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.5, y: -2.495, z: 0}
+  m_LocalPosition: {x: 14.5, y: -2.885, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 1566559903}
@@ -18790,6 +18790,7 @@ MonoBehaviour:
   FishTalkButton: {fileID: 1661224276}
   inventoryBubble: {fileID: 2067344953}
   inventoryFish: {fileID: 2035416255}
+  sweet: {fileID: 226004730}
   Hint2D: {fileID: 81093514}
   HintScreen: {fileID: 1231978606}
   CameraBackground: {fileID: 2024295195}
@@ -18821,12 +18822,8 @@ MonoBehaviour:
   initialBody: {fileID: 21300000, guid: f87f4886696ab4c8683ac925b0987990, type: 3}
   pos0Body: {fileID: 21300000, guid: 51cdd9207e2ae4306ac60e47c42c5be5, type: 3}
   pos1Body: {fileID: 21300000, guid: 41e54a7a1c1954ef4b376c1360c22d74, type: 3}
-  pos0Under: {fileID: 0}
-  pos1Under: {fileID: 0}
   pos0Work: {fileID: 21300000, guid: b260d925f1c05420e8ede3e233e092cf, type: 3}
   pos1Work: {fileID: 21300000, guid: 584bb1269b68946178d5a1c37618a942, type: 3}
-  pos0WorkAlter: {fileID: 21300000, guid: 708d0936fb45f403f9175dff8d8b488b, type: 3}
-  pos1WorkAlter: {fileID: 21300000, guid: 3914d36809ad1409898bb9694654b98e, type: 3}
   openBag: {fileID: 21300000, guid: d997d32b0d304445c8bdbde01f709058, type: 3}
   closeBag: {fileID: 21300000, guid: dfc9e8891f60b455590259117e04dea7, type: 3}
   fullImg: {fileID: 21300000, guid: fac63ca08e4e94a20bd8f726c2e93e87, type: 3}
@@ -18840,10 +18837,8 @@ MonoBehaviour:
   openDoor: {fileID: 21300000, guid: 099c50302844b4b8b802c87e210695e5, type: 3}
   closeDoor: {fileID: 21300000, guid: 0588dbf3bc2784edcb3710f0c15307ad, type: 3}
   cameraBGFull: {fileID: 21300000, guid: 4ec783db62ff44ef9ae0d331feebd7ae, type: 3}
-  postPose1: {fileID: 21300000, guid: 08adcf20b2c1a4c059fc342d580604d1, type: 3}
-  postPose2: {fileID: 21300000, guid: 7e799113351c0466d94cf3f5f89a033a, type: 3}
-  postPose1Alter: {fileID: 21300000, guid: 4cdf3dd9f61fa4084a6027e1a8fb8a48, type: 3}
-  postPose2Alter: {fileID: 21300000, guid: b0c779989dd734a59b82ce4d76c2d74f, type: 3}
+  postPose1: {fileID: 21300000, guid: 7e799113351c0466d94cf3f5f89a033a, type: 3}
+  postPose2: {fileID: 21300000, guid: 08adcf20b2c1a4c059fc342d580604d1, type: 3}
   body: {fileID: 826663691}
   everything: {fileID: 1408277987}
   machineFront: {fileID: 2037833549}
@@ -18851,7 +18846,6 @@ MonoBehaviour:
   KararaFace: {fileID: 859669968}
   MachineDoor: {fileID: 1650897499}
   inventoryBubbleSR: {fileID: 0}
-  inventoryFishSR: {fileID: 0}
   followerNum: {fileID: 235663390}
   followerAnimation: {fileID: 2003605996}
   mobile: {fileID: 1654594104}
@@ -18876,11 +18870,6 @@ MonoBehaviour:
   - {fileID: 1408277987}
   workInventory: {fileID: 21300000, guid: 7570664878d1845ba85febbd8b8cfbf2, type: 3}
   workSubway: {fileID: 21300000, guid: 758970056085c4d36afdacacfb678353, type: 3}
-  workAds0: {fileID: 21300000, guid: 08adcf20b2c1a4c059fc342d580604d1, type: 3}
-  workAds1: {fileID: 21300000, guid: 08adcf20b2c1a4c059fc342d580604d1, type: 3}
-  workAlterInventory: {fileID: 21300000, guid: 5f4d9f26f107243cb882ad61c45a9ef9, type: 3}
-  workAlterSubway: {fileID: 21300000, guid: f2a29cd3c002d4da988aa1ef507c18eb, type: 3}
-  workAds2: {fileID: 21300000, guid: 08adcf20b2c1a4c059fc342d580604d1, type: 3}
   workShoe: {fileID: 21300000, guid: 32f25c7af9ebe4f99bb197eeab803f2b, type: 3}
   workShoeSubway: {fileID: 21300000, guid: 89b25c4745fe74801885107675d6b3fd, type: 3}
   hoodie: {fileID: 21300000, guid: e7197d786cc824b2d928de2d87111e9f, type: 3}
@@ -19603,10 +19592,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraStopX: 17.5
-  cameraSpeed: 0.1
+  cameraSpeed: 0.2
   TrainStart: {fileID: 815345622}
   TrainSpeed: 0
-  TransitionStage: 0
+  TransitionStage: 3
   trainWithWindow: {fileID: 646241680}
   forwardOneStep: 0
   TransparentButton: {fileID: 1002407368}
@@ -21944,7 +21933,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1726656655}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.45, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1566559903}
@@ -22691,7 +22680,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1795318588
 Transform:
   m_ObjectHideFlags: 0

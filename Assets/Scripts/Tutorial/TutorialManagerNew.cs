@@ -50,7 +50,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     [SerializeField]
     private GameObject Exclamation, Posture, Phone, HintUI, ScrollHint, clothBag, machineFull, machineEmpty, phoneAnimation, changePostureButton,
-        machineOccupied, ClothUI, KararaC, KararaB, KararaA, EmojiBubble, InventoryBackButton, Ins, Shutter, Notice, FishTalkButton, inventoryBubble, inventoryFish;
+        machineOccupied, ClothUI, KararaC, KararaB, KararaA, EmojiBubble, InventoryBackButton, Ins, Shutter, Notice, FishTalkButton, inventoryBubble, inventoryFish, sweet;
 
     public GameObject Hint2D, HintScreen;
     [SerializeField]
@@ -65,11 +65,11 @@ public class TutorialManagerNew : MonoBehaviour
     public GameObject[] ClothUIPosObject, InventoryUIPosObject;
 
     [SerializeField]
-    private Sprite initialBody, pos0Body, pos1Body, pos0Under, pos1Under, pos0Work, pos1Work, pos0WorkAlter, pos1WorkAlter,openBag, closeBag, fullImg, emptyImg, EmojiOpenDoor, unhappyFace, happyFace,
-        EmojiCloth, EmojiHappy, EmojiUnhappy, openDoor, closeDoor, cameraBGFull, postPose1, postPose2, postPose1Alter, postPose2Alter;
+    private Sprite initialBody, pos0Body, pos1Body, pos0Work, pos1Work, openBag, closeBag, fullImg, emptyImg, EmojiOpenDoor, unhappyFace, happyFace,
+        EmojiCloth, EmojiHappy, EmojiUnhappy, openDoor, closeDoor, cameraBGFull, postPose1, postPose2;
 
     [SerializeField]
-    private SpriteRenderer body, everything, machineFront, emoji, KararaFace, MachineDoor, inventoryBubbleSR, inventoryFishSR;
+    private SpriteRenderer body, everything, machineFront, emoji, KararaFace, MachineDoor, inventoryBubbleSR;
 
 
     [SerializeField]
@@ -84,7 +84,7 @@ public class TutorialManagerNew : MonoBehaviour
     public SpriteRenderer[] subwayCloth, inventoryCloth, adsCloth;
 
 
-    public Sprite workInventory, workSubway, workAds0, workAds1,workAlterInventory, workAlterSubway, workAds2, workShoe, workShoeSubway,
+    public Sprite workInventory, workSubway, workShoe, workShoeSubway,
         hoodie, barefoot, transparent, SlipperInventory;
 
     private float KararaPosX = -39f;
@@ -148,8 +148,6 @@ public class TutorialManagerNew : MonoBehaviour
 
         workInventory = Resources.Load<Sprite>("Images/Karara/Cloth/Inventory/work");
         workSubway = Resources.Load<Sprite>("Images/Karara/Cloth/Subway/work");
-        workAds0 = Resources.Load<Sprite>("Images/Karara/Cloth/Pose/Pose1_1/work");
-        workAds1 = Resources.Load<Sprite>("Images/Karara/Cloth/Pose/Pose1_3/work");
 
         FishTextManager = GameObject.Find("---FishTextManager").GetComponent<FishTextManager>();
 
@@ -456,13 +454,26 @@ public class TutorialManagerNew : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        Hint2D.SetActive(true);
+        if(stepCounter == 0)
+        {
+            Hint2D.SetActive(true);
+        }
     }
 
 
+    IEnumerator ShowHintInAd()
+    {
+        yield return new WaitForSeconds(1.5f);
+        if(stepCounter == 1)
+        {
+            Hint2D.SetActive(true);
+        }
+    }
 
     public void ClickAd()
     {
+        StopCoroutine(ShowExclamation());
+
         if (deactiveButtons) return;
         
         AudioManager.PlayAudio(AudioType.Poster_Enter);
@@ -470,6 +481,8 @@ public class TutorialManagerNew : MonoBehaviour
         Debug.Log("ClickAd");
         if (AdClick1stTime)
         {
+            StartCoroutine(ShowHintInAd());
+
             Exclamation.SetActive(false);
             forwardOneStep = true;
         }
@@ -481,6 +494,10 @@ public class TutorialManagerNew : MonoBehaviour
                 //这几个能到screen 4的阶段都在显示scream
                 return;
             }
+                 
+            //穿上工作服了
+            body.sprite = pos1Work;
+            
             Shutter.SetActive(true);
             Hint2D.SetActive(false);
             forwardOneStep = true;
@@ -560,19 +577,18 @@ public class TutorialManagerNew : MonoBehaviour
             if(clickTime == 1)
             {
                 body.sprite = pos0Body;
-                everything.sprite = pos0Under;            
             }
             else if(clickTime == 2)
             {   
                 body.sprite = pos1Body;
-                everything.sprite = pos1Under;
             }
             else if(clickTime == 3)
             {
                 AdClick1stTime = false;
+                StopCoroutine(ShowHintInAd());
                 Hint2D.SetActive(false);
-                forwardOneStep = true;
 
+                forwardOneStep = true;
                
                 //reset clickTime for 2nd time
                 clickTime = 0;
@@ -581,6 +597,7 @@ public class TutorialManagerNew : MonoBehaviour
         else if(stepCounter == 13)
         {
             clickTime ++;
+       
 
             if(clickTime == 1)
             {
@@ -1001,7 +1018,7 @@ public class TutorialManagerNew : MonoBehaviour
         // ClothUI.SetActive(true);
         ClothUiAnimator.SetTrigger("StartShowing");
         
-        yield return new WaitForSeconds(time);//等动画播完
+        yield return new WaitForSeconds(1f);//等动画播完
         
         Hint2D.SetActive(true);
         deactiveButtons = false;//打开过程有一定时间，到时间前不可再次点击
@@ -1569,6 +1586,21 @@ public class TutorialManagerNew : MonoBehaviour
     public void ProceedToChapterOne()
     {
         SceneManager.LoadScene("StreetStyle");
+    }
+
+    public void ClickSweet()
+    {
+        sweet.SetActive(false);
+        isWearingClothNum ++;
+        StartCoroutine(KararaEatSweet());
+    }
+
+    IEnumerator KararaEatSweet()
+    {
+        yield return new WaitForSeconds(0.3f);
+        inventoryBubble.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        inventoryBubble.SetActive(false);
 
     }
 }
