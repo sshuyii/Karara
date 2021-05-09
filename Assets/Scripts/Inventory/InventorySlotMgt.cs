@@ -117,6 +117,7 @@ public class InventorySlotMgt : MonoBehaviour
         firstEmptySlot.GetComponent<ClothChanging>().originSlotNum = subwaySlotNum;
         firstEmptySlot.GetComponent<ClothChanging>().setFillAmount(timers);
         firstEmptySlot.GetComponent<ClothChanging>().isOccupied = true;
+        firstEmptySlot.GetComponent<ClothChanging>().originalOwner = cloth.owner;
 
     }
 

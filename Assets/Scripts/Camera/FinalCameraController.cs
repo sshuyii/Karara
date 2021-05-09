@@ -616,6 +616,7 @@ public class FinalCameraController : MonoBehaviour
 
         Hide(subPage);
         Hide(appBackground);
+        Show(SubwayMap);
         lastCameraState = myCameraState;
         myCameraState = CameraState.Map;
         FromMatch2Sub = false;

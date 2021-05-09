@@ -164,6 +164,9 @@ public class LevelManager : MonoBehaviour
     {
         Debug.Log("let's see ");
         Hide(transitComic.GetComponent<CanvasGroup>());
+        HideHint();
+        MapCar_Tut_S2.SetActive(false);
+        Show(MapCar.GetComponent<CanvasGroup>());
         isInstruction = false;
         stageTransiting = false;
         comicClick = 0;
@@ -284,9 +287,7 @@ public class LevelManager : MonoBehaviour
             MapHint.gameObject.transform.localPosition = new Vector3(20f, 0, 0);
             GoBackButton.SetActive(true);
             isInstruction = false;
-            MapCar_Tut_S2.SetActive(false);
-            Show(MapCar.GetComponent<CanvasGroup>());
-            
+
         }
 
     }
@@ -313,6 +314,7 @@ public class LevelManager : MonoBehaviour
         comicClick = 0;
         HideHint();
 
+        FinalCameraController.ChangeToSubway();
         FinalCameraController.GotoPage(3);
         Animator myAnim = MapInSubway.GetComponent<Animator>();
         myAnim.SetTrigger("blingbling");
@@ -329,6 +331,7 @@ public class LevelManager : MonoBehaviour
         HideHint();
 
         // todo: 看看该不该蹦出来漫画
+
         FinalCameraController.ChangeToSubway();
         FinalCameraController.GotoPage(3);
 

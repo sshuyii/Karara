@@ -422,7 +422,7 @@ public class StationForButton : MonoBehaviour
     private void ExpandProfile(string name)
     {
         bool matchedCorrect = CheckMatchState(name);
-        if(matchedCorrect) return;
+        //if(matchedCorrect) return;
 
         //todo: tab变色
         displayingProfile = true;

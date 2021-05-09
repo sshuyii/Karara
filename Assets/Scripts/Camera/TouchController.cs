@@ -275,12 +275,6 @@ public class TouchController : MonoBehaviour
                     FinalCameraController.clickSetting();
                     break;
                 
-                //case "MessageLogo":
-                //    FinalCameraController.ChangeToApp();
-                //    break;
-                //case "ClothLogo":
-                //    FinalCameraController.ChangeToCloth();
-                    //break;
                 case "subwayMap":
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     FinalCameraController.ChangeToMap();

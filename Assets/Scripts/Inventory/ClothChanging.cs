@@ -11,6 +11,7 @@ using UnityEngine.UI;
 public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public int originSlotNum;
+    public string originalOwner;
     public Text text;
     private Vector3 startPos;
     public Sprite transparent;
@@ -182,9 +183,8 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     }
     public void showReturnConfirm()
     {
-        currentSprite = GetComponent<Image>().sprite;
-        Cloth thisCloth = SpriteLoader.ClothDic[currentSprite.name];
-        bool bagFoundInCar = AllMachines.FoundBagInCar(thisCloth.owner);
+   
+        bool bagFoundInCar = AllMachines.FoundBagInCar(originalOwner);
 
         if (timer < 0|| bagFoundInCar == false)
         {
@@ -224,9 +224,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 
         currentSprite = GetComponent<Image>().sprite;
-        Cloth thisCloth = SpriteLoader.ClothDic[currentSprite.name];
-        Debug.Log(thisCloth.owner);
-        bool bagFoundInCar = AllMachines.PutClothBackToMachine(thisCloth.owner, originSlotNum);
+        bool bagFoundInCar = AllMachines.PutClothBackToMachine(originalOwner,originSlotNum);
         
 
         if(timer < 0||bagFoundInCar ==false)
@@ -261,7 +259,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         currentSprite = GetComponent<Image>().sprite;
         //Debug.Log("丢掉" +currentSprite.name);
         Cloth thisCloth = SpriteLoader.ClothDic[currentSprite.name];
-        NPC owner = SpriteLoader.NPCDic[thisCloth.owner];
+        NPC owner = SpriteLoader.NPCDic[originalOwner];
         LostAndFound.AddClothToList(thisCloth, owner);
 
         int rate = LostAndFound.RatingSys.rating;
@@ -279,6 +277,8 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         isWearing = false;
         myImage.fillAmount = 1;
         originSlotNum = -1;
+
+        originalOwner = "";
     }
 
 
