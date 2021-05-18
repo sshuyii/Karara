@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class BagsController : MonoBehaviour
@@ -107,7 +108,7 @@ public class BagsController : MonoBehaviour
         bagsInCar.Remove(bag);
     }
 
-    
+    public TextMeshProUGUI clothesAtInventory;
     public void ShowReturnNotice(GameObject bag,bool flip)
     {
         returnNotice.SetActive(true);
@@ -118,6 +119,10 @@ public class BagsController : MonoBehaviour
         
         wc.DoorImage.sprite = washers.openedDoor;
         wc.Occupied.SetActive(false);
+
+        int clotheNum = 4 - wc.clothNum;
+        if(clotheNum > 0)clothesAtInventory.text = "There are " + clotheNum.ToString()+  " clothes at inventory.";
+        else clothesAtInventory.text = "";
 
         if(flip)
         {
@@ -191,7 +196,8 @@ public class BagsController : MonoBehaviour
         for(int i = 0; i < bagsInCar.Count; i++)
         {
             ClothToMachine ctm = bagsInCar[i].GetComponent<ClothToMachine>();
-            if(ctm.underMachineNum == 1|| ctm.underMachineNum == 2 && ctm.isFinished && ctm.timeUp)
+            // timeup 判断可能有问题
+            if(ctm.underMachineNum == 1|| ctm.underMachineNum == 2  && ctm.timeUp)
             {
                 
                 returnedBagNum++;
@@ -208,17 +214,16 @@ public class BagsController : MonoBehaviour
 
     public int CountAllBagsInWasher(int washer)
     {
-        int returnedBagNum = 0;
         for (int i = 0; i < bagsInCar.Count; i++)
         {
             ClothToMachine ctm = bagsInCar[i].GetComponent<ClothToMachine>();
-            if (ctm.underMachineNum == washer && ctm.isFinished && ctm.timeUp)
+            //@ demo possible problem
+            if (ctm.underMachineNum == washer && ctm.timeUp)
             {
-                returnedBagNum++;
-
+                return 1;
             }
         }
-        return returnedBagNum;
+        return 0;
     }
 
 
@@ -229,16 +234,10 @@ public class BagsController : MonoBehaviour
         for (int i = 0; i < bagsInCar.Count; i++)
         {
             ClothToMachine ctm = bagsInCar[i].GetComponent<ClothToMachine>();
-            //Debug.Log("bag owner "+ctm.transform.gameObject.tag + ctm.underMachineNum);
-
-            if (ctm.underMachineNum == washer && ctm.isFinished && ctm.timeUp)
+            if (ctm.underMachineNum == washer && ctm.timeUp)
             {
                 returnedBagNum++;
-                //Debug.Log("bags in 2 returning");
                 returningBag = bagsInCar[i];
-                int washerNum = returningBag.GetComponent<ClothToMachine>().underMachineNum;
-                WasherController wc = washers.WasherControllerList[washerNum];
-                if(wc.clothNum > 0) wc.Occupied.SetActive(true);
                 ClickReturnYes();
             }
         }

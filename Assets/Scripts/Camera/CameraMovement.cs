@@ -39,6 +39,7 @@ public class CameraMovement : MonoBehaviour
     public float defaultSpeed = 50f;
     private bool going = false;
 
+    public bool stopForComic = false;
     void Start()
     {
         // positions = new Vector3[4];
@@ -104,7 +105,7 @@ public class CameraMovement : MonoBehaviour
     private void FixedUpdate()
     {
         
-        if (!going || swipping ||atInventory) return;
+        if (!going || swipping ||atInventory||stopForComic) return;
 
         Vector3 target = positions[currentPage];
         movingTimer += Time.deltaTime;
@@ -140,7 +141,11 @@ public class CameraMovement : MonoBehaviour
         smoothSpeed = defaultSpeed;
     }
 
-
+    public bool AroundPosition(float posx)
+    {
+        if(transform.position.x > posx - 0.5 && transform.position.x < posx + 0.5) return true;
+        else return false;
+    }
   
 
 }

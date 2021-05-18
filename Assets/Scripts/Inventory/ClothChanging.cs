@@ -11,7 +11,8 @@ using UnityEngine.UI;
 public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public int originSlotNum;
-    public string originalOwner;
+    public int originMachine;
+    public GameObject originBag;
     public Text text;
     private Vector3 startPos;
     public Sprite transparent;
@@ -84,6 +85,8 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
     private AudioManager AudioManager;
     private LevelManager LevelManager;
+
+    public bool myBagIsInCar;
     void Start()
     {
         
@@ -150,12 +153,18 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
             myImage.fillAmount = timer/totalTime;
         }
 
+
+
+
     }
 
 
-    public void setFillAmount(float[] timers) {
-        timer = timers[0];
-        totalTime = timers[1];
+
+
+    public void SetFillAmountZero()
+    {
+        timer = 0;
+        myImage.fillAmount = 0;
     }
     public void OnPointerDown(PointerEventData eventData)
 	{
@@ -184,9 +193,9 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     public void showReturnConfirm()
     {
    
-        bool bagFoundInCar = AllMachines.FoundBagInCar(originalOwner);
+        
 
-        if (timer < 0|| bagFoundInCar == false)
+        if (timer < 0|| originBag == null)
         {
             dropClothImage.GetComponent<Image>().sprite = InventorySlotMgt.dropToLandFImg;
         }
@@ -214,18 +223,13 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         returnConfirmButton.gameObject.SetActive(false);
         returnBG.SetActive(false);
         longPress = false;
-        //todo: long press but later chose not to return?
 
+        if(originBag != null) AllMachines.PutClothBackToMachine(originBag,originMachine,originSlotNum);
 
-        //print("return cloth is working");
-
-        //print("return cloth is working and double touched");
-
-
-
-        currentSprite = GetComponent<Image>().sprite;
-        bool bagFoundInCar = AllMachines.PutClothBackToMachine(originalOwner,originSlotNum);
+        bool bagFoundInCar = originBag != null;
+        if(bagFoundInCar) AllMachines.PutClothBackToMachine(originBag,originMachine,originSlotNum);
         
+
 
         if(timer < 0||bagFoundInCar ==false)
         {
@@ -254,16 +258,10 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
             LostAndFound.ShaderOn();
         }
 
-         
-
         currentSprite = GetComponent<Image>().sprite;
-        //Debug.Log("丢掉" +currentSprite.name);
-        Cloth thisCloth = SpriteLoader.ClothDic[currentSprite.name];
-        NPC owner = SpriteLoader.NPCDic[originalOwner];
-        LostAndFound.AddClothToList(thisCloth, owner);
-
-        int rate = LostAndFound.RatingSys.rating;
-        LevelManager.CheckUIRateCondition(rate);
+        LostAndFound.AddClothToList(); // 单纯计数功能
+        if(LevelManager.stage > 1) LevelManager.ShowUIRate();
+        //进入stage 2之后第一次掉星就出现UIRate
     }
 
 
@@ -277,11 +275,22 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         isWearing = false;
         myImage.fillAmount = 1;
         originSlotNum = -1;
+        originMachine = -1;
 
-        originalOwner = "";
     }
 
+    public void NewClothAddToInventory(Sprite clothSprite,int machine, int slot, GameObject bag, float Tremain, float Ttotal )
+    {
+        halfTspImg.sprite = clothSprite;
+        timer = Tremain;
+        totalTime = Ttotal;
+        isOccupied = true;
 
+        originSlotNum = slot;
+        originMachine = machine;
+        originBag = bag;
+
+    }
 
     private void takeOffCloth() 
     {

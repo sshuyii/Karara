@@ -16,6 +16,8 @@ public class RatingSystem : MonoBehaviour
 
     // Start is called before the first frame update
     LevelManager LevelManager;
+
+    
     void Start()
     {
         LevelManager = GameObject.Find("---LevelManager").GetComponent<LevelManager>();
@@ -52,13 +54,11 @@ public class RatingSystem : MonoBehaviour
     public void SubStars() {
         
         rating--;
-        bool changed = true;
         if (rating < lowerBound)
         {
-            changed = false;
             rating = lowerBound;
         }
-        refreshStars(changed);
+        refreshStars();
 
     }
 
@@ -67,22 +67,19 @@ public class RatingSystem : MonoBehaviour
         
         Debug.Log("add star in rating");
         rating++;
-        bool changed = true;
         if (rating > upperBound)
         {
-            changed = false;
             rating = upperBound;
         }
-        refreshStars(changed);
+        refreshStars();
     }
 
 
 
-    private void refreshStars(bool changed)
+    private void refreshStars()
     {
         Debug.Log("refresh star");
 
-        if (!changed) return;
 
         for (int i = 0; i < rating; i++)
         {
@@ -105,6 +102,17 @@ public class RatingSystem : MonoBehaviour
         particleEffect.SetActive(true);
         yield return new WaitForSeconds(1f);
         particleEffect.SetActive(false);
+    }
+
+    public void ChangeRating(int difference)
+    {
+        if(LevelManager.stage < 2) return;
+        // the number could be less than zero.
+        if(difference == 0) return;
+        rating += difference;
+        if (rating > upperBound) rating = upperBound;
+        if(rating < lowerBound) rating = lowerBound;
+        refreshStars();
     }
 
 }

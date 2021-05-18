@@ -1559,16 +1559,20 @@ public class TutorialManagerNew : MonoBehaviour
     }
 
 
-
+    private List<AudioType> fishBubbles = new List<AudioType>{AudioType.FishBubble1,AudioType.FishBubble2,
+    AudioType.FishBubble3, AudioType.FishBubble4, AudioType.FishBubble5, AudioType.FishBubble6, AudioType.FishBubble7};
     IEnumerator AnimateText(TextMeshPro text, string textContent)
     {
         //TutorialCameraController.
-
+        
+        
         currentFT.isPlaying = true;
         for (int i = 0; i < (textContent.Length + 1); i++)
         {
             if (!currentFT.isPlaying) break;
 
+            int random = UnityEngine.Random.Range(0,6);
+            AudioManager.PlayAudio(fishBubbles[random]);
             text.text = textContent.Substring(0, i);
             yield return new WaitForSeconds(.1f);
         }

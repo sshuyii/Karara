@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class StationForButton : MonoBehaviour
 {
     public SubwayMovement SubwayMovement;
-    
+
     // Start is called before the first frame update
 
     private bool isSpecialNPCTab = true;
@@ -78,10 +78,10 @@ public class StationForButton : MonoBehaviour
     [SerializeField]
     private int tabPerStation = 2;
 
-    Dictionary<string,Sprite> bagLogoInCollection = new Dictionary<string, Sprite>();
+    Dictionary<string, Sprite> bagLogoInCollection = new Dictionary<string, Sprite>();
 
     private bool EnteringSelection = false;
-    public GameObject ButtonDown, ButtonUp,EnterSelectionButton;
+    public GameObject ButtonDown, ButtonUp, EnterSelectionButton;
     public Sprite beforeEnter, afterEnter;
 
     //index means each profile.
@@ -94,7 +94,7 @@ public class StationForButton : MonoBehaviour
 
 
     [SerializeField]
-    GameObject resultPref, resultsContent,results,matchGO;
+    GameObject resultPref, resultsContent, results, matchGO;
     [SerializeField]
     Button confirmResult;
     [SerializeField]
@@ -124,7 +124,7 @@ public class StationForButton : MonoBehaviour
         foreach (KeyValuePair<string, NPC> nameNPCPair in SpriteLoader.NPCDic)
         {
             //if (nameNPCPair.Key == "X"|| nameNPCPair.Key == "Karara") continue;
-            if ( nameNPCPair.Key == "Karara") continue;
+            if (nameNPCPair.Key == "Karara") continue;
             NPCNames.Add(nameNPCPair.Key);
             NPCAvatars.Add(nameNPCPair.Value.profile);
             Debug.Log("station for buttons" + nameNPCPair.Key);
@@ -134,7 +134,7 @@ public class StationForButton : MonoBehaviour
 
         //三个站 每站4个tab
 
-        matchedNPCIdx.Add(new List<int> { 0,0,0,0});
+        matchedNPCIdx.Add(new List<int> { 0, 0, 0, 0 });
         matchedNPCIdx.Add(new List<int> { 0, 0, 0, 0 });
         matchedNPCIdx.Add(new List<int> { 0, 0, 0, 0 });
 
@@ -142,7 +142,7 @@ public class StationForButton : MonoBehaviour
         InstagramController = GameObject.Find("---InstagramController").GetComponent<InstagramController>();
         BagsController = GameObject.Find("---BagsController").GetComponent<BagsController>();
 
-        for(int i = 0; i < NPCNames.Count; i++)
+        for (int i = 0; i < NPCNames.Count; i++)
         {
             ProfileUsageState.Add("");
         }
@@ -158,7 +158,7 @@ public class StationForButton : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(results.active && results.GetComponent<ScrollRect>().verticalNormalizedPosition < 0.3f)
+        if (results.active && results.GetComponent<ScrollRect>().verticalNormalizedPosition < 0.3f)
         {
             confirmResult.interactable = true;
         }
@@ -169,13 +169,13 @@ public class StationForButton : MonoBehaviour
         if (LevelManager.stage == 1) collection = collection_stage2;
         if (LevelManager.stage == 2) collection = collection_stage3;
 
-       
+
         foreach (Transform t in collection.transform.GetComponentInChildren<Transform>())
         {
             if (t.gameObject.name == "CollectionContent") collectionContent = t.gameObject;
         }
 
-        
+
         tabsParentGO.transform.SetParent(collection.transform);
     }
 
@@ -210,19 +210,19 @@ public class StationForButton : MonoBehaviour
         //if (LevelManager.isInstruction) return;
         if (LevelManager.stage == 1 && !LevelManager.stageTransiting) return;
 
-        
+
 
 
         activeSelectorIdx = stationNum * tabPerStation;
         StationDetails();
 
-        if(LevelManager.stage > 2 || (LevelManager.stage == 2 && LevelManager.isInstruction))
+        if (LevelManager.stage > 2 || (LevelManager.stage == 2 && LevelManager.isInstruction))
         {
             Debug.Log("LETS SEE THE TRANSITION!!!");
             showProfileSelectors();
             HideProfileWhenCloseStationDetail();
         }
-        
+
     }
 
 
@@ -264,7 +264,7 @@ public class StationForButton : MonoBehaviour
         // * tabPerStation
 
         Debug.Log("click tab");
-        for (int i = 0;i < tabsBG.Count; i++)
+        for (int i = 0; i < tabsBG.Count; i++)
         {
             tabsBG[i].GetComponent<Image>().sprite = normalTab;
         }
@@ -292,40 +292,41 @@ public class StationForButton : MonoBehaviour
             }
         }
 
-        
+
         ClearCollectionContent();
         DisplayCollectionContent(tabNum);
     }
 
 
-        
+
     public void StationDetails()
     {
-        
+
         //Debug.Log(" station detail");
 
 
-        
+
 
         // if no bag created in the sation, do not show anything.
-       
-            
-        if ((isDetailed && stationNum == currDetailedStation) || exiting)
+
+
+        if ((isDetailed) || exiting)
         {
             Debug.Log("EnterStationDetail_Tut_S3 wrong way");
-            if (LevelManager.stage == 2 && LevelManager.isInstruction) return;
-              
-           collection.SetActive(false);
-           tabsParentGO.SetActive(false);
-           isDetailed = false;
+
+         
+            collection.SetActive(false);
+            tabsParentGO.SetActive(false);
+            isDetailed = false;
+            //if (LevelManager.stage == 2 && LevelManager.isInstruction) return;
+
 
         }
         else
         {
             if (!isDetailed)
             {
-                Debug.Log("EnterStationDetail_Tut_S3");
-               collection.SetActive(true);
+                collection.SetActive(true);
                 tabsParentGO.SetActive(true);
                 isDetailed = true;
             }
@@ -335,16 +336,27 @@ public class StationForButton : MonoBehaviour
 
             ClearCollectionContent();
             currDetailedStation = stationNum;
+            List<string> bagOwners = BagsController.stationBagOwners[stationNum];
 
 
-            for (int i = 0; i < BagsController.stationBagOwners[stationNum].Count; i++)
+            if (bagOwners.Count > 0)
             {
-                tabsBG[i].GetComponent<Image>().sprite = normalTab;
+                for (int i = 0; i < bagOwners.Count; i++)
+                {
+                    tabsBG[i].GetComponent<Image>().sprite = normalTab;
+                }
+                tabsBG[tabNum].GetComponent<Image>().sprite = PressedTab;
+
+                string currentBagOwner = BagsController.stationBagOwners[currDetailedStation][tabNum];
+                tabLogo.sprite = SpriteLoader.NPCDic[currentBagOwner].closeBag;
+                DisplayCollectionContent(tabNum);
             }
-            tabsBG[tabNum].GetComponent<Image>().sprite = PressedTab;
-            string currentBagOwner = BagsController.stationBagOwners[currDetailedStation][tabNum];
-            tabLogo.sprite = SpriteLoader.NPCDic[currentBagOwner].closeBag;
-            DisplayCollectionContent(tabNum);
+            else
+            {
+                tabsParentGO.SetActive(false);
+                
+            }
+
         }
 
     }
@@ -439,7 +451,7 @@ public class StationForButton : MonoBehaviour
     {
         displayingProfile = false;
         InstagramController.clearProfileContent();
-        DisplayCollectionContent(stationNum);
+        DisplayCollectionContent(tabNum);
     }
 
 
@@ -458,7 +470,7 @@ public class StationForButton : MonoBehaviour
         string thisTabOwner = BagsController.stationBagOwners[stationNum][tabNum];
 
 
-        if(ProfileUsageState[idx] != "" && ProfileUsageState[idx] != thisTabOwner) greyedOut.SetActive(true);
+        if (ProfileUsageState[idx] != "" && ProfileUsageState[idx] != thisTabOwner) greyedOut.SetActive(true);
         else greyedOut.SetActive(false);
 
         ProfileSelector.transform.GetComponent<Image>().sprite = NPCAvatars[idx];
@@ -479,34 +491,34 @@ public class StationForButton : MonoBehaviour
     {
 
         matchedNPCIdx[stationNum][tabNum]++;
-        if(matchedNPCIdx[stationNum][tabNum] == NPCNames.Count)
+        if (matchedNPCIdx[stationNum][tabNum] == NPCNames.Count)
         {
             matchedNPCIdx[stationNum][tabNum]--;
         }
 
-        
+
 
         showProfileSelectors();
-        if(ShowingProfile)refreshProfile();
+        if (ShowingProfile) refreshProfile();
     }
 
     public void LastProfile()
     {
 
         matchedNPCIdx[stationNum][tabNum]--;
-        if(matchedNPCIdx[stationNum][tabNum] < 0)
+        if (matchedNPCIdx[stationNum][tabNum] < 0)
         {
             matchedNPCIdx[stationNum][tabNum] = 0;
         }
 
         showProfileSelectors();
-        if(ShowingProfile)refreshProfile();
+        if (ShowingProfile) refreshProfile();
     }
 
 
     private void HideProfileWhenCloseStationDetail()
     {
-        
+
         if (isDetailed == false)
         {
             ShowingProfile = false;
@@ -530,7 +542,7 @@ public class StationForButton : MonoBehaviour
     public void EnterSelection()
     {
         EnteringSelection = !EnteringSelection;
-        if(EnteringSelection)
+        if (EnteringSelection)
 
         {
             if (LevelManager.stage == 2 && LevelManager.isInstruction)
@@ -551,10 +563,10 @@ public class StationForButton : MonoBehaviour
                 LevelManager.EndMatch_Tut_S3();
             }
             int idx = matchedNPCIdx[stationNum][tabNum];
-            if(ProfileUsageState[idx] != "")
+            if (ProfileUsageState[idx] != "")
             {
                 EnteringSelection = !EnteringSelection;
-                
+
             }
             else
             {
@@ -563,13 +575,13 @@ public class StationForButton : MonoBehaviour
                 ButtonDown.SetActive(false);
                 ButtonUp.SetActive(false);
             }
-            
+
         }
 
-        
+
     }
 
-    
+
     private bool CheckMatchState(string currentProfile)
     {
         int idx = matchedNPCIdx[stationNum][tabNum];
@@ -587,15 +599,15 @@ public class StationForButton : MonoBehaviour
         }
 
 
-        for (int i=0; i < ProfileUsageState.Count; i++)
+        for (int i = 0; i < ProfileUsageState.Count; i++)
         {
             string WhoUseThisProfile = ProfileUsageState[i];
             string TrueOwner = NPCNames[i];
 
             if (WhoUseThisProfile != "" && WhoUseThisProfile == TrueOwner)
             {
-                
-                GameObject match = Instantiate(resultPref,resultsContent.transform);
+
+                GameObject match = Instantiate(resultPref, resultsContent.transform);
                 Sprite bag = SpriteLoader.NPCDic[TrueOwner].closeBag;
                 match.transform.Find("bag").gameObject.GetComponent<Image>().sprite = bag;
                 Sprite profile = NPCAvatars[i];
@@ -629,7 +641,7 @@ public class StationForButton : MonoBehaviour
     }
 
 
-    
+
     public void ExitMap()
     {
         exiting = true;
@@ -738,6 +750,6 @@ public class StationForButton : MonoBehaviour
 
 
 
-   
+
 }
 

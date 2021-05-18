@@ -94,8 +94,9 @@ public class LevelManager : MonoBehaviour
     public bool FishReturnBagShown = false;
     public bool LandFinLeaveStation = false;
     public GameObject FishBagReturnComic;
-    
+    public bool ending = false;
     public GameObject LostAndFoundReturnComic,waypoint1;
+    private InstagramController InstagramController;
     void Start()
     {
         Resources.UnloadUnusedAssets();
@@ -104,7 +105,7 @@ public class LevelManager : MonoBehaviour
         SubwayMovement = GameObject.Find("---StationController").GetComponent<SubwayMovement>();
         RatingSystem = GameObject.Find("FloatingUI").GetComponent<RatingSystem>();
         FishBossNotification = GameObject.Find("FishBossUI").GetComponent<FishBossNotification>();
-
+        InstagramController = FinalCameraController.InstagramController;
 
 
         PathFollower = MapCar.GetComponent<PathFollower>();
@@ -183,6 +184,9 @@ public class LevelManager : MonoBehaviour
              
 
     }
+
+    public Sprite demoEndPost;
+
     public void StageTrasiting()
     {
         stageTransiting = true;
@@ -195,9 +199,25 @@ public class LevelManager : MonoBehaviour
         if (stage == 2)
         {
             Debug.Log("transiting 2");
-            Show(transitComic.GetComponent<CanvasGroup>());
+            //@ demo stop at here
+            // Show(transitComic.GetComponent<CanvasGroup>());
+
+            FinalCameraController.ChangeToSubway();
+            FinalCameraController.enableScroll = false;
+            Vibration.Init();
+            Vibration.Vibrate();
+            ending = true;
+            InstagramController.AddInsPost("Alex", demoEndPost);
+
         }
 
+    }
+
+    
+    //@ demo
+    public void ClickDemoEnd()
+    {
+        SceneManager.LoadScene("StartScene", LoadSceneMode.Single);
     }
 
     public void ClickComic()
@@ -209,7 +229,8 @@ public class LevelManager : MonoBehaviour
         {
             // 前置教程
             if (stage == 1) Tut_S2();
-            if (stage == 2) Tut_S3();
+            //@ demo stop at here
+            // if (stage == 2) Tut_S3();
         }
 
         Debug.Log("comic click" + comicClick);
@@ -432,28 +453,14 @@ public class LevelManager : MonoBehaviour
 
     }
 
-    public IEnumerator CheckUIRateCondition(int rate)
+    public void ShowUIRate()
     {
-        if (stage < 2 || UIRateShown) yield break;
+        if (stage < 2 || UIRateShown) return;
 
-        if((countStationS2 > 0 && countStationS2 < targetStationS2 && rate == 0)||
-           (countStationS2 > targetStationS2))
-        {
-            
-            countStationS2 = -10000;
-            UIRateShown = true;
-
-            FinalCameraController.ChangeToSubway();
-            FinalCameraController.GotoPage(1);
-
-            yield return new WaitForSeconds(1f);
-            RatingSystem.ShowRatingSys(true);
-
-        }
-
-        yield return null;
-
-
+        FinalCameraController.ChangeToSubway();
+        FinalCameraController.GotoPage(1);
+        UIRateShown = true;
+        RatingSystem.ShowRatingSys(true); // with partical effect
 
     }
 
@@ -470,6 +477,7 @@ public class LevelManager : MonoBehaviour
         
         FishBagReturnComic.SetActive(false);
         StartCoroutine(SubwayMovement.TrainPauseResume());
+        FinalCameraController.CameraMovement.stopForComic = false;
     }
 
     public void ShowLFReturnComic()
