@@ -18,7 +18,7 @@ public class FinalCameraController : MonoBehaviour
     public TouchController TouchController;
     public AllMachines AllMachines;
     public LevelManager LevelManager;
-    private InstagramController InstagramController;
+    public InstagramController InstagramController;
 
     public CanvasGroup disableInputCG, ChapterOneEndComic, Mask, TakePhoto, fishShoutCG,
         ChapterOneFailCG, Inventory, SubwayMap,inventory, appBackground, albumBackground, albumCG, albumDetailCG, frontPage, SavingPage, subPage;
@@ -40,7 +40,7 @@ public class FinalCameraController : MonoBehaviour
 
     public GameObject fishTalk;
     public TextMeshPro fishTalkText;
-    private bool isfishTalking = true;
+    private bool isfishTalking = false;
 
     [HideInInspector]
     public CameraMovement CameraMovement;
@@ -139,7 +139,8 @@ public class FinalCameraController : MonoBehaviour
     private bool AdInstructionShown = false;
 
     public FishBossNotification FishBossNotification;
-
+    public ValueEditor ValueEditor;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -161,6 +162,7 @@ public class FinalCameraController : MonoBehaviour
         FishBossNotification = GameObject.Find("FishBossUI").GetComponent<FishBossNotification>();
         BagsController = GameObject.Find("---BagsController").GetComponent<BagsController>();
         FishTextManager = GameObject.Find("---FishTextManager").GetComponent<FishTextManager>();
+        ValueEditor = GameObject.Find("---ValueEditor").GetComponent<ValueEditor>();
         FishBossNotification.HideFish();
    
 
@@ -314,7 +316,7 @@ public class FinalCameraController : MonoBehaviour
 
     public void BossTalk()
     {
-        CancelAllUI(false);
+        
         if (isfishTalking == false)
         {
             fishTalk.SetActive(true);
@@ -466,12 +468,7 @@ public class FinalCameraController : MonoBehaviour
             lastCameraState = CameraState.Subway;
             ChangeToSubway();
         }
-        else if (myAppState == AppState.RetroPage || myAppState == AppState.KararaPage || myAppState == AppState.DesignerPage || myAppState == AppState.NPCPage)
-        {
-            Show(frontPage);
-
-            myAppState = AppState.Mainpage;
-        }
+       
         else if (myAppState == AppState.MainpageSub)
         {
             ReturnFromSub();
@@ -479,6 +476,9 @@ public class FinalCameraController : MonoBehaviour
         else if (myAppState == AppState.SavingPage)
         {
             //to do 待定
+            Hide(SavingPage);
+            lastCameraState = CameraState.Subway;
+            ChangeToSubway();
         }
     }
 
@@ -549,12 +549,15 @@ public class FinalCameraController : MonoBehaviour
 
     }
 
+    public GameObject DemoEndButton;
     public void ChangeToApp()
     {
         if (myCameraState != CameraState.Subway && myCameraState != CameraState.App)
         {
             return;
         }
+
+        if(LevelManager.ending) DemoEndButton.SetActive(true);
 
         CancelAllUI(false);
 
@@ -576,9 +579,11 @@ public class FinalCameraController : MonoBehaviour
         RatingSys.LeaveSubway();
         myAppState = AppState.Mainpage;
         Show(frontPage);
-
+        Show(appBackground);
+        
         
     }
+
 
 
     public void MainPageToAlbum()

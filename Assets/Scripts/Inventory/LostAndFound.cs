@@ -71,19 +71,11 @@ public class LostAndFound : MonoBehaviour
 
     }
 
-    public void AddClothToList(Cloth cloth, NPC owner)
+    public void AddClothToList()
     {
         Debug.Log("call drop cloth in l&F script");
         totalCount++;
         if (totalCount > 0) LostFoundClothInScene.SetActive(true);
-
-        cloth.state = Cloth.ClothState.LandF;
-        owner.myClothesInLF.Add(cloth.name);
-
-        ClothesOwners.Add(owner);
-        LostAndFoundClothes.Add(cloth);
-        RatingSys.SubStars();
-
     }
 
 

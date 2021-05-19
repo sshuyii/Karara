@@ -45,8 +45,8 @@ public class InventorySlotMgt : MonoBehaviour
 
     public bool isWorkingCloth = true;
     public Sprite dropToMachineImg, dropToLandFImg;
-  
-
+    
+    public List<ClothChanging> slotScripts = new List<ClothChanging>();
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +54,11 @@ public class InventorySlotMgt : MonoBehaviour
         DoneButton.gameObject.SetActive(false);
         SpriteLoader = GameObject.Find("---SpriteLoader").GetComponent<SpriteLoader>();
         BagsController = GameObject.Find("---BagsController").GetComponent<BagsController>();
+
+        for(int i = 0; i < slots.Length; i++) 
+        {
+            slotScripts.Add(slots[i].GetComponentInChildren<ClothChanging>());
+        }
     }
 
     // Update is called once per frame
@@ -65,7 +70,7 @@ public class InventorySlotMgt : MonoBehaviour
     public void castLongPress()
     {
         for (int i = 0; i < slots.Length; i++) {
-            slots[i].GetComponentInChildren<ClothChanging>().showReturnConfirm();
+            slotScripts[i].showReturnConfirm();
         }
 
         DoneButton.gameObject.SetActive(true);
@@ -74,7 +79,7 @@ public class InventorySlotMgt : MonoBehaviour
     public void DoneBottonClicked()
     {
         for(int i = 0; i < slots.Length; i++) {
-            slots[i].GetComponentInChildren<ClothChanging>().hideReturnConfirm();
+            slotScripts[i].hideReturnConfirm();
         }
         DoneButton.gameObject.SetActive(false);
     }
@@ -85,7 +90,7 @@ public class InventorySlotMgt : MonoBehaviour
         int first = -1;
         for(int i = 0; i < slots.Length; i++)
         {
-            if (!slots[i].GetComponent<ClothChanging>().isOccupied)
+            if (!slotScripts[i].isOccupied)
             {
                 first = i;
                 return first;
@@ -94,7 +99,7 @@ public class InventorySlotMgt : MonoBehaviour
         return first;
     }
 
-    public void AddClothToInventory(string clothName, int subwaySlotNum)
+    public void AddClothToInventory(string clothName, int machineNum, int subwaySlotNum, GameObject bag)
     {
         occupiedNum++;
         int slot = GetFirstEmptySlot();
@@ -107,17 +112,16 @@ public class InventorySlotMgt : MonoBehaviour
 
 
         GameObject firstEmptySlot = slots[slot];
+        ClothChanging firstEmptySlotScipt = slotScripts[slot];
         Cloth cloth = SpriteLoader.ClothDic[clothName];
 
         float[] timers = BagsController.GetRemainTime(cloth.owner);
 
+        Sprite clothSprite = cloth.spritesInScenes[2];
+        firstEmptySlot.GetComponent<Image>().sprite = clothSprite;
+        
+        firstEmptySlotScipt.NewClothAddToInventory(clothSprite, machineNum, subwaySlotNum, bag, timers[0],timers[1]);
 
-        firstEmptySlot.GetComponent<Image>().sprite = cloth.spritesInScenes[2];
-        firstEmptySlot.GetComponent<ClothChanging>().halfTspImg.sprite = cloth.spritesInScenes[2];
-        firstEmptySlot.GetComponent<ClothChanging>().originSlotNum = subwaySlotNum;
-        firstEmptySlot.GetComponent<ClothChanging>().setFillAmount(timers);
-        firstEmptySlot.GetComponent<ClothChanging>().isOccupied = true;
-        firstEmptySlot.GetComponent<ClothChanging>().originalOwner = cloth.owner;
 
     }
 
@@ -141,9 +145,17 @@ public class InventorySlotMgt : MonoBehaviour
         InventoryFull.SetActive(false);
         for (int i = 0; i < slots.Length; i++)
         {
-            slots[i].GetComponentInChildren<ClothChanging>().hideReturnConfirm();
+            slotScripts[i].hideReturnConfirm();
         }
 
+    }
+
+    public void TransparentizeClothes(GameObject bag)
+    {
+        foreach(ClothChanging cg in slotScripts)
+        {
+            if(cg.originBag == bag) cg.SetFillAmountZero();
+        }
     }
 
 }

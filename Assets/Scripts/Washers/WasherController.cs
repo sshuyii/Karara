@@ -61,7 +61,8 @@ public class WasherController : MonoBehaviour
     private AudioSource washingSound;
     private TouchController TouchController;
 
-    public string currentCustomer;
+
+    public GameObject currentBag;
     private AudioManager AudioManager;
     SubwayMovement SubwayMovement;
 
@@ -278,7 +279,7 @@ public class WasherController : MonoBehaviour
 
         DoorImage.sprite = AllMachines.closedDoor;
         
-        if (clothNum == 0 ) Occupied.SetActive(false);
+        if (clothNum == 0 || myMachineState == AllMachines.MachineState.empty) Occupied.SetActive(false);
         else if(myMachineState == AllMachines.MachineState.finished || myMachineState == AllMachines.MachineState.noninteractable) Occupied.SetActive(true);
 
     }
@@ -393,93 +394,16 @@ public class WasherController : MonoBehaviour
 
     
 
-    private void GenerateClothAccordingToTag(string tagName, List<Sprite> MachineClothList)
-    {
-        int upperBound = SpriteLoader.NPCDic[tagName].myClothes.Count;
-        for (int i = 0; i < buttons.Length; i++)
-        {
-
-
-            HashSet<int> usedIdx = SpriteLoader.NPCDic[tagName].usedIdx;
-            int randomIdx;
-
-            while (true) {
-               
-                randomIdx = UnityEngine.Random.Range(0, upperBound);
-                if (!usedIdx.Contains(randomIdx))
-                {
-                    usedIdx.Add(randomIdx);
-                    break;
-                }
-            }
-
-            string clothName = SpriteLoader.NPCDic[tagName].myClothes[randomIdx];
-
-
-            buttons[i].GetComponent<SpriteRenderer>().enabled = true;
-            buttons[i].GetComponent<BoxCollider2D>().enabled = true;
-            buttons[i].tag = tagName;
-            buttons[i].GetComponent<SpriteRenderer>().sprite = SpriteLoader.ClothDic[clothName].spritesInScenes[2];
-            Sprite buttonImage = buttons[i].GetComponent<SpriteRenderer>().sprite;
-            MachineClothList.Add(buttonImage);
-
-          
-        }
-    }
     
-    public void GenerateCloth(string tagName)
-    {
-        //need to get all button reset, because they are disabled when clicked last time
-        
-        List<Sprite> MachineClothList = new List<Sprite>();
-
-        //randomly generate clothes when player opens the machine
-        if(isFirstOpen)
-        {
-
-            if (FinalCameraController.isTutorial && FinalCameraController.TutorialManager.tutorialNumber < 12)
-            {
-                //cloth 1
-                //buttons[0].GetComponent<Button>().enabled = true;
-
-                buttons[0].GetComponent<SpriteRenderer>().enabled = true;
-                buttons[0].GetComponent<BoxCollider2D>().enabled = true;
-                buttons[0].GetComponent<SpriteRenderer>().sprite = AllMachines.TutorialCloth1;
-                buttons[0].tag = "Tutorial";
-                Sprite buttonImage = buttons[0].GetComponent<SpriteRenderer>().sprite;
-
-                MachineClothList.Add(buttonImage);
-
-            }
-            else if (AllMachines.CustomerNameList[number].Contains(tagName))
-            {
-                //print("isGeneratingCloth");
-                GenerateClothAccordingToTag(tagName, MachineClothList);
-            }
-
-        }
-
-         isFirstOpen = false;
-         if(!FinalCameraController.AllStationClothList.ContainsKey(tagName))
-         {
-            //Debug.Log(tagName);
-             FinalCameraController.AllStationClothList.Add(tagName, MachineClothList);
-         }
-    }
-        
        
     public void ResetMachine(){
 
         StartCoroutine(CollectClothese());
-        currentCustomer = "";
         transform.tag ="Untagged";
+        currentBag = null;
         isFirstOpen = true;
         clothNum = 4;
-        
         timer = 0;
-
-
-        
                 
     }
 
@@ -497,9 +421,11 @@ public class WasherController : MonoBehaviour
 
     private void AddClothToCollection()
     {
+        string bagOwnerName = currentBag.GetComponent<ClothToMachine>().owner.name;
+
         foreach (GameObject thisButton in buttons)
         {
-            FinalCameraController.AllStationClothList[currentCustomer]
+            FinalCameraController.AllStationClothList[bagOwnerName]
                 .Add(thisButton.GetComponent<SpriteRenderer>().sprite);
         }
     }
@@ -537,5 +463,6 @@ public class WasherController : MonoBehaviour
         
         Light.sprite = statusEmpty;
         myMachineState = AllMachines.MachineState.empty;
+        Occupied.SetActive(false);
     }
 }

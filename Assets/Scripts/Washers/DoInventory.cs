@@ -9,8 +9,6 @@ using System;
 public class DoInventory : MonoBehaviour
 {
     private InventorySlotMgt InventorySlotMgt;
-
-    private FinalCameraController FinalCameraController;
     private WasherController WasherController;
     
     private GameObject InventoryController;
@@ -27,8 +25,6 @@ public class DoInventory : MonoBehaviour
     {
         InventoryController = GameObject.Find("---InventoryController");
         InventorySlotMgt = InventoryController.GetComponent<InventorySlotMgt>();
-        
-        FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
         TouchController =  GameObject.Find("---TouchController").GetComponent<TouchController>();
 
         washerNum = GetComponentInParent<WasherController>().number;
@@ -72,7 +68,7 @@ public class DoInventory : MonoBehaviour
             }
 
             currentSprite = GetComponent<SpriteRenderer>().sprite;
-            InventorySlotMgt.AddClothToInventory(currentSprite.name, slotNum);
+            InventorySlotMgt.AddClothToInventory(currentSprite.name, washerNum, slotNum, WasherController.currentBag);
 
             GetComponent<SpriteRenderer>().enabled = false;
             GetComponent<BoxCollider2D>().enabled = false;

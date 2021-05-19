@@ -31,7 +31,7 @@ public class ClothToMachine : MonoBehaviour
     public Image secondImage;
     public bool isNoticePrefab;
 
-    
+
     //a timer to record how much time has passed since the bag is on the car
 
     public bool isReady;
@@ -56,7 +56,7 @@ public class ClothToMachine : MonoBehaviour
     private float fillAmount;
     private float delayTime;
 
-    private NPC owner;
+    public NPC owner;
     public int myStation;
 
     private List<string> clothesInBag = new List<string>();
@@ -81,7 +81,7 @@ public class ClothToMachine : MonoBehaviour
         myAudio = GetComponent<AudioSource>();
 
         myImage = GetComponent<Image>();
-//        secondImage = GetComponentInChildren<Image>();
+        //        secondImage = GetComponentInChildren<Image>();
         hitTime = 0;
 
 
@@ -105,7 +105,7 @@ public class ClothToMachine : MonoBehaviour
 
         GenerateCloth();
 
-        if(!FinalCameraController.AllStationClothList.ContainsKey(owner.name))
+        if (!FinalCameraController.AllStationClothList.ContainsKey(owner.name))
         {
             FinalCameraController.AllStationClothList.Add(owner.name, new List<Sprite>());
         }
@@ -123,9 +123,9 @@ public class ClothToMachine : MonoBehaviour
 
         if (SubwayMovement.pauseBeforeMove) return;
 
-        if (stage > 1) 
+        if (stage > 1)
         {
-            if(delayTime > 0) delayTime -= Time.deltaTime;
+            if (delayTime > 0) delayTime -= Time.deltaTime;
             else
             {
                 timer -= Time.deltaTime;
@@ -140,7 +140,7 @@ public class ClothToMachine : MonoBehaviour
             timeUp = true;
             Debug.Log("包包过期！！");
 
-            if (stage > 1 && hitTime <=  1)
+            if (stage > 1 && hitTime <= 1)
             {
                 GameObject overdue = Instantiate(AllMachines.Overdue, this.gameObject.transform.position,
                         Quaternion.identity);
@@ -148,26 +148,18 @@ public class ClothToMachine : MonoBehaviour
             }
 
         }
-
-        if (underMachineNum >= 0) isFinished = AllMachines.FinishedOrNot(underMachineNum);
-
-        if(timeUp && isFinished)
-        {
-            StartCoroutine(ReturnBag2cases());
-        }
-      
     }
 
 
-   private IEnumerator ReturnBag2cases()
-   {
+    private IEnumerator ReturnBag2cases()
+    {
         //todo: overdue bag 洗完，右上角有鱼老板提示
         //if (underMachineNum == 0) FinalCameraController.CameraMovement.JumpToPage(2);
         //else FinalCameraController.CameraMovement.JumpToPage(3);
 
         //如果在stage 1: 只记录数值
 
-        if(stage == 1)
+        if (stage == 1)
         {
             BagsController.AddTimeUpBags();
             yield return null;
@@ -175,7 +167,7 @@ public class ClothToMachine : MonoBehaviour
         else
         {
             AllMachines.SetWasherAsNoninteractable(underMachineNum);
-            
+
         }
 
 
@@ -189,19 +181,20 @@ public class ClothToMachine : MonoBehaviour
         delayTime = TDelay;
     }
 
-    public IEnumerator returnClothYes ()
+    public IEnumerator returnClothYes()
     {
         AudioManager.PlayAudio(AudioType.Cloth_Return);
         AllMachines.isReturning = true;
         // FinalCameraController.ChangeToSubway();
         FinalCameraController.alreadyNotice = false;
 
-        
 
-        
+        // 清空洗衣机，清空used Idx?, 清空inventory 透明度
         FinalCameraController.returnMachineNum = underMachineNum;
-        AllMachines.ClearMahine(underMachineNum);
+        int star = AllMachines.ClearMachine(underMachineNum, timeUp);
         SpriteLoader.NPCDic[tag].usedIdx.Clear();
+        RatingSys.ChangeRating(star);
+
 
         float Twait = ValueEditor.TimeRelated.openWasherDelay1 + ValueEditor.TimeRelated.openWasherDelay2;
         myAnimator.SetTrigger("Disappear");
@@ -210,20 +203,14 @@ public class ClothToMachine : MonoBehaviour
         yield return new WaitForSeconds(Twait);
 
 
-        if (!timeUp)
-        {
-            Debug.Log(" not time up add star!!!");
-            RatingSys.AddStars();
-        }
-
         yield return new WaitForSeconds(Twait);
         Destroy(thisBag);
         AllMachines.isReturning = false;
         Destroy(this);
-        
+
     }
 
-    
+
     public void returnClothYesDirectly()
     {
 
@@ -233,19 +220,11 @@ public class ClothToMachine : MonoBehaviour
         FinalCameraController.alreadyNotice = false;
 
         FinalCameraController.returnMachineNum = underMachineNum;
-        AllMachines.ClearMahine(underMachineNum);
-
+        int star = AllMachines.ClearMachine(underMachineNum, timeUp);
         SpriteLoader.NPCDic[tag].usedIdx.Clear();
+        RatingSys.ChangeRating(star);
 
 
-        Debug.Log("add star!!!");
-
-        if (!timeUp)
-        {
-            Debug.Log(" not time up add star!!!");
-            RatingSys.AddStars();
-        }
-        //if (!timeUp) RatingSys.AddStars();
 
 
         Destroy(thisBag);
@@ -256,7 +235,7 @@ public class ClothToMachine : MonoBehaviour
 
         Destroy(this);
 
-       
+
     }
 
 
@@ -266,11 +245,11 @@ public class ClothToMachine : MonoBehaviour
     }
 
 
- 
+
     public void putClothIn()
     {
 
-        
+
         FinalCameraController.CancelAllUI(false);
 
         if (FinalCameraController.isSwipping) return;
@@ -289,7 +268,7 @@ public class ClothToMachine : MonoBehaviour
             AudioManager.PlayAudio(AudioType.Bag_Phase1);
 
             SubwayMovement.bagNum -= 1;
-            AllMachines.SetMachineAsBagUnder(underMachineNum, owner.name, clothesInBag);
+            AllMachines.SetMachineAsBagUnder(underMachineNum, clothesInBag, this.gameObject);
 
 
 
@@ -332,54 +311,44 @@ public class ClothToMachine : MonoBehaviour
             isFinished = AllMachines.FinishedOrNot(underMachineNum);
             if (isFinished && !FinalCameraController.alreadyNotice)
             {
-                if(underMachineNum ==1) BagsController.ShowReturnNotice(thisBag,true);
+                if (underMachineNum == 1) BagsController.ShowReturnNotice(thisBag, true);
                 else BagsController.ShowReturnNotice(thisBag, false);
             }
             hitTime++;
         }
-          
+
     }
 
 
     private void GenerateCloth()
     {
-        if (FinalCameraController.isTutorial)
-        {
-            // do something
-        }
-        else
-        {
-            int upperBound = owner.myClothes.Count;
-            int randomIdx;
+        int upperBound = owner.myClothes.Count;
+        int randomIdx;
 
 
-            for (int i = 0; i < AllMachines.clothButtonNum; i++)
+        for (int i = 0; i < AllMachines.clothButtonNum; i++)
+        {
+            while (true)
             {
-                while (true)
+                randomIdx = Random.Range(0, upperBound);
+                if (!owner.usedIdx.Contains(randomIdx))
                 {
-                    randomIdx = Random.Range(0, upperBound);
-                    if (!owner.usedIdx.Contains(randomIdx))
-                    {
-                        owner.usedIdx.Add(randomIdx);
-                        clothesInBag.Add(SpriteLoader.ClothDic[owner.myClothes[randomIdx]].name);
+                    owner.usedIdx.Add(randomIdx);
+                    clothesInBag.Add(SpriteLoader.ClothDic[owner.myClothes[randomIdx]].name);
 
-                        break;
-                    }
+                    break;
                 }
-
             }
 
-            foreach (int idx in owner.usedIdx)
-            {
-                clothesInBag.Add(SpriteLoader.ClothDic[owner.myClothes[idx]].name);
-            }
-
-            //the clothes belongs to this bag are store as a index list 
         }
 
-        
-        
+        foreach (int idx in owner.usedIdx)
+        {
+            clothesInBag.Add(SpriteLoader.ClothDic[owner.myClothes[idx]].name);
+        }
+
+
     }
 
-    
+
 }

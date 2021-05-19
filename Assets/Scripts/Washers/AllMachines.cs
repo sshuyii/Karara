@@ -13,20 +13,20 @@ public class AllMachines : MonoBehaviour
 {
 
     public GameObject currentBag;
+    private BagsController BagsController;
 
     //a list to record all customer's names
-    public List<List<string> >CustomerNameList = new List<List<string>>();
 
 
     public bool isReturning;
-    
+
     public GameObject returnNotice;
     public Button returnNoticeYes;
     public Button returnNoticeNo;
 
     public Sprite openedDoor;
     public Sprite closedDoor;
-    
+
     public GameObject noticeParent;
 
     public GameObject Overdue;
@@ -35,7 +35,7 @@ public class AllMachines : MonoBehaviour
     public List<Sprite> openBags;
     public Dictionary<string, Sprite> openBagsDic = new Dictionary<string, Sprite>();
 
-    
+
     public Sprite TutorialCloth1;
     public Sprite TutorialCloth2;
 
@@ -53,7 +53,8 @@ public class AllMachines : MonoBehaviour
 
     public int machineWithNotice;
 
-    public enum MachineState {
+    public enum MachineState
+    {
         empty,
         bagUnder,
         full,
@@ -64,15 +65,22 @@ public class AllMachines : MonoBehaviour
     }
 
 
+    InventorySlotMgt InventorySlotMgt;
+    public int[] OccupiedClothUISlots = new int[4];
+
+    private GameObject[] bagsUnderMahines = new GameObject[3];
 
     void Start()
     {
+        InventorySlotMgt = GameObject.Find("---InventoryController").GetComponent<InventorySlotMgt>();
+        BagsController = GameObject.Find("---BagsController").GetComponent<BagsController>();
+
         for (int i = 0; i < WashingMachines.Count; i++)
         {
             WasherControllerList.Add(WashingMachines[i].GetComponent<WasherController>());
-            CustomerNameList.Add(new List<string>());
+
         }
-        
+
         clothButtonNum = WasherControllerList[0].buttons.Length;
 
     }
@@ -80,8 +88,8 @@ public class AllMachines : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        
+
+
     }
 
     public void SetWasherAsNoninteractable(int idx)
@@ -91,7 +99,7 @@ public class AllMachines : MonoBehaviour
     public int FindSuitableMachine(MachineState neededState)
     {
         int machine = -1;
-        for(int i = 0; i < WasherControllerList.Count; i++)
+        for (int i = 0; i < WasherControllerList.Count; i++)
         {
             if (WasherControllerList[i].myMachineState == neededState)
             {
@@ -104,43 +112,49 @@ public class AllMachines : MonoBehaviour
         return machine;
     }
 
-    public void SetMachineAsBagUnder(int idx, string name, List<string> clothes)
+    public void SetMachineAsBagUnder(int idx, List<string> clothes, GameObject bagGO)
     {
         WasherControllerList[idx].myMachineState = MachineState.bagUnder;
-        AddCustomer(idx, name);
+        WasherControllerList[idx].currentBag = bagGO;
+        bagsUnderMahines[idx] = bagGO;
         AddClothToMachine(idx, clothes);
-
     }
 
     public void SetMachineAsFull(int idx)
     {
         WasherControllerList[idx].SetMachineAsFull();
-        
+
     }
 
 
-    public void AddCustomer(int machineIdx, string customer) {
-        //Debug.Log(machineIdx);
-        CustomerNameList[machineIdx].Add(customer);
+    // public void AddCustomer(int machineIdx, string customer)
+    // {
 
-        //Debug.Log(machineIdx);
+    //     WasherControllerList[machineIdx].currentCustomer = customer;
+    // }
 
-        WasherControllerList[machineIdx].currentCustomer = customer;
-    }
-
-    public bool FinishedOrNot(int idx) {
-        if (WasherControllerList[idx].myMachineState == MachineState.finished 
+    public bool FinishedOrNot(int idx)
+    {
+        if (WasherControllerList[idx].myMachineState == MachineState.finished
             || WasherControllerList[idx].myMachineState == MachineState.noninteractable) return true;
         else return false;
     }
 
 
-    public void ClearMahine(int idx) {
+    public int ClearMachine(int idx, bool timeup)
+    {
+        int star = 0;
+        if (!timeup) star++;
+        star = star + WasherControllerList[idx].clothNum - 4;
+        Debug.Log("star " + star.ToString());
+        GameObject bag = bagsUnderMahines[idx];
+        InventorySlotMgt.TransparentizeClothes(bag);
         WasherControllerList[idx].ResetMachine();
+        bagsUnderMahines[idx] = null;
+        return star;
     }
 
 
-    
 
 
 
@@ -149,12 +163,13 @@ public class AllMachines : MonoBehaviour
         WasherControllerList[idx].AddClothSprite(clothes);
     }
 
-    public void CloseAllMachines() {
+    public void CloseAllMachines()
+    {
         foreach (WasherController wc in WasherControllerList)
         {
             // close door image
             // clothui active = false
-            if(wc.shut == 1)
+            if (wc.shut == 1)
             {
                 wc.shut = 0;
                 // Hide(ClothUI);
@@ -163,42 +178,36 @@ public class AllMachines : MonoBehaviour
 
                 //change door to closed sprite
                 wc.DoorImage.sprite = closedDoor;
-                if(wc.myMachineState == MachineState.finished || wc.myMachineState== MachineState.noninteractable)wc.Occupied.SetActive(true);
+                if (wc.myMachineState == MachineState.finished || wc.myMachineState == MachineState.noninteractable) wc.Occupied.SetActive(true);
             }
         }
     }
 
 
-    public bool PutClothBackToMachine(string customerName,int slotNum)
+    public bool PutClothBackToMachine(GameObject bag, int machineIdx, int slotNum)
     {
-        foreach(WasherController wc in WasherControllerList)
+       
+        if (bagsUnderMahines[machineIdx] == bag)
         {
-            if(wc.currentCustomer == customerName)
-            {
-                wc.buttons[slotNum-1].GetComponent<SpriteRenderer>().enabled = true;
-                wc.buttons[slotNum - 1].GetComponent<BoxCollider2D>().enabled = true;
-                wc.clothNum++;
-                return true;
-            }
-        }
-        
-        return false;
-    }
-
-    public bool FoundBagInCar(string customerName)
-    {
-        foreach (WasherController wc in WasherControllerList)
-        {
-            if (wc.currentCustomer == customerName)
-            { 
-                return true;
-            }
+            
+            WasherController wc = WasherControllerList[machineIdx];
+            wc.buttons[slotNum - 1].GetComponent<SpriteRenderer>().enabled = true;
+            wc.buttons[slotNum - 1].GetComponent<BoxCollider2D>().enabled = true;
+            wc.clothNum++;
+            return true;
         }
 
         return false;
     }
 
-    
+    public bool FoundBagInCar(GameObject bag, int machineIdx)
+    {
+        Debug.Log("@demo bag:" + bag.name + "machine " + machineIdx);
+        if (bagsUnderMahines[machineIdx] == bag) return true;
+        else return false;
+    }
 
-    
+
+
+
 }

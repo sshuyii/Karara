@@ -32,6 +32,14 @@ public enum AudioType
     UI_Dialogue,
     UI_Talk,
     Poster_Enter,
+    FishBubble1,
+    FishBubble2,
+    FishBubble3,
+    FishBubble4,
+    FishBubble5,
+    FishBubble6,
+    FishBubble7,
+
     No,
 
 }

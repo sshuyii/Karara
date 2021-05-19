@@ -19,6 +19,7 @@ public class SpriteLoader : MonoBehaviour
 
     public Cloth[] defaultClothes = new Cloth[4];
 
+    public Sprite transparent;
 
     // Start is called before the first frame update
     void Start()
