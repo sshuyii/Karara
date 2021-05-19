@@ -474,12 +474,7 @@ public class SubwayMovement : MonoBehaviour
     void DoorOpenFinish()
     {
         // check ugradeOrNot
-        if (LevelManager.upgradeReadyOrNot)
-        {
-            pauseBeforeMove = true;
-            StationForButton.UpdateCollectionUI();
-            LevelManager.StageTrasiting();
-        }
+        
 
         // 门完全开之后：
         // 1.产生包
@@ -634,12 +629,14 @@ public class SubwayMovement : MonoBehaviour
     private bool forceScroll = false;
     public IEnumerator trainPause()
     {
+
         Banner.SetActive(false);
         pauseBeforeMove = true;
         bool hasBagtoReturn = false;
         for (int i = 2; i > -1; i--)
         {
             hasBagtoReturn = CountBagInMachine(i);
+            if(hasBagtoReturn) break;
         }
 
         if (!forceScroll)
@@ -672,7 +669,7 @@ public class SubwayMovement : MonoBehaviour
         BlackScreen.SetActive(false);
         yield return new WaitForSeconds(0.5f);
 
-        FinalCameraController.ChangeCameraSpeed(normalSpeed * 0.5f);
+        FinalCameraController.ChangeCameraSpeed(normalSpeed * 0.2f);
         FinalCameraController.GotoPage(1);
         //screen 4
         if (LevelManager.UIRateShown && LostAndFound.totalCount > 0)
@@ -716,6 +713,7 @@ public class SubwayMovement : MonoBehaviour
             float x = machinesTransform[machineNum].position.x;
             if (!LevelManager.FishReturnBagShown)
             {
+                LevelManager.FishReturnBagShown = true;
                 StartCoroutine(ShowFishReturnBagComic(x));
             }
             return true;
@@ -752,7 +750,6 @@ public class SubwayMovement : MonoBehaviour
         FinalCameraController.ChangeCameraSpeed(-1f);
         for (int i = ScrollStopAtMachine; i > -1; i--)
         {
-
             BagsController.DropAllBagsInWasher(i);
         }
 
@@ -776,6 +773,12 @@ public class SubwayMovement : MonoBehaviour
     public void trainMove()
     {
         //current station means the station the train is heading to
+        if (LevelManager.upgradeReadyOrNot)
+        {
+            pauseBeforeMove = true;
+            StationForButton.UpdateCollectionUI();
+            LevelManager.StageTrasiting();
+        }
 
         if (LevelManager.stage > 1) atInitailStation = false;
         LocalizedString locString = "Fish/DoYourJob";
