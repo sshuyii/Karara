@@ -50,7 +50,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     [SerializeField]
     private GameObject Exclamation, Posture, Phone, HintUI, ScrollHint, clothBag, machineFull, machineEmpty, phoneAnimation, changePostureButton,
-        machineOccupied, ClothUI, KararaC, KararaB, KararaA, EmojiBubble, InventoryBackButton, Ins, Shutter, Notice, FishTalkButton, inventoryBubble, inventoryFish, sweet;
+        machineOccupied, ClothUI, KararaC, KararaB, KararaA, ClothFish, EmojiBubble, InventoryBackButton, Ins, Shutter, Notice, FishTalkButton, inventoryBubble, inventoryFish, sweet;
 
     public GameObject Hint2D, HintScreen;
     [SerializeField]
@@ -1542,6 +1542,8 @@ public class TutorialManagerNew : MonoBehaviour
     public void ShowComic()
     {
         Show(Comic);
+        Hide(mobile);
+        Hide(followerNum);
     }
 
     public void Hide(CanvasGroup UIGroup)
@@ -1595,6 +1597,7 @@ public class TutorialManagerNew : MonoBehaviour
     public void ClickSweet()
     {
         sweet.SetActive(false);
+        ClothFish.SetActive(true);
         isWearingClothNum ++;
         StartCoroutine(KararaEatSweet());
     }
