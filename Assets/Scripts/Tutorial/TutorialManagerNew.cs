@@ -534,7 +534,9 @@ public class TutorialManagerNew : MonoBehaviour
             Posture.SetActive(true);
             Show(CameraBackground);
             ChangeHintPos(HintPosCamera, 3);
-            body.sprite = initialBody;
+            // body.sprite = initialBody;
+            body.sprite = pos0Body;//0601版本里没细化两个subwayscene的姿势
+
 
         }
         else
@@ -576,13 +578,13 @@ public class TutorialManagerNew : MonoBehaviour
 
             if(clickTime == 1)
             {
-                body.sprite = pos0Body;
-            }
-            else if(clickTime == 2)
-            {   
                 body.sprite = pos1Body;
             }
-            else if(clickTime == 3)
+            // else if(clickTime == 2)
+            // {   
+            //     body.sprite = pos1Body;
+            // }
+            else if(clickTime == 2)
             {
                 AdClick1stTime = false;
                 StopCoroutine(ShowHintInAd());

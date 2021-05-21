@@ -17,13 +17,18 @@ public class StartTutorialNew : MonoBehaviour
     private Sprite openDoor, closeDoor;
 
     [SerializeField]
+    private GameObject Title;
+
+
+
+    [SerializeField]
     private Animator doorAnimator;
 
-    [SerializeField]
-    private GameObject iconBackground;
+    // [SerializeField]
+    // private GameObject iconBackground;
 
-    [SerializeField]
-    private float endPoint, startPoint, speedA;
+    // [SerializeField]
+    // private float endPoint, startPoint, speedA;
 
 
 
@@ -54,15 +59,15 @@ public class StartTutorialNew : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //for background moving
-        if(iconBackground.transform.position.x < endPoint)
-        {
-            iconBackground.transform.position += new Vector3(speedA, 0, 0);
-        }
-        else
-        {
-            iconBackground.transform.position = new Vector3 (startPoint, 0, 0);
-        }
+        // //for background moving
+        // if(iconBackground.transform.position.x < endPoint)
+        // {
+        //     iconBackground.transform.position += new Vector3(speedA, 0, 0);
+        // }
+        // else
+        // {
+        //     iconBackground.transform.position = new Vector3 (startPoint, 0, 0);
+        // }
        
     }
     public void ClickMachine()
@@ -79,6 +84,10 @@ public class StartTutorialNew : MonoBehaviour
 
     IEnumerator StartGame()
     {
+        Title.SetActive(false);
+
+        yield return new WaitForSeconds(0.2f);
+
         door.sprite = closeDoor;
         //播放一个摔门的声音
         PlayAudio(doorClose);
