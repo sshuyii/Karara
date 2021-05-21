@@ -183,6 +183,7 @@ public class SubwayMovement : MonoBehaviour
 
     // station scroll
     int ScrollStopAtMachine = -1;
+    int cummulateStation = 0;
     ValueEditor ValueEditor;
 
     // Start is called before the first frame update
@@ -348,7 +349,18 @@ public class SubwayMovement : MonoBehaviour
         if (timerStay > stayTime)
         {
             timerStay = 0f;
-            if (LevelManager.stage > 1 && !atInitailStation) StartCoroutine(trainPause());
+            if (LevelManager.upgradeReadyOrNot)
+            {
+                pauseBeforeMove = true;
+                StationForButton.UpdateCollectionUI();
+                LevelManager.StageTrasiting();
+            }
+            if (LevelManager.stage > 1 && !atInitailStation)
+            {
+                //@ demo
+
+                StartCoroutine(trainPause());
+            }
             else if (LevelManager.stage > 2 && !atInitailStation)
             {
                 AdsController.UpdatePosters();
@@ -474,7 +486,7 @@ public class SubwayMovement : MonoBehaviour
     void DoorOpenFinish()
     {
         // check ugradeOrNot
-        
+
 
         // 门完全开之后：
         // 1.产生包
@@ -603,6 +615,7 @@ public class SubwayMovement : MonoBehaviour
             {
                 Button bag = Instantiate(NPCBag, bagPos[firstEmptyPos],
                     Quaternion.identity) as Button;
+
                 bag.GetComponent<ClothToMachine>().SetTime(CalculateBagTime(), CalculateDelayTime());
                 bag.GetComponent<ClothToMachine>().myStation = currentStation;
                 string temp = "X";
@@ -632,17 +645,22 @@ public class SubwayMovement : MonoBehaviour
 
         Banner.SetActive(false);
         pauseBeforeMove = true;
+        bool resumePause = true;
         bool hasBagtoReturn = false;
         for (int i = 2; i > -1; i--)
         {
             hasBagtoReturn = CountBagInMachine(i);
-            if(hasBagtoReturn) break;
+            if (hasBagtoReturn)
+            {
+                if (!forceScroll) resumePause = false;
+                break;
+            }
         }
 
         if (!forceScroll)
         {
             if (hasBagtoReturn || LevelManager.UIRateShown) forceScroll = true;
-            else 
+            else
             {
                 EndTrainPause();
                 yield break;
@@ -674,20 +692,20 @@ public class SubwayMovement : MonoBehaviour
         //screen 4
         if (LevelManager.UIRateShown && LostAndFound.totalCount > 0)
         {
-            AdsController.UpdatePosters();
+            if(cummulateStation%2 == 0 )AdsController.UpdatePosters();
             StartCoroutine(LostAndFound.AnimationDropNUm());
             //yield return new WaitForSeconds(1f);
         }
         else
         {
-            AdsController.UpdatePosters();
+            if(cummulateStation%2 == 0) AdsController.UpdatePosters();
             //yield return new WaitForSeconds(1f);
         }
 
 
 
 
-        StartCoroutine(TrainPauseResume());
+        if (resumePause) StartCoroutine(TrainPauseResume());
 
     }
 
@@ -727,7 +745,7 @@ public class SubwayMovement : MonoBehaviour
         // yield return new WaitForSeconds(ValueEditor.TimeRelated.fishReturnBagDelay);
 
         int count = 0;
-        forceScroll = true;
+
         FinalCameraController.CameraMovement.AroundPosition(posx);
         while (count < 4000)
         {
@@ -747,9 +765,10 @@ public class SubwayMovement : MonoBehaviour
     public IEnumerator TrainPauseResume()
     {
         if (ScrollStopAtMachine > 0) FinalCameraController.GotoPage(1);
-        FinalCameraController.ChangeCameraSpeed(-1f);
+        FinalCameraController.ChangeCameraSpeed(2f);
         for (int i = ScrollStopAtMachine; i > -1; i--)
         {
+            yield return new WaitForSeconds(1f);
             BagsController.DropAllBagsInWasher(i);
         }
 
@@ -773,20 +792,15 @@ public class SubwayMovement : MonoBehaviour
     public void trainMove()
     {
         //current station means the station the train is heading to
-        if (LevelManager.upgradeReadyOrNot)
-        {
-            pauseBeforeMove = true;
-            StationForButton.UpdateCollectionUI();
-            LevelManager.StageTrasiting();
-        }
+
 
         if (LevelManager.stage > 1) atInitailStation = false;
         LocalizedString locString = "Fish/DoYourJob";
         string translation = locString;
-        FinalCameraController.fishTalkText.text = translation;
+        //FinalCameraController.fishTalkText.text = translation;
         if (LevelManager.stage > 1) LevelManager.countStationS2++;
 
-
+        cummulateStation ++;
         if (currentStation < 2)
         {
             currentStation++;
@@ -850,12 +864,13 @@ public class SubwayMovement : MonoBehaviour
     private float CalculateBagTime()
     {
         // return (3 * stayTime + 3 * moveTime - timerStay);
-        return (3 * stayTime + 3 * moveTime);
+        return (3 * stayTime + 3 * moveTime - 0.1f);
     }
 
     private float CalculateDelayTime()
     {
-        return stayTime - timerStay;
+        if (LevelManager.stage == 1) return 0;
+        else return stayTime - timerStay;
     }
 
 }

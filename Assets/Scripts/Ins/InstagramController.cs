@@ -263,7 +263,7 @@ public class InstagramController : MonoBehaviour
     public void SavePhoto()
     {
         
-        if(RunOnRealPhone) NativeToolkit.SaveImage(texture2Save,"KARARA" + savedPhotoCount.ToString());
+        if(RunOnRealPhone) Debug.Log("local save image KARARA" + savedPhotoCount.ToString());
         else Debug.Log("save image KARARA" + savedPhotoCount.ToString());
         savedPhotoCount++;
     }

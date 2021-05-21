@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using UnityEditor;
-using UnityEditor.EditorTools;
+
 using UnityEngine;
 
 public class TutorialTransition : MonoBehaviour

@@ -116,20 +116,18 @@ public class LevelManager : MonoBehaviour
 
         GameObject.Find("Main Camera").transform.position = new Vector3(0, 0, -20);
 
-        if (!skip)
-        {
+        // if (!skip)
+        // {
 
-        }
-        else
-        {
-            //FinalCameraController.myCameraState = FinalCameraController.CameraState.Subway;
-            //ShowRatingSys(false);
-            //CloseInstruction();
-            EndMapTutorial();
-        }
-
-
-        
+        // }
+        // else
+        // {
+        //     //FinalCameraController.myCameraState = FinalCameraController.CameraState.Subway;
+        //     //ShowRatingSys(false);
+        //     //CloseInstruction();
+        //     EndMapTutorial();
+        // }
+        if(skip) SubwayMovement.trainStop();        
 
 
         comicList.Add(new List<Sprite>());
@@ -174,6 +172,7 @@ public class LevelManager : MonoBehaviour
         upgradeReadyOrNot = false;
         stageTransiting = false;
         SubwayMovement.pauseBeforeMove = false;
+        
         stage++;
 
 
@@ -204,8 +203,7 @@ public class LevelManager : MonoBehaviour
 
             FinalCameraController.ChangeToSubway();
             FinalCameraController.enableScroll = false;
-            Vibration.Init();
-            Vibration.Vibrate();
+            Handheld.Vibrate();
             ending = true;
             InstagramController.AddInsPost("Alex", demoEndPost);
 
@@ -323,7 +321,7 @@ public class LevelManager : MonoBehaviour
         }
 
        
-        SubwayMovement.trainStop();
+        SubwayMovement.EndTrainPause();
         //SubwayMovement.timerStay = SubwayMovement.stayTime - 0.01f;
     }
 

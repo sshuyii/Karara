@@ -89,7 +89,7 @@ public class FishBossNotification : MonoBehaviour
     public void ShowBubble()
     {
 
-        //FishBubble.SetActive(true);
+        //.SetActive(true);
     }
 
     
