@@ -692,8 +692,11 @@ public class SubwayMovement : MonoBehaviour
         //screen 4
         if (LevelManager.UIRateShown && LostAndFound.totalCount > 0)
         {
-            if(cummulateStation%2 == 0 )AdsController.UpdatePosters();
-            StartCoroutine(LostAndFound.AnimationDropNUm());
+            if(cummulateStation%2 == 0 )
+            {
+                AdsController.UpdatePosters();
+                StartCoroutine(LostAndFound.AnimationDropNUm());
+            }
             //yield return new WaitForSeconds(1f);
         }
         else
