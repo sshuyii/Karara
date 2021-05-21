@@ -17,14 +17,15 @@ public class TouchController : MonoBehaviour
     public bool isSwiping = false;
     public bool isSwipable = false;
     private bool TOF;
-   
+
     public Touch touch;
 
     public bool leftSwipe;
-    
+
     public float offsetX;
     public Transform camTransform;
-    public enum InputState {
+    public enum InputState
+    {
         LeftSwipe,
         RightSwipe,
         Tap,
@@ -48,10 +49,10 @@ public class TouchController : MonoBehaviour
     int currentlyDisplayingText = 0;
 
     private CameraMovement cameraMovement;
-    
+
     // public WasherController washerController;
     RaycastHit2D hit;
-    public string[] RaycastHitResult = new string[2]{"",""};
+    public string[] RaycastHitResult = new string[2] { "", "" };
 
     private LostAndFound LostAndFound;
     private AdsController AdsController;
@@ -70,16 +71,16 @@ public class TouchController : MonoBehaviour
             AdsController = GameObject.Find("---AdsController").GetComponent<AdsController>();
             AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
         }
-            
+
 
         cameraMovement = GameObject.Find("Main Camera").GetComponent<CameraMovement>();
 
-        
+
         // washerController = GameObject.Find("").GetComponent<WasherController>();
     }
 
-    
-    
+
+
     // Update is called once per frame
     void Update()
     {
@@ -87,25 +88,27 @@ public class TouchController : MonoBehaviour
 
         // @@@
         //&& EventSystem.current.IsPointerOverGameObject()
-        if (FinalCameraController.myCameraState!=FinalCameraController.CameraState.Subway)
+        if (FinalCameraController.myCameraState != FinalCameraController.CameraState.Subway)
         {
             return;
         }
-        if (EventSystem.current.currentSelectedGameObject != null) {
+        if (EventSystem.current.currentSelectedGameObject != null)
+        {
             //DebugOutput.GetComponent<Text>().text = EventSystem.current.currentSelectedGameObject.name;
             //AudioManager.PlayAudio(AudioType.UI_Dialogue);
             return;
         }
 
 
-        if (Input.touchCount == 0) {
-            myInputState  = InputState.None;
+        if (Input.touchCount == 0)
+        {
+            myInputState = InputState.None;
             hit = new RaycastHit2D();
-            RaycastHitResult = new string[2]{"",""};
-        } 
+            RaycastHitResult = new string[2] { "", "" };
+        }
 
 
-//        //print("cancelCloth = " + doubleTouch);
+        //        //print("cancelCloth = " + doubleTouch);
         for (var i = 0; i < Input.touchCount; ++i)
         {
             if (Input.GetTouch(i).phase == TouchPhase.Began)
@@ -114,15 +117,15 @@ public class TouchController : MonoBehaviour
                 {
                     //Debug.Log("Double Tap");
                     doubleTouch = true;
-                }  
+                }
             }
             else if (Input.GetTouch(i).phase == TouchPhase.Ended)
             {
                 doubleTouch = false;
             }
         }
-        
-        
+
+
         if (Input.touchCount == 1) // user is touching the screen with a single touch
         {
             touch = Input.GetTouch(0); // get the touch
@@ -132,20 +135,20 @@ public class TouchController : MonoBehaviour
                 lp = touch.position;
 
                 startTime = Time.time;
-                
+
                 // offsetX = camTransform.position.x - lp.x;
 
                 myInputState = InputState.None;
-                
+
                 //for swipe screen
                 isSwipable = true;
             }
             else if (touch.phase == TouchPhase.Moved) // update the last position based on where they moved
             {
                 lp = touch.position;
-//                //print("lp = " + lp);
+                //                //print("lp = " + lp);
 
-                if(FinalCameraController.enableScroll && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
+                if (FinalCameraController.enableScroll && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
                 {
                     isSwiping = true;
                     cameraMovement.swipping = true;
@@ -161,32 +164,32 @@ public class TouchController : MonoBehaviour
             }
             else if (touch.phase == TouchPhase.Ended) //check if the finger is removed from the screen
             {
-                
+
 
 
 
                 lp = touch.position;  //last touch position. Ommitted if you use list
-        
+
                 offsetX = 0;
                 isSwiping = false;
                 cameraMovement.swipping = false;
 
                 //check if this is a fast swipe
                 diffTime = startTime - Time.time;
-                swipeDistance = Vector2.Distance(fp,lp);
+                swipeDistance = Vector2.Distance(fp, lp);
                 swipeSpeed = Mathf.Abs(swipeDistance / diffTime);//<<<<<<<<
-//                //print("diffTime =" + diffTime);
-//                //print("swipeSpeed =" + swipeSpeed);
+                                                                 //                //print("diffTime =" + diffTime);
+                                                                 //                //print("swipeSpeed =" + swipeSpeed);
                 if (swipeSpeed > 500 && Mathf.Abs(diffTime) < 0.2f)
                 {
                     isFastSwipe = true;
-                    
+
                 }
                 else
                 {
                     isFastSwipe = false;
                 }
-                
+
                 //Check if drag distance is greater than 20% of the screen height
                 if (Mathf.Abs(lp.x - fp.x) > dragDistance || Mathf.Abs(lp.y - fp.y) > dragDistance)
                 {//It's a drag
@@ -198,7 +201,8 @@ public class TouchController : MonoBehaviour
                             //Debug.Log("Right Swipe");
                             leftSwipe = false;
                             myInputState = InputState.RightSwipe;
-                            if(FinalCameraController.enableScroll && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway){
+                            if (FinalCameraController.enableScroll && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
+                            {
                                 cameraMovement.Go2Page(cameraMovement.currentPage - 1);
                             }
                         }
@@ -206,10 +210,11 @@ public class TouchController : MonoBehaviour
                         {   //Left swipe
                             //Debug.Log("Left Swipe");
                             leftSwipe = true;
-                            
+
                             myInputState = InputState.LeftSwipe;
 
-                            if(FinalCameraController.enableScroll && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway){
+                            if (FinalCameraController.enableScroll && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
+                            {
                                 cameraMovement.Go2Page(cameraMovement.currentPage + 1);
                                 //cameraMovement.currentPage += 1;
                             }
@@ -227,39 +232,42 @@ public class TouchController : MonoBehaviour
                         }
                     }
                 }
-                else 
+                else
                 {   //It's a tap as the drag distance is less than 20% of the screen height
                     Debug.Log("Tap");
                     myInputState = InputState.Tap;
-                    
+
 
                     checkTap();
                     checkCollider();
                 }
             }
-            
+
         }
-        
+
     }
 
-    private void checkTap(){
+    private void checkTap()
+    {
 
 
         lp.z = 0;
         Vector3 screenPoint = Camera.main.ScreenToWorldPoint(lp);
-        hit = Physics2D.Raycast(screenPoint,Vector2.zero);
+        hit = Physics2D.Raycast(screenPoint, Vector2.zero);
         Debug.Log("checkTap");
-        if ( hit.collider!=null ){
+        if (hit.collider != null)
+        {
 
-            
+
 
             string hitObject = hit.transform.gameObject.name;
-            switch(hitObject){
+            switch (hitObject)
+            {
 
                 case "FishBoss":
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     FinalCameraController.BossTalk();
-                break;
+                    break;
 
                 case "PlayerBodySubway":
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
@@ -274,7 +282,7 @@ public class TouchController : MonoBehaviour
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     FinalCameraController.clickSetting();
                     break;
-                
+
                 case "subwayMap":
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     FinalCameraController.ChangeToMap();
@@ -297,17 +305,20 @@ public class TouchController : MonoBehaviour
 
             //DebugOutput.GetComponent<Text>().text = hit.transform.gameObject.name;
             Debug.Log(hit.transform.gameObject.name);
-            
+
         }
     }
 
-    public string[] checkCollider(){
-        
-        HashSet<string> buttons = new HashSet<string>{"Music","Sound","Realtime","Lost&Found_basket"};
-        if( hit.collider != null){
+    public string[] checkCollider()
+    {
+
+        HashSet<string> buttons = new HashSet<string> { "Music", "Sound", "Realtime", "Lost&Found_basket" };
+        if (hit.collider != null)
+        {
             string name = hit.transform.name;
             //DebugOutput.GetComponent<Text>().text = name;
-            if (buttons.Contains(name)){
+            if (buttons.Contains(name))
+            {
                 RaycastHitResult[0] = name;
             }
 
@@ -316,7 +327,7 @@ public class TouchController : MonoBehaviour
             DoInventory doIvt = hit.transform.gameObject.GetComponent<DoInventory>();
             if (doIvt != null)
             {
-               
+
                 // AudioManager.PlayAudio(AudioType.UI_Dialogue);
                 RaycastHitResult[0] = doIvt.GetComponentInParent<WasherController>().number.ToString();
                 RaycastHitResult[1] = doIvt.slotNum.ToString();
@@ -324,15 +335,15 @@ public class TouchController : MonoBehaviour
                 return RaycastHitResult;
             }
 
-            WasherController wc = hit.transform.gameObject.GetComponentInParent<WasherController>();
-            if (wc != null)
+            if (name == "MachineSquareButton")
             {
-                // AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                WasherController wc = hit.transform.gameObject.GetComponentInParent<WasherController>();
                 RaycastHitResult[0] = "washer";
                 RaycastHitResult[1] = wc.number.ToString();
                 return RaycastHitResult;
 
             }
+
 
             HandleAnimation ha = hit.transform.gameObject.GetComponent<HandleAnimation>();
             if (ha != null)
