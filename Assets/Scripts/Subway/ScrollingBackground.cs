@@ -56,7 +56,7 @@ public class ScrollingBackground : MonoBehaviour
 
         GameObject clone = Instantiate(obj) as GameObject;
         for(int i = 0; i <= childsNeeded; i++)
-        { 
+        {
             GameObject g = Instantiate(clone) as GameObject;
             g.transform.SetParent(obj.transform);
             g.transform.localPosition = new Vector3(objectWidth * i, 0, 0);

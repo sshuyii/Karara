@@ -132,6 +132,7 @@ public class TutorialManagerNew : MonoBehaviour
     public TutorialTransition TutorialTransition;
     void Start()
     {
+        KararaC.SetActive(false);
         clothBag.SetActive(false);//不然会显示在地铁外面
 
         //Set Camera position and size in stage 3  
@@ -950,6 +951,7 @@ public class TutorialManagerNew : MonoBehaviour
             //箭头在第一件没被拿走的衣服上
             ChangeHintPos(ClothUIPos[0], 0);
             Hint2D.SetActive(false);
+            HintUI.SetActive(false);
 
 
             StartCoroutine(OpenCloseDoor(0.2f));
@@ -1099,6 +1101,7 @@ public class TutorialManagerNew : MonoBehaviour
     {
         KararaC.SetActive(true);
         KararaB.SetActive(false);
+        EmojiBubble.SetActive(false);
 
         KararaA.SetActive(false);
 
@@ -1279,7 +1282,7 @@ public class TutorialManagerNew : MonoBehaviour
 
         HintScreen.SetActive(false);
 
-        TutorialCameraController.JumpToPage(4);
+        // TutorialCameraController.JumpToPage(4);
 
         //karara现在穿着工作服和拖鞋啦
         GameObject.Find("PlayerEverythingSubway").GetComponent<SpriteRenderer>().enabled = true;
@@ -1313,11 +1316,15 @@ public class TutorialManagerNew : MonoBehaviour
         TutorialCameraController.targetPage = 4;
 
         //暂时不用教第二次滑动
-        // ScrollHint.SetActive(true);
+        //暂时还是教一下
+        ScrollHint.SetActive(true);
+        ScrollHint.GetComponentInChildren<Animator>().SetTrigger("SecondTime");
         // ScrollHint.transform.localRotation = new Quaternion(0,0,180,0);
         // foreach (Transform child in ScrollHint.transform)
         // {
-        //     child.localRotation = new Quaternion(0, 0, 180, 0);
+        //     // child.localRotation = new Quaternion(0, 0, 180, 0);
+        //     child.localScale = new Vector3(-1, 0, 0);
+
         // }
     }
 
@@ -1607,9 +1614,9 @@ public class TutorialManagerNew : MonoBehaviour
     IEnumerator KararaEatSweet()
     {
         yield return new WaitForSeconds(0.3f);
-        inventoryBubble.SetActive(true);
-        yield return new WaitForSeconds(2f);
-        inventoryBubble.SetActive(false);
+        // inventoryBubble.SetActive(true);
+        // yield return new WaitForSeconds(2f);
+        // inventoryBubble.SetActive(false);
 
     }
 }
