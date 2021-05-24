@@ -77,6 +77,10 @@ public class TutorialTouchController : MonoBehaviour
 
 
         // @@@
+        if (TutorialCameraController.myCameraState != TutorialCameraController.CameraState.Subway)
+        {
+            return;
+        }
 
         if (EventSystem.current.currentSelectedGameObject != null)
         {
