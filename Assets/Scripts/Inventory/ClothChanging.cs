@@ -251,16 +251,20 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     
    
     private void DropToLostAndFound(){
+   
         if(LevelManager.neverGoLandF)
         {
             LevelManager.neverGoLandF = false;
             LevelManager.ShowLFReturnComic();
             LostAndFound.ShaderOn();
         }
+        else if(LevelManager.stage > 1)
+        {
+            LevelManager.ShowUIRate();
+        }
 
         currentSprite = GetComponent<Image>().sprite;
         LostAndFound.AddClothToList(); // 单纯计数功能
-        if(LevelManager.stage > 1) LevelManager.ShowUIRate();
         //进入stage 2之后第一次掉星就出现UIRate
     }
 

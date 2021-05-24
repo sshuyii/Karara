@@ -8135,7 +8135,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 21300000, guid: a8d921cf6b77d4b0bbb8c8ca518a9eed, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 792c6ec392c2e4362bbb3c4a6422653c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -12529,7 +12529,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9287ea9e7603e4c0997cf66592f496aa, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2b5bca739b99e495ab234e00d1963f82, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -22154,6 +22154,11 @@ MonoBehaviour:
     - Emmm... Work harder!
     isPlaying: 0
     playingIdx: 0
+  - key: ReturnFinishedBags
+    content:
+    - Hurry up! Return the finished bags!
+    isPlaying: 0
+    playingIdx: 0
 --- !u!4 &1170965925
 Transform:
   m_ObjectHideFlags: 0
@@ -25188,7 +25193,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 21300000, guid: 048dddebe022d44d79e5f57cb7869aef, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f049b0b52de5842978c232b688f8f264, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -25390,15 +25395,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 32f25c7af9ebe4f99bb197eeab803f2b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3cfbb3981f70447de85c115b563b60df, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 6.24, y: 10.91}
+  m_Size: {x: 7.52, y: 11.88}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1322165794
@@ -27316,6 +27321,7 @@ MonoBehaviour:
   unfinishedBagNum: 0
   FishBossNotification: {fileID: 0}
   clothesAtInventory: {fileID: 2039688779}
+  neverMinusStar: 1
 --- !u!4 &1407451369
 Transform:
   m_ObjectHideFlags: 0
@@ -39213,7 +39219,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: There are __ clothes at inventory.
+  m_text: ' '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -40704,6 +40710,8 @@ MonoBehaviour:
       clip: {fileID: 8300000, guid: 7c6be3498852c47e488be460cf462707, type: 3}
     - m_type: 18
       clip: {fileID: 8300000, guid: 2ce71875255a94c819c9e1d87e36e74c, type: 3}
+    - m_type: 19
+      clip: {fileID: 8300000, guid: f1b9fff1ab21c45dca95efe9fafe0374, type: 3}
   - source: {fileID: 2007106115}
     audio:
     - m_type: 8

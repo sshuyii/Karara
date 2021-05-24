@@ -48,11 +48,11 @@ public class SpriteLoader : MonoBehaviour
         LoadKararaClothes();
 
         ClothDic["work"].state = Cloth.ClothState.Wearing;
-        ClothDic["shoe"].state = Cloth.ClothState.Wearing;
+        ClothDic["slipper"].state = Cloth.ClothState.Wearing;
 
         defaultClothes[0] = ClothDic["top"];
         defaultClothes[1] = ClothDic["bottom"];
-        defaultClothes[2] = ClothDic["shoe"];
+        defaultClothes[2] = ClothDic["slipper"];
         defaultClothes[3] = ClothDic["work"];
 
         //Debug.Log("你猜" + defaultClothes[0].name);
@@ -135,7 +135,6 @@ public class SpriteLoader : MonoBehaviour
             case "Shoe":
                 thisType = Cloth.ClothType.Shoe;
                 break;
-
             case "Everything":
                 thisType = Cloth.ClothType.Everything;
                 break;
@@ -179,6 +178,9 @@ public class SpriteLoader : MonoBehaviour
                     case "shoe":
                         thisType = Cloth.ClothType.Shoe;
                         break;
+                    case "slipper":
+                        thisType = Cloth.ClothType.Shoe;
+                        break;
                     default:
                         thisType = Cloth.ClothType.Everything;
                         break;
@@ -217,9 +219,9 @@ public class SpriteLoader : MonoBehaviour
     }
 
     private void LoadClothes() {
-        //StreamWriter writer = new StreamWriter("./file.txt");
+        // StreamWriter writer = new StreamWriter("./file.txt");
 
-        //StreamReader reader = new System.IO.StreamReader("./file.txt");
+      
         StringReader reader = null;
         TextAsset file = (TextAsset)Resources.Load("clothAttributes", typeof(TextAsset));
         reader = new StringReader(file.text);
@@ -261,7 +263,7 @@ public class SpriteLoader : MonoBehaviour
                         //Debug.Log(atbs);
                         ClothDic.Add(picName, new Cloth(picName, newPic, thisType, owner,atbs));
 
-                        //writer.WriteLine(picName + " 1 1 1 1");
+                        // writer.WriteLine(picName + " 1 1 1 1");
 
 
                     }
@@ -272,7 +274,7 @@ public class SpriteLoader : MonoBehaviour
 
         }
 
-        //writer.Close();
+        // writer.Close();
 
 
         for (int i = 0; i < postures.Length; i++)

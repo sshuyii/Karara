@@ -50,6 +50,9 @@ public class FishTextManager : MonoBehaviour
     {
         FishText newFishText = new FishText();
         if (FishTextDict.ContainsKey(keyWord)) newFishText = FishTextDict[keyWord];
+        else{
+            newFishText.content = new List<string>(){keyWord};
+        }
         return newFishText;
     }
 }

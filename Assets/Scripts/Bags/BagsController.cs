@@ -109,6 +109,7 @@ public class BagsController : MonoBehaviour
     }
 
     public TextMeshProUGUI clothesAtInventory;
+    public bool neverMinusStar = true;
     public void ShowReturnNotice(GameObject bag,bool flip)
     {
         returnNotice.SetActive(true);
@@ -121,8 +122,10 @@ public class BagsController : MonoBehaviour
         wc.Occupied.SetActive(false);
 
         int clotheNum = 4 - wc.clothNum;
-        if(clotheNum > 0)clothesAtInventory.text = "There are " + clotheNum.ToString()+  " clothes at inventory.";
-        else clothesAtInventory.text = "";
+        if(clotheNum > 0) StartCoroutine(LevelManager.StopToMinusStar(clotheNum, washerNum, neverMinusStar));
+        // if(clotheNum == 1) clothesAtInventory.text = "There is " + clotheNum.ToString()+  " clothe at inventory.";
+        // if(clotheNum > 1)clothesAtInventory.text = "There are " + clotheNum.ToString()+  " clothes at inventory.";
+        // else clothesAtInventory.text = "";
 
         if(flip)
         {
