@@ -498,15 +498,16 @@ public class LevelManager : MonoBehaviour
         FinalCameraController.InstructionShow();
     }
 
-    public IEnumerator StopToMinusStar(int starNum, int wahserNum, bool neverMinusStar)
+    public IEnumerator StopToMinusStar( int wahserNum, bool neverMinusStar)
     {
 
         if (!neverMinusStar)
         {
-            StartCoroutine(FishTalkClothesInInventory(starNum));
+            StartCoroutine(FishTalkClothesInInventory());
         }
         else
         {
+            
             SubwayMovement.pauseBeforeMove = true;
             FinalCameraController.enableScroll = false;
             FinalCameraController.DisableInput(true);
@@ -514,7 +515,7 @@ public class LevelManager : MonoBehaviour
             yield return new WaitForSeconds(1f);
             FinalCameraController.GotoPage(1);
             FinalCameraController.Hide(FinalCameraController.fishShoutCG);
-            StartCoroutine(FishTalkClothesInInventory(starNum));
+            StartCoroutine(FishTalkClothesInInventory());
             yield return new WaitForSeconds(2f);
             if (wahserNum < 1) FinalCameraController.GotoPage(2);
             else FinalCameraController.GotoPage(3);
@@ -526,10 +527,9 @@ public class LevelManager : MonoBehaviour
 
     }
 
-    private IEnumerator FishTalkClothesInInventory(int starNum)
+    private IEnumerator FishTalkClothesInInventory()
     {
-        if (starNum == 1) FinalCameraController.FishTalkAccessFromScript("There is a piece of clothe you left in inventory!");
-        else FinalCameraController.FishTalkAccessFromScript("There are " + starNum + " clothes you left in inventory! ");
+        FinalCameraController.FishTalkAccessFromScript("Put all clothes back into bag  before return it! Or we'll get bad ratings!");
         yield return new WaitForSeconds(2f);
         FinalCameraController.FishTalkAccessFromScript("");
     }

@@ -7,6 +7,7 @@ public class Ad
 {
 
     public string name;
+    public List<int> myPoses;
     public Sprite sprite;
     public int[] attributes = new int[4] { 0,0,0,0};
 
@@ -29,5 +30,10 @@ public class Ad
     {
         hasTaken = true;
         poseNum = pose;
+    }
+
+    public void AddUsalbePose(List<int> poses)
+    {
+        myPoses = poses;
     }
 }

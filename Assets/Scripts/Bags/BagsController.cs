@@ -33,6 +33,7 @@ public class BagsController : MonoBehaviour
 
         timeUpBagNum = 0;
         unfinishedBagNum = 0;
+        UIMinusStars = clothesAtInventory.transform.parent.gameObject;
     }
 
     // Update is called once per frame
@@ -109,6 +110,7 @@ public class BagsController : MonoBehaviour
     }
 
     public TextMeshProUGUI clothesAtInventory;
+    public GameObject UIMinusStars;
     public bool neverMinusStar = true;
     public void ShowReturnNotice(GameObject bag,bool flip)
     {
@@ -121,8 +123,20 @@ public class BagsController : MonoBehaviour
         wc.DoorImage.sprite = washers.openedDoor;
         wc.Occupied.SetActive(false);
 
-        int clotheNum = 4 - wc.clothNum;
-        if(clotheNum > 0) StartCoroutine(LevelManager.StopToMinusStar(clotheNum, washerNum, neverMinusStar));
+        int star = wc.clothNum - 4;
+        if(bag.GetComponent<ClothToMachine>().timeUp == false) star++;
+        if(star < 0) {
+            StartCoroutine(LevelManager.StopToMinusStar( washerNum, neverMinusStar));
+            UIMinusStars.SetActive(true);
+            clothesAtInventory.text = star.ToString();
+            neverMinusStar = false;
+        }
+        else if(star > 0) 
+        {
+            UIMinusStars.SetActive(true);
+            clothesAtInventory.text = star.ToString();
+        }
+        else UIMinusStars.SetActive(false);
         // if(clotheNum == 1) clothesAtInventory.text = "There is " + clotheNum.ToString()+  " clothe at inventory.";
         // if(clotheNum > 1)clothesAtInventory.text = "There are " + clotheNum.ToString()+  " clothes at inventory.";
         // else clothesAtInventory.text = "";
@@ -138,7 +152,7 @@ public class BagsController : MonoBehaviour
                 }
             }
         }
-
+        
     }
 
     public void HideNotice()
