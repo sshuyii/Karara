@@ -328,7 +328,7 @@ public class FinalCameraController : MonoBehaviour
 
     public void FishTalkAccessFromScript(string keyWord)
     {
-        CancelAllUI(false);
+        // CancelAllUI(false);
         if (isfishTalking == false)
         {
             fishTalk.SetActive(true);
@@ -343,7 +343,6 @@ public class FinalCameraController : MonoBehaviour
     {
         currentFT = FishTextManager.GetText(keyWord);
         int idx = Random.Range(0, currentFT.content.Count);
-        
         fishTalkText.text = currentFT.content[currentFT.playingIdx];
     }
 

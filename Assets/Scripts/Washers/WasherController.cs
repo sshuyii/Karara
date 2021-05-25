@@ -278,6 +278,7 @@ public class WasherController : MonoBehaviour
         pressOK = true;
 
         DoorImage.sprite = AllMachines.closedDoor;
+        AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
         
         if (clothNum == 0 || myMachineState == AllMachines.MachineState.empty) Occupied.SetActive(false);
         else if(myMachineState == AllMachines.MachineState.finished || myMachineState == AllMachines.MachineState.noninteractable) Occupied.SetActive(true);
@@ -446,6 +447,7 @@ public class WasherController : MonoBehaviour
         yield return new WaitForSeconds(ValueEditor.TimeRelated.openWasherDelay2);
 
         DoorImage.sprite = AllMachines.closedDoor;
+        AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
         
 
     }

@@ -139,6 +139,7 @@ public class InstagramController : MonoBehaviour
 
     // Start is called before the first frame update
     LevelManager LevelManager;
+    GameObject tutorialPost;
     void Start()
     {
 
@@ -159,6 +160,14 @@ public class InstagramController : MonoBehaviour
 
         PosturePostImageList = originalPosture.GetComponentsInChildren<SpriteRenderer>();
 
+        
+        tutorialPost = GameObject.Find("TutorialPost");
+        if(tutorialPost!= null) 
+        {
+            Destroy(postParent.transform.GetChild(0).gameObject);
+            tutorialPost.transform.SetParent(postParent.transform);
+            tutorialPost.transform.SetAsFirstSibling();
+        }
 
     }
 
@@ -167,7 +176,7 @@ public class InstagramController : MonoBehaviour
     void Update()
     {
        
-
+        
 
     }
 

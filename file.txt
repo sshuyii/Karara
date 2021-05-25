@@ -6,6 +6,8 @@ BottomB3 1 1 1 1
 BottomB4 1 1 1 1
 BottomC1 1 1 1 1
 BottomC2 1 1 1 1
+BottomD1 1 1 1 1
+BottomD2 1 1 1 1
 BottomZ1 1 1 1 1
 BottomZ2 1 1 1 1
 BottomZ3 1 1 1 1
@@ -20,6 +22,8 @@ TopB5 1 1 1 1
 TopB6 1 1 1 1
 TopC1 1 1 1 1
 TopC2 1 1 1 1
+TopD1 1 1 1 1
+TopD2 1 1 1 1
 TopZ1 1 1 1 1
 TopZ2 1 1 1 1
 TopZ3 1 1 1 1
@@ -31,11 +35,8 @@ ShoeA1 1 1 1 1
 ShoeA2 1 1 1 1
 ShoeB1 1 1 1 1
 ShoeC1 1 1 1 1
+ShoeD1 1 1 1 1
 ShoeZ1 1 1 1 1
 ShoeZ2 1 1 1 1
 EverythingB1 1 1 1 1
 EverythingB2 1 1 1 1
-top 1 1 1 1
-bottom 1 1 1 1
-shoe 1 1 1 1
-work 1 1 1 1

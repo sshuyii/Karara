@@ -13,15 +13,15 @@ public class LevelManager : MonoBehaviour
 {
 
     [SerializeField]
-    private GameObject MapHint,MapTutorialBubble,GoBackButton, transitComic,MapCar,MapCar_Tut_S2;
+    private GameObject MapHint, MapTutorialBubble, GoBackButton, transitComic, MapCar, MapCar_Tut_S2;
 
     [SerializeField]
     private CanvasGroup Map;
 
     [SerializeField]
     private GameObject MapInSubway;
-   
-    
+
+
 
 
 
@@ -36,9 +36,9 @@ public class LevelManager : MonoBehaviour
     public CanvasGroup Stations;
     private CanvasGroup carCG;
     private PathFollower PathFollower;
-    
-    
-    public GameObject station,bagIn;
+
+
+    public GameObject station, bagIn;
     public Sprite bagOut;
     private FinalCameraController FinalCameraController;
 
@@ -95,7 +95,7 @@ public class LevelManager : MonoBehaviour
     public bool LandFinLeaveStation = false;
     public GameObject FishBagReturnComic;
     public bool ending = false;
-    public GameObject LostAndFoundReturnComic,waypoint1;
+    public GameObject LostAndFoundReturnComic, waypoint1;
     private InstagramController InstagramController;
     void Start()
     {
@@ -111,8 +111,8 @@ public class LevelManager : MonoBehaviour
         PathFollower = MapCar.GetComponent<PathFollower>();
         carCG = MapCar.GetComponent<CanvasGroup>();
 
-        int skipInstruction = PlayerPrefs.GetInt("skip",-1);
-        if(skipInstruction == 1) skip = true;
+        int skipInstruction = PlayerPrefs.GetInt("skip", -1);
+        if (skipInstruction == 1) skip = true;
 
         GameObject.Find("Main Camera").transform.position = new Vector3(0, 0, -20);
 
@@ -127,7 +127,7 @@ public class LevelManager : MonoBehaviour
         //     //CloseInstruction();
         //     EndMapTutorial();
         // }
-        if(skip) SubwayMovement.trainStop();        
+        if (skip) SubwayMovement.trainStop();
 
 
         comicList.Add(new List<Sprite>());
@@ -142,12 +142,12 @@ public class LevelManager : MonoBehaviour
     {
         //只有滚到底的时候才会显示关闭按钮
 
-  
-    
+
+
 
 
         //只有滚到底的时候才会显示关闭按钮
-        if (isInstruction&& InstructionScroll.active &&
+        if (isInstruction && InstructionScroll.active &&
             InstructionScroll.GetComponent<ScrollRect>().verticalNormalizedPosition < 0.3f)
         {
             closeInstructionButton.GetComponent<Button>().interactable = true;
@@ -155,7 +155,7 @@ public class LevelManager : MonoBehaviour
 
         if (Practicing) CheckMatch();
 
-        
+
     }
 
 
@@ -172,7 +172,7 @@ public class LevelManager : MonoBehaviour
         upgradeReadyOrNot = false;
         stageTransiting = false;
         SubwayMovement.pauseBeforeMove = false;
-        
+
         stage++;
 
 
@@ -180,7 +180,7 @@ public class LevelManager : MonoBehaviour
 
 
         return;
-             
+
 
     }
 
@@ -211,7 +211,7 @@ public class LevelManager : MonoBehaviour
 
     }
 
-    
+
     //@ demo
     public void ClickDemoEnd()
     {
@@ -233,14 +233,14 @@ public class LevelManager : MonoBehaviour
 
         Debug.Log("comic click" + comicClick);
     }
-    
+
     private void CheckMatch()
     {
         //todo: 
         if (fakeMatch)
         {
             Practicing = false;
-            
+
         }
     }
 
@@ -263,10 +263,10 @@ public class LevelManager : MonoBehaviour
 
     public void ShowInstructionInMap()
     {
-       
+
         if (!isInstruction) return;
 
-        if(stage == 2 && stageTransiting)
+        if (stage == 2 && stageTransiting)
         {
             StartCoroutine(EnterStationDetail_Tut_S3());
         }
@@ -277,7 +277,7 @@ public class LevelManager : MonoBehaviour
 
         //Practicing = true;
 
-        
+
 
         Debug.Log("show instruction in map");
     }
@@ -288,7 +288,7 @@ public class LevelManager : MonoBehaviour
     {
         RatingSystem.ShowRatingSys(withParticleEffect);
 
-        
+
     }
 
     // 如果是chap 1 开屏在地铁内显示图片instruction 关闭时用这个
@@ -315,12 +315,12 @@ public class LevelManager : MonoBehaviour
     {
         // click back to subway button from map
 
-        if(stageTransiting)
+        if (stageTransiting)
         {
             UpdateStage();
         }
 
-       
+
         SubwayMovement.EndTrainPause();
         //SubwayMovement.timerStay = SubwayMovement.stayTime - 0.01f;
     }
@@ -354,7 +354,7 @@ public class LevelManager : MonoBehaviour
         FinalCameraController.ChangeToSubway();
         FinalCameraController.GotoPage(3);
 
-        
+
 
         Animator myAnim = MapInSubway.GetComponent<Animator>();
         myAnim.SetTrigger("blingbling");
@@ -364,7 +364,7 @@ public class LevelManager : MonoBehaviour
 
     public IEnumerator EnterMap_Tut_S2()
     {
-        
+
         isInstruction = true;
         Animator myAnim = MapInSubway.GetComponent<Animator>();
         myAnim.SetTrigger("idle");
@@ -381,7 +381,7 @@ public class LevelManager : MonoBehaviour
 
         ShowHint();
         MapTutorialBubble.SetActive(false);
-        
+
     }
 
     public IEnumerator EnterMap_Tut_S3()
@@ -402,7 +402,7 @@ public class LevelManager : MonoBehaviour
         GoBackButton.SetActive(true);
         GoBackButton.GetComponent<Button>().enabled = false;
         yield return null;
-    
+
 
     }
 
@@ -422,7 +422,7 @@ public class LevelManager : MonoBehaviour
         yield return null;
     }
 
-  
+
 
     public IEnumerator EnterMatch_Tut_S3()
     {
@@ -472,7 +472,7 @@ public class LevelManager : MonoBehaviour
 
     public void ConfirmFishBagReturnComic()
     {
-        
+
         FishBagReturnComic.SetActive(false);
         StartCoroutine(SubwayMovement.TrainPauseResume());
         FinalCameraController.CameraMovement.stopForComic = false;
@@ -485,6 +485,7 @@ public class LevelManager : MonoBehaviour
     }
     public void ConfirmLFReturnComic()
     {
+        ShowUIRate();
         LostAndFoundReturnComic.SetActive(false);
     }
 
@@ -497,17 +498,54 @@ public class LevelManager : MonoBehaviour
         FinalCameraController.InstructionShow();
     }
 
+    public IEnumerator StopToMinusStar( int wahserNum, bool neverMinusStar)
+    {
+
+        if (!neverMinusStar)
+        {
+            StartCoroutine(FishTalkClothesInInventory());
+        }
+        else
+        {
+            
+            SubwayMovement.pauseBeforeMove = true;
+            FinalCameraController.enableScroll = false;
+            FinalCameraController.DisableInput(true);
+            FinalCameraController.Show(FinalCameraController.fishShoutCG);
+            yield return new WaitForSeconds(1f);
+            FinalCameraController.GotoPage(1);
+            FinalCameraController.Hide(FinalCameraController.fishShoutCG);
+            StartCoroutine(FishTalkClothesInInventory());
+            yield return new WaitForSeconds(2f);
+            if (wahserNum < 1) FinalCameraController.GotoPage(2);
+            else FinalCameraController.GotoPage(3);
+            SubwayMovement.pauseBeforeMove = false;
+            FinalCameraController.enableScroll = true;
+            FinalCameraController.DisableInput(false);
+
+        }
+
+    }
+
+    private IEnumerator FishTalkClothesInInventory()
+    {
+        FinalCameraController.FishTalkAccessFromScript("Put all clothes back into bag  before return it! Or we'll get bad ratings!");
+        yield return new WaitForSeconds(2f);
+        FinalCameraController.FishTalkAccessFromScript("");
+    }
     private bool lastTextFinish;
 
 
-    
-    public void Hide(CanvasGroup UIGroup) {
+
+    public void Hide(CanvasGroup UIGroup)
+    {
         UIGroup.alpha = 0f; //this makes everything transparent
         UIGroup.blocksRaycasts = false; //this prevents the UI element to receive input events
         UIGroup.interactable = false;
     }
-    
-    public void Show(CanvasGroup UIGroup) {
+
+    public void Show(CanvasGroup UIGroup)
+    {
         UIGroup.alpha = 1f;
         UIGroup.blocksRaycasts = true;
         UIGroup.interactable = true;

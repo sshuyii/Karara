@@ -260,7 +260,10 @@ public class ClothToMachine : MonoBehaviour
             //没有洗衣机就不动啥反应都没有
 
             underMachineNum = AllMachines.FindSuitableMachine(AllMachines.MachineState.empty);
-            if (underMachineNum < 0) return;
+            if (underMachineNum < 0) {
+                FinalCameraController.FishTalkAccessFromScript("ReturnFinishedBags");
+                return;
+            }
 
 
 

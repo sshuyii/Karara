@@ -130,6 +130,10 @@ public class TutorialManagerNew : MonoBehaviour
     private GameObject MainCamera;
 
     public TutorialTransition TutorialTransition;
+    public Image progressBar;
+    public GameObject TutorialPost;
+
+    
     void Start()
     {
         KararaC.SetActive(false);
@@ -171,18 +175,26 @@ public class TutorialManagerNew : MonoBehaviour
             InventoryUIPos[i] = InventoryUIPosObject[i].GetComponent<RectTransform>().position;
 
         }
-
+        
     }
 
     IEnumerator LongTap()
     {
         //出现鱼教学长按还衣服
         yield return new WaitForSeconds(1.5f);
+        
         inventoryFish.SetActive(true);//todo: 说话的打字机效果
-
-        yield return new WaitForSeconds(1f);
-
+        int bubbleCount = 10;
+        for(int i = 0; i < bubbleCount; i ++)
+        {
+            int random = UnityEngine.Random.Range(0,5);
+            AudioManager.PlayAudio(fishBubbles[random]);
+            yield return new WaitForSeconds(0.1f);
+        }
+        //yield return new WaitForSeconds(1f);
+        
         shoeAnimator.SetBool("isShining", true);
+        
 
         //箭头出现在
         HintScreen.SetActive(true);
@@ -195,9 +207,11 @@ public class TutorialManagerNew : MonoBehaviour
 
     bool longTap = false;
     // Update is called once per frame
+
     void Update()
     {
-
+        
+    
         if(TutorialTransition.TransitionStage == 3)
         {
             //set inactive
@@ -226,6 +240,7 @@ public class TutorialManagerNew : MonoBehaviour
             if (myMachineState == MachineState.Washing)
             {
                 CalculateTime();
+                UpdateProgressBar();
             }
 
             timer += Time.deltaTime;
@@ -1239,6 +1254,7 @@ public class TutorialManagerNew : MonoBehaviour
     {
         TutorialCameraController.GoToCloset();
         // HintScreen.SetActive(true);
+        TutorialCameraController.myCameraState = TutorialCameraController.CameraState.Closet;
         Show(Inventory);
     }
 
@@ -1277,6 +1293,7 @@ public class TutorialManagerNew : MonoBehaviour
 
         //真正回到地铁
         TutorialCameraController.ReturnToApp();
+        TutorialCameraController.myCameraState = TutorialCameraController.CameraState.Subway;
 
         Hide(Inventory);
 
@@ -1349,9 +1366,10 @@ public class TutorialManagerNew : MonoBehaviour
 
     private void GoToIns()
     {
-        Ins.SetActive(true);
+        Show(Ins.GetComponent<CanvasGroup>());
         Posture.SetActive(false);
         TutorialCameraController.myCameraState = TutorialCameraController.CameraState.App;
+        
         //HintPosInsBack 暂时不用
     }
 
@@ -1360,7 +1378,7 @@ public class TutorialManagerNew : MonoBehaviour
         Debug.Log("ClickInsBack");
         if (deactiveButtons) return;
         HintScreen.SetActive(false);
-        Ins.SetActive(false);
+        Hide(Ins.GetComponent<CanvasGroup>());
         Hide(CameraBackground);
         
 
@@ -1570,8 +1588,8 @@ public class TutorialManagerNew : MonoBehaviour
     }
 
 
-    private List<AudioType> fishBubbles = new List<AudioType>{AudioType.FishBubble1,AudioType.FishBubble2,
-    AudioType.FishBubble3, AudioType.FishBubble4, AudioType.FishBubble5, AudioType.FishBubble6, AudioType.FishBubble7};
+    private List<AudioType> fishBubbles = new List<AudioType>{  AudioType.FishBubble2,
+    AudioType.FishBubble3, AudioType.FishBubble4,AudioType.FishBubble5, AudioType.FishBubble6, AudioType.FishBubble7};
     IEnumerator AnimateText(TextMeshPro text, string textContent)
     {
         //TutorialCameraController.
@@ -1582,7 +1600,7 @@ public class TutorialManagerNew : MonoBehaviour
         {
             if (!currentFT.isPlaying) break;
 
-            int random = UnityEngine.Random.Range(0,6);
+            int random = UnityEngine.Random.Range(0,5);
             AudioManager.PlayAudio(fishBubbles[random]);
             text.text = textContent.Substring(0, i);
             yield return new WaitForSeconds(.1f);
@@ -1600,6 +1618,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     public void ProceedToChapterOne()
     {
+        TutorialPost.transform.SetParent(null);
         SceneManager.LoadScene("StreetStyle");
     }
 
@@ -1618,5 +1637,13 @@ public class TutorialManagerNew : MonoBehaviour
         // yield return new WaitForSeconds(2f);
         // inventoryBubble.SetActive(false);
 
+
+    }
+
+
+    private void UpdateProgressBar()
+    {
+        progressBar.fillAmount = timer/5f;
+        
     }
 }

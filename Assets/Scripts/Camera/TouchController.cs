@@ -335,7 +335,8 @@ public class TouchController : MonoBehaviour
                 return RaycastHitResult;
             }
 
-            if (name == "MachineSquareButton")
+           
+            if (name == "WasherTapSpace")
             {
                 WasherController wc = hit.transform.gameObject.GetComponentInParent<WasherController>();
                 RaycastHitResult[0] = "washer";
