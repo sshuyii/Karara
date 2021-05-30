@@ -132,7 +132,13 @@ public class AdsController : MonoBehaviour
 
         foreach(PosterPosePair pair in PosterPosePairs_Chap1)
         {
-            AdsDic[pair.AdName].AddUsalbePose(pair.myPoses);
+            if(pair.myPoses != null){
+                AdsDic[pair.AdName].AddUsalbePose(pair.myPoses);
+            }
+            else{
+                List<int> l = new List<int>(){0,1,2,3};
+                AdsDic[pair.AdName].AddUsalbePose(l);
+            }
         }
 
     }
