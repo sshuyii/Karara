@@ -97,6 +97,14 @@ public class LevelManager : MonoBehaviour
     public bool ending = false;
     public GameObject LostAndFoundReturnComic, waypoint1;
     private InstagramController InstagramController;
+    private LostAndFound LostAndFound;
+
+    public GameObject[] MiniNotices;
+
+    enum returnBagState
+    {
+        stageOne
+    }
     void Start()
     {
         Resources.UnloadUnusedAssets();
@@ -104,8 +112,9 @@ public class LevelManager : MonoBehaviour
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
         SubwayMovement = GameObject.Find("---StationController").GetComponent<SubwayMovement>();
         RatingSystem = GameObject.Find("FloatingUI").GetComponent<RatingSystem>();
+        LostAndFound = GameObject.Find("Lost&Found_basket").GetComponent<LostAndFound>();
         FishBossNotification = GameObject.Find("FishBossUI").GetComponent<FishBossNotification>();
-        InstagramController = FinalCameraController.InstagramController;
+        InstagramController = GameObject.Find("---InstagramController").GetComponent<InstagramController>();
 
 
         PathFollower = MapCar.GetComponent<PathFollower>();
@@ -185,7 +194,7 @@ public class LevelManager : MonoBehaviour
     }
 
     public Sprite demoEndPost;
-
+    public GameObject endingParticleEffect,endingPopupWindow;
     public void StageTrasiting()
     {
         stageTransiting = true;
@@ -200,11 +209,14 @@ public class LevelManager : MonoBehaviour
             Debug.Log("transiting 2");
             //@ demo stop at here
             // Show(transitComic.GetComponent<CanvasGroup>());
-
+            //终点
             FinalCameraController.ChangeToSubway();
             FinalCameraController.enableScroll = false;
+            FinalCameraController.DisableInput(true);
             Handheld.Vibrate();
             ending = true;
+            
+            
             InstagramController.AddInsPost("Alex", demoEndPost);
 
         }
@@ -333,11 +345,11 @@ public class LevelManager : MonoBehaviour
         comicClick = 0;
         HideHint();
 
-        FinalCameraController.ChangeToSubway();
-        FinalCameraController.GotoPage(3);
-        Animator myAnim = MapInSubway.GetComponent<Animator>();
-        myAnim.SetTrigger("blingbling");
-        FinalCameraController.enableScroll = false;
+        FinalCameraController.ChangeToMap();
+        // FinalCameraController.GotoPage(3);
+        // Animator myAnim = MapInSubway.GetComponent<Animator>();
+        // myAnim.SetTrigger("blingbling");
+        // FinalCameraController.enableScroll = false;
 
     }
 
@@ -455,10 +467,8 @@ public class LevelManager : MonoBehaviour
     {
         if (stage < 2 || UIRateShown) return;
 
-        FinalCameraController.ChangeToSubway();
-        FinalCameraController.GotoPage(1);
         UIRateShown = true;
-        RatingSystem.ShowRatingSys(true); // with partical effect
+        RatingSystem.ShowRatingSys(true); // with particle effect
 
     }
 
@@ -470,13 +480,7 @@ public class LevelManager : MonoBehaviour
         // show comic and confirm
     }
 
-    public void ConfirmFishBagReturnComic()
-    {
 
-        FishBagReturnComic.SetActive(false);
-        StartCoroutine(SubwayMovement.TrainPauseResume());
-        FinalCameraController.CameraMovement.stopForComic = false;
-    }
 
     public void ShowLFReturnComic()
     {
@@ -485,7 +489,7 @@ public class LevelManager : MonoBehaviour
     }
     public void ConfirmLFReturnComic()
     {
-        ShowUIRate();
+        // ShowUIRate();
         LostAndFoundReturnComic.SetActive(false);
     }
 
@@ -498,40 +502,87 @@ public class LevelManager : MonoBehaviour
         FinalCameraController.InstructionShow();
     }
 
-    public IEnumerator StopToMinusStar( int wahserNum, bool neverMinusStar)
+    private bool stage1Returned = false;
+    public bool stage2UIRateFirst = false;
+    public IEnumerator StopToMinusStar( GameObject notice, int starNum, int oneStarForBag)
     {
+        
 
-        if (!neverMinusStar)
+        if(stage == 1)
         {
-            StartCoroutine(FishTalkClothesInInventory());
+            notice.GetComponent<ReturnNotice>().SetStarNum(0);
+            notice.GetComponent<ReturnNotice>().SetClothNum(starNum);
+            if(starNum > -1) yield break;
+            if(!stage1Returned)
+            {
+                stage1Returned = true;
+                FinalCameraController.FishTalkAccessFromScript("A",true);
+                FinalCameraController.Show(FinalCameraController.fishShoutCG);
+            }
+            
         }
-        else
+        else if(stage == 2)
         {
             
-            SubwayMovement.pauseBeforeMove = true;
-            FinalCameraController.enableScroll = false;
-            FinalCameraController.DisableInput(true);
-            FinalCameraController.Show(FinalCameraController.fishShoutCG);
-            yield return new WaitForSeconds(1f);
-            FinalCameraController.GotoPage(1);
-            FinalCameraController.Hide(FinalCameraController.fishShoutCG);
-            StartCoroutine(FishTalkClothesInInventory());
-            yield return new WaitForSeconds(2f);
-            if (wahserNum < 1) FinalCameraController.GotoPage(2);
-            else FinalCameraController.GotoPage(3);
-            SubwayMovement.pauseBeforeMove = false;
-            FinalCameraController.enableScroll = true;
-            FinalCameraController.DisableInput(false);
-
+            notice.GetComponent<ReturnNotice>().SetStarNum(starNum+oneStarForBag);
+            notice.GetComponent<ReturnNotice>().SetClothNum(starNum+oneStarForBag);
+            if(starNum > -1) yield break;
+            if(!UIRateShown)
+            {
+                
+                stage2UIRateFirst = true;
+                FinalCameraController.DisableInput(true);
+                FinalCameraController.enableScroll = false;
+                ShowUIRate();
+                yield return new WaitForSeconds(0.3f);
+                
+                FinalCameraController.FishTalkAccessFromScript("A",true);
+                if(starNum < 0) FinalCameraController.Show(FinalCameraController.fishShoutCG);
+                FinalCameraController.DisableInput(false);
+                FinalCameraController.enableScroll = true;
+            }
+            
+           
         }
+        yield return null;
 
     }
 
+    public IEnumerator GoLostAndFoundFirstTime()
+    {
+        FinalCameraController.enableScroll =false;
+        FinalCameraController.DisableInput(true);
+
+        yield return new WaitForSeconds(0.3f);
+        SubwayMovement.BlackScreen.SetActive(true);
+
+        FinalCameraController.ChangeToSubway();
+        FinalCameraController.GotoPage(4);
+
+        yield return new WaitForSeconds(0.5f);
+        SubwayMovement.BlackScreen.SetActive(false);
+        LostAndFound.clickLostFound();
+        
+
+        yield return new WaitForSeconds(2f);
+        SubwayMovement.BlackScreen.SetActive(true);
+        LostAndFound.clickLostFound();
+
+        yield return new WaitForSeconds(0.5f);
+        SubwayMovement.BlackScreen.SetActive(false);
+
+        FinalCameraController.ChangeToCloth();
+        FinalCameraController.CameraMovement.previousPage = 2;
+        FinalCameraController.enableScroll = true;
+        FinalCameraController.DisableInput(false);
+        
+
+    }
     private IEnumerator FishTalkClothesInInventory()
     {
-        FinalCameraController.FishTalkAccessFromScript("Put all clothes back into bag  before return it! Or we'll get bad ratings!");
+        FinalCameraController.FishTalkAccessFromScript("Put all clothes back into bag  before return it! Or we'll get bad ratings!",true);
         yield return new WaitForSeconds(2f);
-        FinalCameraController.FishTalkAccessFromScript("");
+        FinalCameraController.FishTalkAccessFromScript("",false);
     }
     private bool lastTextFinish;
 

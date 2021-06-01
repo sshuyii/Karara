@@ -183,17 +183,19 @@ public class ClothToMachine : MonoBehaviour
 
     public IEnumerator returnClothYes()
     {
+        
+
         AudioManager.PlayAudio(AudioType.Cloth_Return);
         AllMachines.isReturning = true;
         // FinalCameraController.ChangeToSubway();
         FinalCameraController.alreadyNotice = false;
-
+        
 
         // 清空洗衣机，清空used Idx?, 清空inventory 透明度
         FinalCameraController.returnMachineNum = underMachineNum;
         int star = AllMachines.ClearMachine(underMachineNum, timeUp);
         SpriteLoader.NPCDic[tag].usedIdx.Clear();
-        RatingSys.ChangeRating(star);
+        if(FinalCameraController.LevelManager.UIRateShown && !FinalCameraController.LevelManager.stage2UIRateFirst) RatingSys.ChangeRating(star);
 
 
         float Twait = ValueEditor.TimeRelated.openWasherDelay1 + ValueEditor.TimeRelated.openWasherDelay2;
@@ -201,9 +203,16 @@ public class ClothToMachine : MonoBehaviour
 
         Twait = myAnimator.GetCurrentAnimatorClipInfo(0).Length;
         yield return new WaitForSeconds(Twait);
-
-
         yield return new WaitForSeconds(Twait);
+
+        if(FinalCameraController.LevelManager.UIRateShown && FinalCameraController.LevelManager.stage2UIRateFirst)
+        {
+            RatingSys.ChangeRating(star);
+            FinalCameraController.LevelManager.stage2UIRateFirst = false;
+            FinalCameraController.FishTalkAccessFromScript("B",true);
+        }
+
+        if(FinalCameraController.fishShouting) FinalCameraController.Hide(FinalCameraController.fishShoutCG);
         Destroy(thisBag);
         AllMachines.isReturning = false;
         Destroy(this);
@@ -261,7 +270,7 @@ public class ClothToMachine : MonoBehaviour
 
             underMachineNum = AllMachines.FindSuitableMachine(AllMachines.MachineState.empty);
             if (underMachineNum < 0) {
-                FinalCameraController.FishTalkAccessFromScript("ReturnFinishedBags");
+                FinalCameraController.FishTalkAccessFromScript("ReturnFinishedBags",true);
                 return;
             }
 
@@ -314,8 +323,7 @@ public class ClothToMachine : MonoBehaviour
             isFinished = AllMachines.FinishedOrNot(underMachineNum);
             if (isFinished && !FinalCameraController.alreadyNotice)
             {
-                if (underMachineNum == 1) BagsController.ShowReturnNotice(thisBag, true);
-                else BagsController.ShowReturnNotice(thisBag, false);
+                BagsController.ShowReturnNotice(thisBag, underMachineNum);
             }
             hitTime++;
         }

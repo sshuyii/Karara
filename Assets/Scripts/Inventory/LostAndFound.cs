@@ -39,6 +39,11 @@ public class LostAndFound : MonoBehaviour
         RatingSys = GameObject.Find("FloatingUI").GetComponent<RatingSystem>();
         InstagramController = GameObject.Find("---InstagramController").GetComponent<InstagramController>();
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
+        this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        this.transform.GetChild(0).gameObject.SetActive(false);
+
+        
+    
     }
 
     // Update is called once per frame
@@ -50,8 +55,11 @@ public class LostAndFound : MonoBehaviour
        }
     }
 
+    
     public void clickLostFound()
     {
+        this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        this.transform.GetChild(0).gameObject.SetActive(false);
         if (!isShowingNum)
         {
             ShaderOff();

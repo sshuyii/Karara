@@ -7,8 +7,9 @@ public class BagsController : MonoBehaviour
 {
     public List<GameObject> bagsInCar = new List<GameObject>();
     public List<List<string>> stationBagOwners = new List<List<string>>();
-    public GameObject returnNotice;
+    public GameObject[] returnNotices;
     public GameObject returningBag;
+    private int returnNoticePage;
     FinalCameraController FinalCameraController;
     LevelManager LevelManager;
     public int timeUpBagNum;
@@ -33,7 +34,7 @@ public class BagsController : MonoBehaviour
 
         timeUpBagNum = 0;
         unfinishedBagNum = 0;
-        UIMinusStars = clothesAtInventory.transform.parent.gameObject;
+
     }
 
     // Update is called once per frame
@@ -109,71 +110,47 @@ public class BagsController : MonoBehaviour
         bagsInCar.Remove(bag);
     }
 
-    public TextMeshProUGUI clothesAtInventory;
-    public GameObject UIMinusStars;
+
     public bool neverMinusStar = true;
-    public void ShowReturnNotice(GameObject bag,bool flip)
+    public void ShowReturnNotice(GameObject bag, int machienNum)
     {
-        returnNotice.SetActive(true);
+        GameObject notice = returnNotices[machienNum];
+        notice.SetActive(true);
         returningBag = bag;
+        
         FinalCameraController.alreadyNotice = true;
-        int washerNum = returningBag.GetComponent<ClothToMachine>().underMachineNum;
-        WasherController wc = washers.WasherControllerList[washerNum];
+        
+        WasherController wc = washers.WasherControllerList[machienNum];
         
         wc.DoorImage.sprite = washers.openedDoor;
         wc.Occupied.SetActive(false);
 
         int star = wc.clothNum - 4;
-        if(bag.GetComponent<ClothToMachine>().timeUp == false) star++;
-        if(star < 0) {
-            StartCoroutine(LevelManager.StopToMinusStar( washerNum, neverMinusStar));
-            UIMinusStars.SetActive(true);
-            clothesAtInventory.text = star.ToString();
-            neverMinusStar = false;
-        }
-        else if(star > 0) 
-        {
-            UIMinusStars.SetActive(true);
-            clothesAtInventory.text = star.ToString();
-        }
-        else UIMinusStars.SetActive(false);
-        // if(clotheNum == 1) clothesAtInventory.text = "There is " + clotheNum.ToString()+  " clothe at inventory.";
-        // if(clotheNum > 1)clothesAtInventory.text = "There are " + clotheNum.ToString()+  " clothes at inventory.";
-        // else clothesAtInventory.text = "";
-
-        if(flip)
-        {
-            foreach (Transform child in returnNotice.transform)
-            {
-                if (child.name == "BG")
-                {
-                    child.localRotation = new Quaternion(0, 180, 0, 0);
-                    return;
-                }
-            }
-        }
-        
+        int oneStarForBag = 0;
+        if(bag.GetComponent<ClothToMachine>().timeUp == false && LevelManager.stage > 1 ) oneStarForBag++;
+        StartCoroutine(LevelManager.StopToMinusStar( notice, star, oneStarForBag));
     }
 
     public void HideNotice()
     {
-        returnNotice.SetActive(false);
-        FinalCameraController.alreadyNotice = false;
-        foreach (Transform child in returnNotice.transform)
+        if(FinalCameraController.fishShouting) return;
+        foreach(GameObject notice in returnNotices)
         {
-            if (child.name == "BG")
-            {
-                child.localRotation = new Quaternion(0, 0, 0, 0);
-                return;
-            }
+            notice.SetActive(false);
         }
+        FinalCameraController.alreadyNotice = false;
+       
     }
     public void ClickReturnNo(bool DropBagOrNot) {
         HideNotice();
 
         if(returningBag != null && !DropBagOrNot)
         {
+            
             int washerNum = returningBag.GetComponent<ClothToMachine>().underMachineNum;
+            returnNotices[washerNum].SetActive(false);
+            FinalCameraController.alreadyNotice = false;
+            FinalCameraController.Hide(FinalCameraController.fishShoutCG);
             WasherController wc = washers.WasherControllerList[washerNum];
             wc.DoorImage.sprite = washers.closedDoor;
             if(wc.clothNum > 0) wc.Occupied.SetActive(true);
@@ -183,10 +160,14 @@ public class BagsController : MonoBehaviour
     }
 
     public void ClickReturnYes() {
+        foreach(GameObject notice in returnNotices)
+        {
+            notice.SetActive(false);
+        }
+        FinalCameraController.alreadyNotice = false;
+        
         StartCoroutine(returningBag.GetComponent<ClothToMachine>().returnClothYes());
         bagsInCar.Remove(returningBag);
-
-        ClickReturnNo(true);
     }
 
 

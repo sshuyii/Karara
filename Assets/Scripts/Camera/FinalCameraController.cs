@@ -140,6 +140,7 @@ public class FinalCameraController : MonoBehaviour
 
     public FishBossNotification FishBossNotification;
     public ValueEditor ValueEditor;
+    public bool fishShouting = false;
     
     // Start is called before the first frame update
     void Start()
@@ -192,7 +193,6 @@ public class FinalCameraController : MonoBehaviour
         InstructionDismiss();
 
         Hide(TakePhoto);
-        Hide(fishShoutCG);
         Hide(SubwayMap);
         Hide(Inventory);
         Hide(frontPage);
@@ -216,7 +216,13 @@ public class FinalCameraController : MonoBehaviour
         ChapterEndChecker();
 
 
-
+        // if(fishShouting && myCameraState == CameraState.Subway && CameraMovement.currentPage == 1)
+        // {
+        //     fishShoutCG.alpha = 0f;
+        // }
+        // else if(fishShouting){
+        //     fishShoutCG.alpha = 1f;
+        // }
 
 
         if (TouchController.isSwiping == true)
@@ -241,12 +247,17 @@ public class FinalCameraController : MonoBehaviour
         {
             CheckScreenNum();
 
-            if (transform.position.x < 5 && transform.position.x > -5 && FishBossNotification.isActive)
+            if (transform.position.x < 5 && transform.position.x > -5 )
             {
-                FishBossNotification.HideFish();
+                if(FishBossNotification.isActive)FishBossNotification.HideFish();
+                fishShoutCG.alpha = 0f;
             }
-            else if (transform.position.x > 5 & FishBossNotification.isActive)
+            else if (transform.position.x > 5 )
             {
+                if(fishShouting)
+                {
+                    fishShoutCG.alpha = 1f;
+                }
                 //FishBossNotification.ShowFish();
             }
 
@@ -300,6 +311,8 @@ public class FinalCameraController : MonoBehaviour
             PlayerPrefs.SetInt("skipInstruction", 0);
             PlayerPrefs.Save();
         }
+
+        
     }
 
     IEnumerator ChapterOneFailComic()
@@ -326,9 +339,10 @@ public class FinalCameraController : MonoBehaviour
         isfishTalking = !isfishTalking;
     }
 
-    public void FishTalkAccessFromScript(string keyWord)
+    public void FishTalkAccessFromScript(string keyWord, bool reset)
     {
         // CancelAllUI(false);
+        if(reset) isfishTalking = false;
         if (isfishTalking == false)
         {
             fishTalk.SetActive(true);
@@ -402,7 +416,7 @@ public class FinalCameraController : MonoBehaviour
         phone.SetActive(false);
         CameraMovement.previousPage = CameraMovement.currentPage;
         Show(Inventory);
-        Hide(fishShoutCG);
+
         Mask.alpha = 0;
         if (!isTutorial) CheckInstructionButton.SetActive(true);
 
@@ -526,6 +540,11 @@ public class FinalCameraController : MonoBehaviour
             }
             else
             {
+                if(LevelManager.ending) 
+                {
+                    DisableInput(false);
+                    LevelManager.endingPopupWindow.SetActive(true);
+                }
                 myCameraState = CameraState.Subway;
                 RatingSys.GoBackToSubway();
             }
@@ -556,7 +575,9 @@ public class FinalCameraController : MonoBehaviour
             return;
         }
 
-        if(LevelManager.ending) DemoEndButton.SetActive(true);
+        if(LevelManager.ending) {
+            LevelManager.endingParticleEffect.SetActive(true);
+        }
 
         CancelAllUI(false);
 
@@ -710,6 +731,7 @@ public class FinalCameraController : MonoBehaviour
 
     public void Hide(CanvasGroup UIGroup)
     {
+        if(UIGroup == fishShoutCG) fishShouting = false;
         UIGroup.alpha = 0f; //this makes everything transparent
         UIGroup.blocksRaycasts = false; //this prevents the UI element to receive input events
         UIGroup.interactable = false;
@@ -717,6 +739,7 @@ public class FinalCameraController : MonoBehaviour
 
     public void Show(CanvasGroup UIGroup)
     {
+        if(UIGroup == fishShoutCG) fishShouting = true;
         UIGroup.alpha = 1f;
         UIGroup.blocksRaycasts = true;
         UIGroup.interactable = true;
@@ -725,6 +748,7 @@ public class FinalCameraController : MonoBehaviour
     public void ChangeToAdvertisement()
     {
         //Hide(subwayBackground);
+        
         if (myCameraState != CameraState.Subway)
         {
             return;

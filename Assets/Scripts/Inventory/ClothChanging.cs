@@ -255,12 +255,12 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         if(LevelManager.neverGoLandF)
         {
             LevelManager.neverGoLandF = false;
-            LevelManager.ShowLFReturnComic();
-            LostAndFound.ShaderOn();
+            
+            StartCoroutine(LevelManager.GoLostAndFoundFirstTime());
         }
         else if(LevelManager.stage > 1)
         {
-            LevelManager.ShowUIRate();
+            // LevelManager.ShowUIRate();
         }
 
         currentSprite = GetComponent<Image>().sprite;
