@@ -317,6 +317,9 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         if(clothName != 2) return;
         myAnimator.SetBool("isShining", false);
 
+        //fish boss stop talking
+        TutorialManagerNew.inventoryFish.SetActive(false);
+
 
         //这个script是挂在inventory的衣服UI上的
         returnClothNotice.SetActive(false);

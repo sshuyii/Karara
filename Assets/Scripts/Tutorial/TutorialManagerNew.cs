@@ -50,9 +50,9 @@ public class TutorialManagerNew : MonoBehaviour
 
     [SerializeField]
     private GameObject Exclamation, Posture, Phone, HintUI, ScrollHint, clothBag, machineFull, machineEmpty, phoneAnimation, changePostureButton,
-        machineOccupied, ClothUI, KararaC, KararaB, KararaA, ClothFish, EmojiBubble, InventoryBackButton, Ins, Shutter, Notice, FishTalkButton, inventoryBubble, inventoryFish, sweet;
+        machineOccupied, ClothUI, KararaC, KararaB, KararaA, ClothFish, EmojiBubble, InventoryBackButton, Ins, Shutter, Notice, FishTalkButton, inventoryBubble, sweet;
 
-    public GameObject Hint2D, HintScreen;
+    public GameObject Hint2D, HintScreen, inventoryFish;
     [SerializeField]
     private CanvasGroup CameraBackground, scream, Inventory, Flashlight, FloatingUI, RedDot, Comic;
 
@@ -201,8 +201,8 @@ public class TutorialManagerNew : MonoBehaviour
         HintScreen.transform.position = InventoryUIPos[1];
 
         //对话框出现3s后消失（暂时
-        yield return new WaitForSeconds(3f);
-        inventoryFish.SetActive(false);
+        // yield return new WaitForSeconds(3f);
+        // inventoryFish.SetActive(false);
     }
 
     bool longTap = false;
@@ -210,7 +210,6 @@ public class TutorialManagerNew : MonoBehaviour
 
     void Update()
     {
-        
     
         if(TutorialTransition.TransitionStage == 3)
         {
@@ -1243,6 +1242,7 @@ public class TutorialManagerNew : MonoBehaviour
     public void ClickKarara()
     {
         if(stepCounter < 9) return;
+        if(stepCounter > 10) return;//过了阶段再点击要给个提示，告诉玩家可以点，但是现在不要点
         if (deactiveButtons) return;
         Hint2D.SetActive(false);
         forwardOneStep = true;
@@ -1632,6 +1632,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     IEnumerator KararaEatSweet()
     {
+        kararaAnimator.SetTrigger("sweet");
         yield return new WaitForSeconds(0.3f);
         // inventoryBubble.SetActive(true);
         // yield return new WaitForSeconds(2f);

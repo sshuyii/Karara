@@ -111,4 +111,12 @@ public class StartTutorialNew : MonoBehaviour
         }
 
     }
+
+    public void clickSkip()
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("StreetStyle");
+
+        print("click machine");
+
+    }
 }
