@@ -539,12 +539,19 @@ public class FinalCameraController : MonoBehaviour
                 //todo: kind of connfused
             }
             else
-            {
-                if(LevelManager.ending) 
+            {   if(myCameraState == CameraState.App && LevelManager.ending && !LevelManager.vibrationHold)
                 {
-                    DisableInput(false);
                     LevelManager.endingPopupWindow.SetActive(true);
+                    return;
                 }
+
+                if(LevelManager.vibrationHold)
+                {
+                    LevelManager.StartEndingProcess();
+                    LevelManager.vibrationHold = false;
+                }
+
+                
                 myCameraState = CameraState.Subway;
                 RatingSys.GoBackToSubway();
             }
@@ -569,15 +576,19 @@ public class FinalCameraController : MonoBehaviour
 
     public GameObject DemoEndButton;
     public void ChangeToApp()
-    {
+    {   
+        
+        if(LevelManager.ending) {
+            LevelManager.MoveParticleEffect();
+        }
+
+        
         if (myCameraState != CameraState.Subway && myCameraState != CameraState.App)
         {
             return;
         }
 
-        if(LevelManager.ending) {
-            LevelManager.endingParticleEffect.SetActive(true);
-        }
+
 
         CancelAllUI(false);
 
@@ -795,6 +806,7 @@ public class FinalCameraController : MonoBehaviour
 
     public void DisableInput(bool temp)
     {
+        // false --> 不block interactable
         disableInputCG.blocksRaycasts = temp;
     }
 
@@ -906,4 +918,6 @@ public class FinalCameraController : MonoBehaviour
         }
         
     }
+
+   
 }
