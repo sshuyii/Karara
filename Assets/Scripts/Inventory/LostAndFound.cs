@@ -58,11 +58,11 @@ public class LostAndFound : MonoBehaviour
     
     public void clickLostFound()
     {
-        this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
-        this.transform.GetChild(0).gameObject.SetActive(false);
+        
         if (!isShowingNum)
         {
             ShaderOff();
+            this.transform.GetChild(0).gameObject.SetActive(true);
             lostFoundNum.SetText(totalCount.ToString());
             lostFoundNum.enabled = true;
             numBubble.SetActive(true);
@@ -70,6 +70,7 @@ public class LostAndFound : MonoBehaviour
         else
         {
 
+            this.transform.GetChild(0).gameObject.SetActive(false);
             lostFoundNum.enabled = false;
             numBubble.SetActive(false);
         }

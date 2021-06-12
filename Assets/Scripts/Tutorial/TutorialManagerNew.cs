@@ -131,7 +131,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     public TutorialTransition TutorialTransition;
     public Image progressBar;
-    public GameObject TutorialPost;
+    public GameObject TutorialPost,TutorialPostClone;
 
     
     void Start()
@@ -1359,6 +1359,9 @@ public class TutorialManagerNew : MonoBehaviour
         Debug.Log("click shutter");
         forwardOneStep = true;
         
+        string pose = postKararaImage.sprite.name;
+        PlayerPrefs.SetInt("KararaPose", (int)Char.GetNumericValue(pose[pose.Length -1]));
+	    PlayerPrefs.Save();
     }
 
 
@@ -1618,7 +1621,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     public void ProceedToChapterOne()
     {
-        TutorialPost.transform.SetParent(null);
+        
         SceneManager.LoadScene("StreetStyle");
     }
 

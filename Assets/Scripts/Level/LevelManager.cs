@@ -194,7 +194,8 @@ public class LevelManager : MonoBehaviour
     }
 
     public Sprite demoEndPost;
-    public GameObject endingParticleEffect,endingPopupWindow;
+    public GameObject endingParticleEffect,endingPopupWindow,InsParticleParent;
+    public bool vibrationHold = false;
     public void StageTrasiting()
     {
         stageTransiting = true;
@@ -210,24 +211,42 @@ public class LevelManager : MonoBehaviour
             //@ demo stop at here
             // Show(transitComic.GetComponent<CanvasGroup>());
             //终点
-            FinalCameraController.ChangeToSubway();
-            FinalCameraController.enableScroll = false;
-            FinalCameraController.DisableInput(true);
-            Handheld.Vibrate();
-            ending = true;
-            
-            
-            InstagramController.AddInsPost("Alex", demoEndPost);
 
+            ending = true;
+
+            if(FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
+            {
+                StartEndingProcess();
+            }
+            else{
+                vibrationHold = true;
+            }
+
+            if(FinalCameraController.myCameraState != FinalCameraController.CameraState.App)
+                InstagramController.AddInsPost("A", demoEndPost);
+
+            SubwayMovement.pauseBeforeMove = true;
+            
         }
 
     }
 
-
-    //@ demo
-    public void ClickDemoEnd()
+    public void StartEndingProcess()
     {
-        SceneManager.LoadScene("StartScene", LoadSceneMode.Single);
+        FinalCameraController.enableScroll = false;
+        FinalCameraController.DisableInput(true);
+        Handheld.Vibrate();
+        endingParticleEffect.SetActive(true);
+    }
+    public IEnumerator MoveParticleEffect()
+    {
+        FinalCameraController.DisableInput(false);
+        endingParticleEffect.transform.localPosition = new Vector3(0,0,0);
+        endingParticleEffect.transform.SetParent(InsParticleParent.transform);
+        
+        yield return new WaitForSeconds(1f);
+        endingParticleEffect.SetActive(false);
+        
     }
 
     public void ClickComic()
@@ -561,10 +580,12 @@ public class LevelManager : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
         SubwayMovement.BlackScreen.SetActive(false);
-        LostAndFound.clickLostFound();
+        LostAndFound.transform.gameObject.GetComponent<SpriteRenderer>().enabled = true;
         
+        yield return new WaitForSeconds(1f);
+        LostAndFound.clickLostFound();
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         SubwayMovement.BlackScreen.SetActive(true);
         LostAndFound.clickLostFound();
 
@@ -586,7 +607,10 @@ public class LevelManager : MonoBehaviour
     }
     private bool lastTextFinish;
 
-
+     public void ClickEndingYes()
+    {
+         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
+    }
 
     public void Hide(CanvasGroup UIGroup)
     {

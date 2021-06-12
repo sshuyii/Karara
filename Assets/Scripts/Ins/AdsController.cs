@@ -76,7 +76,7 @@ public class AdsController : MonoBehaviour
         public List<int> myPoses;
     }
 
-    
+
     void Start()
     {
 
@@ -130,15 +130,22 @@ public class AdsController : MonoBehaviour
 
         S2UpperBound = S1UpperBound + S2UpperBound;
 
-        foreach(PosterPosePair pair in PosterPosePairs_Chap1)
+        foreach (PosterPosePair pair in PosterPosePairs_Chap1)
         {
-            if(pair.myPoses != null){
-                AdsDic[pair.AdName].AddUsalbePose(pair.myPoses);
+            if (pair.myPoses != null)
+            {
+                if (pair.myPoses.Count == 0)
+                {
+                    List<int> l = new List<int>() { 0, 1, 2, 3 };
+                    AdsDic[pair.AdName].AddUsalbePose(l);
+                }
+
+                else AdsDic[pair.AdName].AddUsalbePose(pair.myPoses);
             }
-            else{
-                List<int> l = new List<int>(){0,1,2,3};
-                AdsDic[pair.AdName].AddUsalbePose(l);
-            }
+
+
+            Debug.Log(pair.AdName + " pose count " + AdsDic[pair.AdName].myPoses.Count);
+
         }
 
     }
@@ -183,16 +190,16 @@ public class AdsController : MonoBehaviour
 
     public void ChangePosture()
     {
-
-        currentPoseIdx++;
+        Debug.Log("poster " + currentAd);
+        // currentPoseIdx++;
         int loopCounter = poses.Count;
-        while(loopCounter > 0)
+        while (loopCounter > 0)
         {
-            
+
             currentPoseIdx++;
             if (currentPoseIdx >= poses.Count) currentPoseIdx = 0;
             List<int> thisPoses = AdsDic[currentAd].myPoses;
-            if(thisPoses.Contains(currentPoseIdx))
+            if (thisPoses.Contains(currentPoseIdx))
             {
                 bodyImage.sprite = poses[currentPoseIdx];
                 ChangeClothEnterAds();
@@ -303,6 +310,7 @@ public class AdsController : MonoBehaviour
 
                 nextAdSpot.SetActive(true);
                 AdsWaitinglist.Dequeue();
+                adsShown++;
                 StartCoroutine(RendererFadeIn(nextAdRender));
                 break;
             }
@@ -316,6 +324,7 @@ public class AdsController : MonoBehaviour
         if (nextAdIdx > 0)
         {
             Ad newAd = AdsWaitinglist.Dequeue();
+            adsShown++;
             SpriteRenderer r = AdsInSubway[nextAdIdx].GetComponent<SpriteRenderer>();
             r.sprite = newAd.sprite;
             StartCoroutine(RendererFadeIn(r));

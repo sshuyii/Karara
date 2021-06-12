@@ -363,12 +363,14 @@ public class SubwayMovement : MonoBehaviour
             }
             else if (LevelManager.stage > 2 && !atInitailStation)
             {
-                AdsController.UpdatePosters();
-                trainMove();
+                // AdsController.UpdatePosters();
+                // trainMove();
             }
             else
             {
+                
                 trainMove();
+                if(LevelManager.stage == 1) ActionsOnScreen4();
             }
 
         }
@@ -684,7 +686,7 @@ public class SubwayMovement : MonoBehaviour
 
         ActionsOnScreen4();
 
-        
+        yield return new WaitForSeconds(1f);
         if(!hasBagtoReturn) // case 2
         {
             FinalCameraController.GotoPage(1);

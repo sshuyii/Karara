@@ -18,7 +18,7 @@ public class InstagramController : MonoBehaviour
     private AdsController AdsController;
 
     private SubwayMovement SubwayMovement;
-    
+
     public int currentPostNum;
 
     public SortedDictionary<GameObject, int> allPostsDict = new SortedDictionary<GameObject, int>();
@@ -31,10 +31,10 @@ public class InstagramController : MonoBehaviour
     public GameObject postReplyParent;
 
     public GameObject redDot;
-   
+
     public GameObject postPrefab;
     public GameObject postParent;
-    
+
     public GameObject replyPrefab;
     public Transform replyParent;
 
@@ -49,19 +49,19 @@ public class InstagramController : MonoBehaviour
     //change post in karara's page
     public GameObject filmParent;
     public GameObject photoPostPrefab;
-    
+
     //reply list
     public List<GameObject> replyList = new List<GameObject>();
-    
+
     //take picture page gameobjects
     public GameObject PosturePostPrefab;
     public GameObject PosturePostPrefabNew;
 
     public GameObject originalPosture;
     public SpriteRenderer[] PosturePostImageList;
-    
-    
-    
+
+
+
     public bool replyChosen = false;
 
     public Sprite unfollow;
@@ -112,12 +112,12 @@ public class InstagramController : MonoBehaviour
     private Text followerNumMatchUI, targetFollowerNumMatchUI;
     [SerializeField]
     private Image progress;
-    
+
 
 
     [SerializeField]
-    private GameObject albumContent, savedPhotoPrefab,savedPhotoLarge, firstPost;
-    
+    private GameObject albumContent, savedPhotoPrefab, savedPhotoLarge;
+
 
 
     private GameObject currentLargePhoto;
@@ -139,17 +139,16 @@ public class InstagramController : MonoBehaviour
 
     // Start is called before the first frame update
     LevelManager LevelManager;
-    GameObject tutorialPost;
+
+
+    public GameObject KararaTutorialPost;
     void Start()
     {
 
 
 
-        //get the tutorial post into postList
-        firstPost = postParent.transform.GetChild(0).gameObject;
-        
-        
-        
+
+
         redDot.SetActive(false);
         SubwayMovement = GameObject.Find("---StationController").GetComponent<SubwayMovement>();
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
@@ -160,30 +159,46 @@ public class InstagramController : MonoBehaviour
 
         PosturePostImageList = originalPosture.GetComponentsInChildren<SpriteRenderer>();
 
-        
-        tutorialPost = GameObject.Find("TutorialPost");
-        if(tutorialPost!= null) 
-        {
-            Destroy(postParent.transform.GetChild(0).gameObject);
-            tutorialPost.transform.SetParent(postParent.transform);
-            tutorialPost.transform.SetAsFirstSibling();
-        }
+
+        // KararaTutorialPost = ("TutorialPost(Clone)");
+        // if(KararaTutorialPost!= null) 
+        // {
+        //     Destroy(postParent.transform.GetChild(0).gameObject);
+        //     KararaTutorialPost.transform.SetParent(postParent.transform);
+        //     KararaTutorialPost.transform.SetAsFirstSibling();
+        // }
+
+
+
+        // if(DontDestroyOnLoad != null) {
+        //     KararaTutorialPost = DontDestroyOnLoad.transform.GetChild(0).gameObject;
+        //     KararaTutorialPost.transform.SetParent(profileContent.transform);
+        //     tutorialPost.transform.SetAsFirstSibling();
+        // }
+
+        AddTutorialPost();
+
 
     }
 
-   
+
     // Update is called once per frame
     void Update()
     {
-       
-        
+
+
 
     }
 
-    
-  
 
 
+    public Sprite[] tutorialPoses;
+    public void AddTutorialPost()
+    {
+        int poseNum = PlayerPrefs.GetInt("KararaPose");
+        if(poseNum == 0) return;
+        KararaTutorialPost.GetComponent<Image>().sprite = tutorialPoses[poseNum-1];
+    }
 
     public void clearProfileContent()
     {
@@ -195,7 +210,7 @@ public class InstagramController : MonoBehaviour
 
     public void ClickProfilePhoto(string name)
     {
-        Debug.Log("Click Profile Photo "+name);
+        Debug.Log("Click Profile Photo " + name);
         FinalCameraController.MatchToSub();
         clearProfileContent();
         displayProfileContent(name);
@@ -204,10 +219,10 @@ public class InstagramController : MonoBehaviour
 
     public void displayProfileContent(string name)
     {
-        
+
         //todo: 这里暂时用的只有两个人的post
-        
-         NPC thisNPC = SpriteLoader.NPCDic[name];
+
+        NPC thisNPC = SpriteLoader.NPCDic[name];
         List<Sprite> selectedList = thisNPC.shownPosts;
 
 
@@ -215,10 +230,10 @@ public class InstagramController : MonoBehaviour
         {
 
             GameObject newPost = Instantiate(PosturePostPrefabNew, profileContent.transform);
-        
+
             var profile = newPost.transform.Find("ProfilePhoto").gameObject;
             var profileName = newPost.transform.Find("ProfileName").gameObject.GetComponent<TextMeshProUGUI>();
-        
+
             profile.GetComponent<Image>().sprite = thisNPC.profile;
             profileName.text = thisNPC.name;
             newPost.transform.Find("Post").gameObject.GetComponent<Image>().sprite = sprt;
@@ -250,19 +265,20 @@ public class InstagramController : MonoBehaviour
 
     public void AddInsPost(string NPCName, Sprite postImg)
     {
+        if (!redDot.active) redDot.SetActive(true);
         GameObject newPost = Instantiate(PosturePostPrefabNew, postParent.transform);
-        
+
         NPC thisNPC = SpriteLoader.NPCDic[NPCName];
         var profile = newPost.transform.Find("ProfilePhoto").gameObject;
         var profileName = newPost.transform.Find("ProfileName").gameObject.GetComponent<TextMeshProUGUI>();
-        profile.GetComponent<Button>().onClick.AddListener( () => ClickProfilePhoto(NPCName));
+        profile.GetComponent<Button>().onClick.AddListener(() => ClickProfilePhoto(NPCName));
         profile.GetComponent<Image>().sprite = thisNPC.profile;
         profileName.text = thisNPC.name;
         newPost.transform.Find("Post").gameObject.GetComponent<Image>().sprite = postImg;
 
         newPost.transform.SetAsFirstSibling();
-        
-        if(NPCName == "Karara") thisNPC.Add2KararaPostList(postImg);
+
+        if (NPCName == "Karara") thisNPC.Add2KararaPostList(postImg);
     }
 
     private Texture2D texture2Save;
@@ -271,14 +287,14 @@ public class InstagramController : MonoBehaviour
     public bool RunOnRealPhone = false;
     public void SavePhoto()
     {
-        
-        if(RunOnRealPhone) Debug.Log("local save image KARARA" + savedPhotoCount.ToString());
+
+        if (RunOnRealPhone) Debug.Log("local save image KARARA" + savedPhotoCount.ToString());
         else Debug.Log("save image KARARA" + savedPhotoCount.ToString());
         savedPhotoCount++;
     }
 
-   
-    
+
+
     public void SetSavePage(Sprite photo, Texture2D texture)
     {
         PicInSavePage.sprite = photo;
@@ -296,7 +312,7 @@ public class InstagramController : MonoBehaviour
         AddFollower();
         AdsController.UseAdAndPose();
 
-        
+
         FinalCameraController.ChangeToApp();
 
     }
@@ -325,7 +341,7 @@ public class InstagramController : MonoBehaviour
 
     public void RefreshPost(string maxOwner, int rating)
     {
-        if(LevelManager.stage <= 2) return;
+        if (LevelManager.stage <= 2) return;
         storedName = maxOwner;
         storedRating = rating;
 
@@ -344,7 +360,7 @@ public class InstagramController : MonoBehaviour
 
     public void RefreshPost()
     {
-        if(LevelManager.stage <= 2) return;
+        if (LevelManager.stage <= 2) return;
         redDot.SetActive(true);
         waitingForRefresh = false;
 
@@ -370,7 +386,7 @@ public class InstagramController : MonoBehaviour
     }
 
 
-   
+
 
 
 
@@ -392,16 +408,16 @@ public class InstagramController : MonoBehaviour
     }
 
 
-    public void RepeatPostureOrBG(int condition )
+    public void RepeatPostureOrBG(int condition)
     {
-        
+
         if (condition == 1)
         {
             Explanation.sprite = repeatPosture;
             //sendButton.interactable = false;
 
         }
-        else if (condition ==2)
+        else if (condition == 2)
         {
             Explanation.sprite = repeatBG;
             //sendButton.interactable = false;
@@ -412,7 +428,7 @@ public class InstagramController : MonoBehaviour
             Explanation.sprite = transparent;
         }
 
-        if(condition == 1 || condition == 2) Unfollow();
+        if (condition == 1 || condition == 2) Unfollow();
 
 
 
