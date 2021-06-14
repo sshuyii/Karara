@@ -32,7 +32,7 @@ public class AdsController : MonoBehaviour
     public string currentAd;
     public int currentPoseIdx;
 
-
+    
 
     public Sprite transparent;
 
@@ -60,9 +60,8 @@ public class AdsController : MonoBehaviour
 
 
 
-    [Header("Level Related")]
-    public int S1UpperBound;
-    public int S2UpperBound;
+     int S1UpperBound;
+     int S2UpperBound;
     LevelManager LevelManager;
 
 
@@ -76,13 +75,14 @@ public class AdsController : MonoBehaviour
         public List<int> myPoses;
     }
 
-
+    ValueEditor ValueEditor;
     void Start()
     {
 
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
         SpriteLoader = GameObject.Find("---SpriteLoader").GetComponent<SpriteLoader>();
         LevelManager = FinalCameraController.LevelManager;
+        ValueEditor = GameObject.Find("---ValueEditor").GetComponent<ValueEditor>();
 
         //StreamWriter writer = new StreamWriter("./file2.txt");
         //StreamReader reader = new System.IO.StreamReader("./file2.txt");
@@ -127,7 +127,8 @@ public class AdsController : MonoBehaviour
         wearingClothes[3] = SpriteLoader.defaultClothes[3];
         wearingClothes[2] = SpriteLoader.defaultClothes[2];
 
-
+        S1UpperBound = ValueEditor.PosterRelated.S1UpperBound;
+        S2UpperBound = ValueEditor.PosterRelated.S2UpperBound;
         S2UpperBound = S1UpperBound + S2UpperBound;
 
         foreach (PosterPosePair pair in PosterPosePairs_Chap1)
@@ -296,7 +297,7 @@ public class AdsController : MonoBehaviour
     public void UpdatePosters()
     {
 
-        if (adsShown - 2 >= usedAds.Count) return;
+        if (adsShown -  ValueEditor.PosterRelated.shownUsedDifference >= usedAds.Count) return;
 
         nextAdIdx = -1;
 

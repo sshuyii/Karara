@@ -9,7 +9,7 @@ public class ValueEditor : MonoBehaviour
 {
     // Start is called before the first frame update
     public TimeRelated TimeRelated;
-
+    public PosterRelated PosterRelated;
     void Start()
     {
         
@@ -36,4 +36,15 @@ public class ValueEditor : MonoBehaviour
 
 
     }
+
+
+    [System.Serializable]
+    public class PosterRelated
+    {
+      public int shownUsedDifference; //1
+
+      public int S1UpperBound; //3
+      public int S2UpperBound; //3
+    }
+
 

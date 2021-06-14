@@ -55,9 +55,9 @@ public class ClockRotate : MonoBehaviour
         {
             //now the timer is placed on the bag
             //zRotation = 360 / (3 *(SubwayMovement.stayTime + SubwayMovement.moveTime));
-            fillAmount = 1;
-            selfImage.fillAmount = fillAmount;
-            selfImage.enabled = true;
+            // fillAmount = 1;
+            // selfImage.fillAmount = fillAmount;
+            // selfImage.enabled = true;
 
         }
 
@@ -114,12 +114,12 @@ public class ClockRotate : MonoBehaviour
                 fastForward = true;
                 //SubwayMovement.Show(bubble);
                 //myButton.enabled = true;
-                selfImage.enabled = true;
+                // selfImage.enabled = true;
             }
             else if (!SubwayMovement.isMoving)
             {
                 fastForward = false;
-                selfImage.enabled = false;
+                // selfImage.enabled = false;
                 //SubwayMovement.Hide(bubble);
                 //myButton.enabled = false;
             }

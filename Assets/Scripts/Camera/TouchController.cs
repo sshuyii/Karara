@@ -287,7 +287,10 @@ public class TouchController : MonoBehaviour
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     FinalCameraController.ChangeToMap();
                     break;
-
+                case "subwayMap_Top":
+                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                    FinalCameraController.ChangeToMap();
+                    break;
                 case "Lost&Found_basket":
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     LostAndFound.clickLostFound();

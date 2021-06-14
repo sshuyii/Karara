@@ -301,6 +301,7 @@ public class WasherController : MonoBehaviour
             return;
         }
 
+        if(clothNum ==0) return;
         Debug.Log("machine " + number.ToString() + " clickMachine()");
         //        if (clothNum == 0 && shut == 0) //if there's no cloth in the door, don't let it open
         //        {

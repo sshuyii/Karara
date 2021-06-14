@@ -98,6 +98,7 @@ public class CameraMovement : MonoBehaviour
         T_total = movingDist / smoothSpeed;
 
         going = true;
+        // FinalCameraController.CancelAllUI(false);
         //StartCoroutine(Going());
 
     }

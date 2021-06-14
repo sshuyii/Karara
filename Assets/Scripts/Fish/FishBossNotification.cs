@@ -40,30 +40,33 @@ public class FishBossNotification : MonoBehaviour
 
     public void HideFish()
     {
-        // FishBossUI.SetActive(false);
-        FishBossUI.transform.GetComponent<CanvasGroup>().alpha = 0f;
-        isActive = false;
-        FishText.text = defaultString;
+
+        // FishBossUI.transform.GetComponent<CanvasGroup>().alpha = 0f;
+        // isActive = false;
+        // FishText.text = defaultString;
     }
 
     public void ShowFish(string content)
     {
-        FishText.text = content;
-        StartCoroutine(ShowFish());
+        // FishText.text = content;
+        // StartCoroutine(ShowFish());
     }
 
 
     public IEnumerator ShowFish()
     {
-        FishBossUI.transform.GetComponent<CanvasGroup>().alpha = 1f;
-        isActive = true;
-        ClickFishBossUI();
+        // FishBossUI.transform.GetComponent<CanvasGroup>().alpha = 1f;
+        // isActive = true;
+        // ClickFishBossUI();
 
         
-        yield return new WaitForSeconds(ValueEditor.TimeRelated.fishNotificationDisplay);
-        ClickFishBossUI();
-        FishBossUI.transform.GetComponent<CanvasGroup>().alpha = 0f;
-        isActive = false;
+        // yield return new WaitForSeconds(ValueEditor.TimeRelated.fishNotificationDisplay);
+        // ClickFishBossUI();
+        // FishBossUI.transform.GetComponent<CanvasGroup>().alpha = 0f;
+        // isActive = false;
+
+        yield return null;
+
         //auto hide after five seconds;
 
     }
@@ -72,18 +75,18 @@ public class FishBossNotification : MonoBehaviour
 
     public void ClickFishBossUI()
     {
-        isOut = !isOut;
-        Debug.Log("clickFish");
-        // myAnimator.SetTrigger("MoveOut");
+        // isOut = !isOut;
+        // Debug.Log("clickFish");
         
     }
 
 
     IEnumerator SetIdle(float time)
     {
-        yield return new WaitForSeconds(time);
+        // yield return new WaitForSeconds(time);
 
-        myAnimator.SetTrigger("Idle");
+        // myAnimator.SetTrigger("Idle");
+        yield return null;
     }
 
     public void ShowBubble()

@@ -390,10 +390,13 @@ public class SubwayMovement : MonoBehaviour
 
         // banner shows 10s before moving
         // does not work on stage one
-        if (LevelManager.stage > CountdownOccureStation - 1 && !atInitailStation && timerStay > stayTime - 10f
-            && !LevelManager.upgradeReadyOrNot)
+        if ( !atInitailStation && timerStay > stayTime - 10f && !LevelManager.upgradeReadyOrNot)
         {
-            if (!Banner.active) Banner.SetActive(true);
+            if (!Banner.active) 
+            {
+                Banner.SetActive(true);
+                BagsController.BagsOnDueShaderOn();
+            }
             else
             {
                 int leftT = (int)(stayTime - timerStay);
@@ -413,13 +416,6 @@ public class SubwayMovement : MonoBehaviour
     void OpenDoor()
     {
         //没有章节结束
-        //if (roundNum == 2)
-        //{
-        //    //第一章结束
-        //    FinalCameraController.ChapterOneEnd = true;
-        //    isTerminated = true;
-        //}
-
         OpeningProcess = true;
         StartCoroutine(AudioManager.PlayAudioInStation(stayTime));
 
@@ -690,7 +686,7 @@ public class SubwayMovement : MonoBehaviour
         if(!hasBagtoReturn) // case 2
         {
             FinalCameraController.GotoPage(1);
-            FinalCameraController.FishTalkAccessFromScript("d",true);
+            FinalCameraController.FishTalkAccessFromScript("D",true);
         }
         else 
         {
@@ -703,7 +699,7 @@ public class SubwayMovement : MonoBehaviour
                     FinalCameraController.ChangeCameraSpeed(1f);
                     if(i != 0) FinalCameraController.GotoPage(3);
                     else FinalCameraController.GotoPage(2);
-                    yield return new WaitForSeconds(0.5f);
+                    yield return new WaitForSeconds(1f);
 
                     if(clothNum < 0)
                     {
@@ -711,7 +707,7 @@ public class SubwayMovement : MonoBehaviour
                         LevelManager.MiniNotices[i].GetComponentInChildren<TextMeshPro>().text = clothNum.ToString();
                         if(!LevelManager.UIRateShown) {
                         //case 3
-                            FinalCameraController.FishTalkAccessFromScript("c",true);
+                            FinalCameraController.FishTalkAccessFromScript("C",true);
                             LevelManager.ShowUIRate();
                             yield return new WaitForSeconds(1f);
                         }
@@ -719,7 +715,7 @@ public class SubwayMovement : MonoBehaviour
                     yield return new WaitForSeconds(1f);
                     LevelManager.MiniNotices[i].SetActive(false);
                     BagsController.DropAllBagsInWasher(i);
-                    FinalCameraController.FishTalkAccessFromScript("b",true);
+                    FinalCameraController.FishTalkAccessFromScript("B",true);
                 }
                 
             }
@@ -813,8 +809,8 @@ public class SubwayMovement : MonoBehaviour
     {
         //current station means the station the train is heading to
 
-
-        if (LevelManager.stage > 1) atInitailStation = false;
+        Banner.SetActive(false);
+        atInitailStation = false;
         LocalizedString locString = "Fish/DoYourJob";
         string translation = locString;
         //FinalCameraController.fishTalkText.text = translation;

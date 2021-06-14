@@ -125,10 +125,11 @@ public class BagsController : MonoBehaviour
         wc.DoorImage.sprite = washers.openedDoor;
         wc.Occupied.SetActive(false);
 
-        int star = wc.clothNum - 4;
+        int absentClothNum = wc.clothNum - 4; // 0 -1 -2 -3 -4 五种情况
         int oneStarForBag = 0;
         if(bag.GetComponent<ClothToMachine>().timeUp == false && LevelManager.stage > 1 ) oneStarForBag++;
-        StartCoroutine(LevelManager.StopToMinusStar( notice, star, oneStarForBag));
+        Debug.Log("star num :" + absentClothNum + "bag star: "+ oneStarForBag);
+        StartCoroutine(LevelManager.StopToMinusStar( notice, absentClothNum, oneStarForBag));
     }
 
     public void HideNotice()
@@ -249,5 +250,16 @@ public class BagsController : MonoBehaviour
         timeUpBagNum++;
         
     }
-
+    public void BagsOnDueShaderOn()
+    {
+        foreach(GameObject bag in bagsInCar)
+        {
+            ClothToMachine ctm = bag.GetComponent<ClothToMachine>();
+            if(ctm.underMachineNum>= 0 && ctm.timer < 11f)
+            {
+                Animator bagAnim = ctm.transform.GetComponent<Animator>();
+                bagAnim.SetTrigger("blingbling");
+            }
+        }
+    }
 }

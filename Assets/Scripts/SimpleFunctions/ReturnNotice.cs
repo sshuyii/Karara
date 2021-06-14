@@ -29,9 +29,11 @@ public class ReturnNotice : MonoBehaviour
         else if(star > 0)
         {
             starNum.text = "+" + star;
+            //只有+1
         }
         else{
-            UI_minusStar.SetActive(false);
+            // UI_minusStar.SetActive(false);
+            starNum.text = "-0";
         }
     }
 
@@ -43,13 +45,13 @@ public class ReturnNotice : MonoBehaviour
         {
             clothNum.text = cloth.ToString();
         }
-        else if(cloth > 0)
-        {
-            clothNum.text = " ";
-            //如果没少衣服的话就不显示数字了，但是星星+1
-        }
         else{
-            UI_minusCloth.SetActive(false);
+            clothNum.text = "-0";
         }
+    }
+
+    public void HideStarSign()
+    {
+        UI_minusStar.SetActive(false);
     }
 }

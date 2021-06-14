@@ -224,7 +224,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         returnBG.SetActive(false);
         longPress = false;
 
-        if(originBag != null) AllMachines.PutClothBackToMachine(originBag,originMachine,originSlotNum);
+        // if(originBag != null) AllMachines.PutClothBackToMachine(originBag,originMachine,originSlotNum);
 
         bool bagFoundInCar = originBag != null;
         if(bagFoundInCar) AllMachines.PutClothBackToMachine(originBag,originMachine,originSlotNum);

@@ -194,6 +194,7 @@ public class AllMachines : MonoBehaviour
             wc.buttons[slotNum - 1].GetComponent<SpriteRenderer>().enabled = true;
             wc.buttons[slotNum - 1].GetComponent<BoxCollider2D>().enabled = true;
             wc.clothNum++;
+            Debug.Log("washer " + wc.number + " cloth num: " + wc.clothNum);
             return true;
         }
 

@@ -70,7 +70,7 @@ public class LostAndFound : MonoBehaviour
         else
         {
 
-            this.transform.GetChild(0).gameObject.SetActive(false);
+            // this.transform.GetChild(0).gameObject.SetActive(false);
             lostFoundNum.enabled = false;
             numBubble.SetActive(false);
         }

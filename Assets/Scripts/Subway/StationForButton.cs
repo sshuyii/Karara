@@ -245,17 +245,17 @@ public class StationForButton : MonoBehaviour
         ClickTab();
     }
 
-    public void ClickTab2()
-    {
-        tabNum = 2;
-        ClickTab();
-    }
+    // public void ClickTab2()
+    // {
+    //     tabNum = 2;
+    //     ClickTab();
+    // }
 
-    public void ClickTab3()
-    {
-        tabNum = 3;
-        ClickTab();
-    }
+    // public void ClickTab3()
+    // {
+    //     tabNum = 3;
+    //     ClickTab();
+    // }
 
     public void ClickTab()
     {

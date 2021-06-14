@@ -184,7 +184,7 @@ public class FinalCameraController : MonoBehaviour
     }
 
 
-    public void CancelAllUI(bool clickMachine)
+public void CancelAllUI(bool clickMachine)
     {
         inventorySlotMgt.CloseAllUI();
         if (!clickMachine) AllMachines.CloseAllMachines();
@@ -200,7 +200,35 @@ public class FinalCameraController : MonoBehaviour
         Hide(albumBackground);
         Hide(albumCG);
         Hide(albumDetailCG);
+        Hide(SavingPage);
+
+
+        isShown = false;
+        
+    }
+    public void CancelAllUI(bool clickMachine, CanvasGroup skipCG)
+    {
+        inventorySlotMgt.CloseAllUI();
+        if (!clickMachine) AllMachines.CloseAllMachines();
+        BagsController.HideNotice();
+        
+        InstructionDismiss();
+
+        List<CanvasGroup> allCG = new List<CanvasGroup>(){TakePhoto,SubwayMap,Inventory,frontPage,appBackground,
+            albumBackground,albumCG,SavingPage};
+        foreach(CanvasGroup cg in allCG)
+        {
+            if(skipCG != cg) Hide(cg);
+        }
+
+        Hide(TakePhoto);
+        Hide(SubwayMap);
+        Hide(Inventory);
         Hide(frontPage);
+        Hide(appBackground);
+        Hide(albumBackground);
+        Hide(albumCG);
+        Hide(albumDetailCG);
         Hide(SavingPage);
 
 
@@ -208,6 +236,7 @@ public class FinalCameraController : MonoBehaviour
         
     }
 
+    
 
     // Update is called once per frame
     void Update()
@@ -225,7 +254,8 @@ public class FinalCameraController : MonoBehaviour
         // }
 
 
-        if (TouchController.isSwiping == true)
+        if (TouchController.myInputState == TouchController.InputState.LeftSwipe||
+            TouchController.myInputState == TouchController.InputState.RightSwipe)
         {
             isSwipping = true;
         }
@@ -407,17 +437,15 @@ public class FinalCameraController : MonoBehaviour
         {
             return;
         }
-
-        CancelAllUI(false);
-
-
+        CancelAllUI(false,inventory);
+  
         myCameraState = CameraState.Closet;
         CameraMovement.atInventory = true;
         phone.SetActive(false);
         CameraMovement.previousPage = CameraMovement.currentPage;
         Show(Inventory);
 
-        Mask.alpha = 0;
+        // Mask.alpha = 0;
         if (!isTutorial) CheckInstructionButton.SetActive(true);
 
 
@@ -518,7 +546,7 @@ public class FinalCameraController : MonoBehaviour
         CameraMovement.atInventory = false;
         CameraMovement.JumpToPreviousPage();
         if (!isTutorial) CheckInstructionButton.SetActive(false);
-        Mask.alpha = 1;
+        // Mask.alpha = 1;
 
 
 

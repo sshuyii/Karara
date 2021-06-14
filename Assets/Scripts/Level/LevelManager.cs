@@ -171,7 +171,8 @@ public class LevelManager : MonoBehaviour
     public void UpdateStage()
     {
         Debug.Log("let's see ");
-        Hide(transitComic.GetComponent<CanvasGroup>());
+        // Hide(transitComic.GetComponent<CanvasGroup>());
+        Stage1EndingComicWindow.SetActive(false);
         HideHint();
         MapCar_Tut_S2.SetActive(false);
         Show(MapCar.GetComponent<CanvasGroup>());
@@ -201,7 +202,8 @@ public class LevelManager : MonoBehaviour
         stageTransiting = true;
         if (stage == 1)
         {
-            Show(transitComic.GetComponent<CanvasGroup>());
+            // Show(transitComic.GetComponent<CanvasGroup>());
+            Stage1EndingComicWindow.SetActive(true);
             Debug.Log("stransiting 1");
         }
 
@@ -523,15 +525,17 @@ public class LevelManager : MonoBehaviour
 
     private bool stage1Returned = false;
     public bool stage2UIRateFirst = false;
-    public IEnumerator StopToMinusStar( GameObject notice, int starNum, int oneStarForBag)
+    public IEnumerator StopToMinusStar( GameObject notice, int absentClothNum, int oneStarForBag)
     {
         
 
         if(stage == 1)
         {
-            notice.GetComponent<ReturnNotice>().SetStarNum(0);
-            notice.GetComponent<ReturnNotice>().SetClothNum(starNum);
-            if(starNum > -1) yield break;
+            // notice.GetComponent<ReturnNotice>().SetStarNum(0);
+            notice.GetComponent<ReturnNotice>().HideStarSign();
+            notice.GetComponent<ReturnNotice>().SetClothNum(absentClothNum);
+            if(absentClothNum > -1) yield break;
+
             if(!stage1Returned)
             {
                 stage1Returned = true;
@@ -543,12 +547,12 @@ public class LevelManager : MonoBehaviour
         else if(stage == 2)
         {
             
-            notice.GetComponent<ReturnNotice>().SetStarNum(starNum+oneStarForBag);
-            notice.GetComponent<ReturnNotice>().SetClothNum(starNum+oneStarForBag);
-            if(starNum > -1) yield break;
+            notice.GetComponent<ReturnNotice>().SetStarNum(absentClothNum+oneStarForBag);
+            notice.GetComponent<ReturnNotice>().SetClothNum(absentClothNum);
+            if(absentClothNum > -1) yield break;
             if(!UIRateShown)
             {
-                
+                //强制滚动未开+stage2第一次还包
                 stage2UIRateFirst = true;
                 FinalCameraController.DisableInput(true);
                 FinalCameraController.enableScroll = false;
@@ -556,7 +560,7 @@ public class LevelManager : MonoBehaviour
                 yield return new WaitForSeconds(0.3f);
                 
                 FinalCameraController.FishTalkAccessFromScript("A",true);
-                if(starNum < 0) FinalCameraController.Show(FinalCameraController.fishShoutCG);
+                if(absentClothNum < 0) FinalCameraController.Show(FinalCameraController.fishShoutCG);
                 FinalCameraController.DisableInput(false);
                 FinalCameraController.enableScroll = true;
             }
@@ -567,6 +571,7 @@ public class LevelManager : MonoBehaviour
 
     }
 
+    
     public IEnumerator GoLostAndFoundFirstTime()
     {
         FinalCameraController.enableScroll =false;
@@ -578,22 +583,23 @@ public class LevelManager : MonoBehaviour
         FinalCameraController.ChangeToSubway();
         FinalCameraController.GotoPage(4);
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         SubwayMovement.BlackScreen.SetActive(false);
         LostAndFound.transform.gameObject.GetComponent<SpriteRenderer>().enabled = true;
-        
-        yield return new WaitForSeconds(1f);
+        LostAndFound.ShaderOn();
+
+        yield return new WaitForSeconds(2f);
         LostAndFound.clickLostFound();
 
-        yield return new WaitForSeconds(1f);
-        SubwayMovement.BlackScreen.SetActive(true);
-        LostAndFound.clickLostFound();
-
-        yield return new WaitForSeconds(0.5f);
-        SubwayMovement.BlackScreen.SetActive(false);
-
+        yield return new WaitForSeconds(2f);
+        SubwayMovement.BlackScreen.SetActive(true);//不知道为啥会造成闪烁
         FinalCameraController.ChangeToCloth();
         FinalCameraController.CameraMovement.previousPage = 2;
+
+        yield return new WaitForSeconds(2f);
+        SubwayMovement.BlackScreen.SetActive(false);
+        LostAndFound.clickLostFound();
+
         FinalCameraController.enableScroll = true;
         FinalCameraController.DisableInput(false);
         
@@ -605,7 +611,15 @@ public class LevelManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
         FinalCameraController.FishTalkAccessFromScript("",false);
     }
+
+    public GameObject Stage1EndingComicWindow;
+    public void ClickStage1EndingComicYes()
+    {
+        Stage1EndingComicWindow.SetActive(false);
+        Tut_S2();
+    }
     private bool lastTextFinish;
+
 
      public void ClickEndingYes()
     {
