@@ -144,8 +144,8 @@ public class AllMachines : MonoBehaviour
     public int ClearMachine(int idx, bool timeup)
     {
         int star = 0;
-        if (!timeup) star++;
-        star = star + WasherControllerList[idx].clothNum - 4;
+        if (!timeup) star = 1;
+        else star = WasherControllerList[idx].clothNum - 4;
         Debug.Log("star " + star.ToString());
         GameObject bag = bagsUnderMahines[idx];
         InventorySlotMgt.TransparentizeClothes(bag);

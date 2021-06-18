@@ -495,8 +495,8 @@ public class SubwayMovement : MonoBehaviour
         if (LevelManager.stage < 2) return; // 如果stage 1 只产生包，不考虑其他
 
         //衣服丢太快可能不能满足UI RATE 出现条件
-        if (roundNum > 2) LostAndFound.DropLostFoundClothes(currentStation); //转完一圈 丢衣服+更post
-        else if (LevelManager.stage > 2 && !atInitailStation) InstagramController.RefreshPost("", FinalCameraController.RatingSys.rating);
+        // if (roundNum > 2) LostAndFound.DropLostFoundClothes(currentStation); //转完一圈 丢衣服+更post
+        // else if (LevelManager.stage > 2 && !atInitailStation) InstagramController.RefreshPost("", FinalCameraController.RatingSys.rating);
 
 
     }
@@ -643,6 +643,7 @@ public class SubwayMovement : MonoBehaviour
     {
 
         Banner.SetActive(false);
+        BagsController.BagsOnDueShaderOff();
         pauseBeforeMove = true;
         bool hasBagtoReturn = CountBagInMachine();
         // case 1 no force scrolling
@@ -701,10 +702,10 @@ public class SubwayMovement : MonoBehaviour
                     else FinalCameraController.GotoPage(2);
                     yield return new WaitForSeconds(1f);
 
-                    if(clothNum < 0)
+                    if(clothNum <= 0)
                     {
                         LevelManager.MiniNotices[i].SetActive(true);
-                        LevelManager.MiniNotices[i].GetComponentInChildren<TextMeshPro>().text = clothNum.ToString();
+                        LevelManager.MiniNotices[i].GetComponentInChildren<TextMeshPro>().text = Math.Abs(clothNum).ToString();
                         if(!LevelManager.UIRateShown) {
                         //case 3
                             FinalCameraController.FishTalkAccessFromScript("C",true);
@@ -737,7 +738,10 @@ public class SubwayMovement : MonoBehaviour
             if (cummulateStation % 2 == 0)
             {
                 AdsController.UpdatePosters();
-                StartCoroutine(LostAndFound.AnimationDropNUm());
+                if(LostAndFound.transform.gameObject.GetComponent<SpriteRenderer>().enabled)
+                    LostAndFound.clickLostFound();
+                
+                // StartCoroutine(LostAndFound.AnimationDropNUm());
             }
         }
         else
@@ -810,6 +814,7 @@ public class SubwayMovement : MonoBehaviour
         //current station means the station the train is heading to
 
         Banner.SetActive(false);
+        BagsController.BagsOnDueShaderOff();
         atInitailStation = false;
         LocalizedString locString = "Fish/DoYourJob";
         string translation = locString;

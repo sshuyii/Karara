@@ -139,12 +139,12 @@ public class LostAndFound : MonoBehaviour
     public void ShaderOn()
     {
         Animator myAnim = GetComponent<Animator>();
-        myAnim.SetTrigger("blingbling");
+        myAnim.SetBool("blingbling",true);
     }
 
     public void ShaderOff()
     {
         Animator myAnim = GetComponent<Animator>();
-        myAnim.SetTrigger("idle");
+        myAnim.SetBool("blingbling",false);
     }
 }

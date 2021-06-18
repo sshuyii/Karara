@@ -9,6 +9,7 @@ using UnityEngine.UI.Extensions;
 
 public class ClothToMachine : MonoBehaviour
 {
+    public bool isShining = false;
 
     private GameObject ClothInMachineController;
 
@@ -207,6 +208,7 @@ public class ClothToMachine : MonoBehaviour
 
         if(FinalCameraController.LevelManager.UIRateShown && FinalCameraController.LevelManager.stage2UIRateFirst)
         {
+            yield return new WaitForSeconds(1.5f);
             RatingSys.ChangeRating(star);
             FinalCameraController.LevelManager.stage2UIRateFirst = false;
             FinalCameraController.FishTalkAccessFromScript("B",true);

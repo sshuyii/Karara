@@ -15,7 +15,7 @@ public class SpriteLoader : MonoBehaviour
     private string mainPath = "Images/Cloth/";
     private string[] scenes = new string[3]{ "Inventory", "Subway", "UI" };
     private string[] clothTypes = new string[4] { "Bottom", "Top", "Shoe", "Everything" };
-    private string[] postures = new string[4] { "Pose1_1", "Pose1_2", "Pose1_3", "Pose1_4" };
+    private string[] postures = new string[6] { "Pose1_1", "Pose1_2", "Pose1_3", "Pose1_4", "Pose1_5", "Pose1_6"};
 
     public Cloth[] defaultClothes = new Cloth[4];
 

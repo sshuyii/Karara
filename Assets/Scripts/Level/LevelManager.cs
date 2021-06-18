@@ -100,7 +100,7 @@ public class LevelManager : MonoBehaviour
     private LostAndFound LostAndFound;
 
     public GameObject[] MiniNotices;
-
+    public GameObject vibration;
     enum returnBagState
     {
         stageOne
@@ -238,11 +238,13 @@ public class LevelManager : MonoBehaviour
         FinalCameraController.enableScroll = false;
         FinalCameraController.DisableInput(true);
         Handheld.Vibrate();
-        endingParticleEffect.SetActive(true);
+        vibration.SetActive(true);
+        
     }
     public IEnumerator MoveParticleEffect()
     {
         FinalCameraController.DisableInput(false);
+        endingParticleEffect.SetActive(true);
         endingParticleEffect.transform.localPosition = new Vector3(0,0,0);
         endingParticleEffect.transform.SetParent(InsParticleParent.transform);
         
@@ -334,9 +336,9 @@ public class LevelManager : MonoBehaviour
 
         if (stageTransiting && stage == 1)
         {
-            ShowHint();
-            MapHint.gameObject.transform.parent = GoBackButton.transform;
-            MapHint.gameObject.transform.localPosition = new Vector3(20f, 0, 0);
+            // ShowHint();
+            // MapHint.gameObject.transform.parent = GoBackButton.transform;
+            // MapHint.gameObject.transform.localPosition = new Vector3(20f, 0, 0);
             GoBackButton.SetActive(true);
             isInstruction = false;
 
@@ -366,6 +368,8 @@ public class LevelManager : MonoBehaviour
         comicClick = 0;
         HideHint();
 
+        FinalCameraController.ChangeToSubway();
+        FinalCameraController.GotoPage(3);
         FinalCameraController.ChangeToMap();
         // FinalCameraController.GotoPage(3);
         // Animator myAnim = MapInSubway.GetComponent<Animator>();
@@ -546,9 +550,16 @@ public class LevelManager : MonoBehaviour
         }
         else if(stage == 2)
         {
+            if(absentClothNum == 0 && oneStarForBag == 1) {
+                notice.GetComponent<ReturnNotice>().SetStarNum(1);
+                notice.GetComponent<ReturnNotice>().SetClothNum(0);
+            }
+            else
+            {
+                notice.GetComponent<ReturnNotice>().SetStarNum(absentClothNum);
+                notice.GetComponent<ReturnNotice>().SetClothNum(absentClothNum);
+            }
             
-            notice.GetComponent<ReturnNotice>().SetStarNum(absentClothNum+oneStarForBag);
-            notice.GetComponent<ReturnNotice>().SetClothNum(absentClothNum);
             if(absentClothNum > -1) yield break;
             if(!UIRateShown)
             {
@@ -556,8 +567,9 @@ public class LevelManager : MonoBehaviour
                 stage2UIRateFirst = true;
                 FinalCameraController.DisableInput(true);
                 FinalCameraController.enableScroll = false;
+                yield return new WaitForSeconds(1.5f);
                 ShowUIRate();
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(1.5f);
                 
                 FinalCameraController.FishTalkAccessFromScript("A",true);
                 if(absentClothNum < 0) FinalCameraController.Show(FinalCameraController.fishShoutCG);

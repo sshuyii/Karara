@@ -20,6 +20,8 @@ public class BagsController : MonoBehaviour
     float timer; //for check bag status periodicly 
     AllMachines washers;
     ValueEditor ValueEditor;
+
+    List<GameObject> shiningBags = new List<GameObject>();
     void Start()
     {
         FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
@@ -216,8 +218,9 @@ public class BagsController : MonoBehaviour
         for (int i = 0; i < bagsInCar.Count; i++)
         {
             ClothToMachine ctm = bagsInCar[i].GetComponent<ClothToMachine>();
+            WasherController machine = washers.WasherControllerList[washer];
             //@ demo possible problem
-            if (ctm.underMachineNum == washer && ctm.timeUp)
+            if (ctm.underMachineNum == washer && ctm.timeUp && machine.myMachineState== AllMachines.MachineState.finished)
             {
                 return 1;
             }
@@ -233,7 +236,8 @@ public class BagsController : MonoBehaviour
         for (int i = 0; i < bagsInCar.Count; i++)
         {
             ClothToMachine ctm = bagsInCar[i].GetComponent<ClothToMachine>();
-            if (ctm.underMachineNum == washer && ctm.timeUp)
+            WasherController machine = washers.WasherControllerList[washer];
+            if (ctm.underMachineNum == washer && ctm.timeUp && machine.myMachineState== AllMachines.MachineState.finished)
             {
                 returnedBagNum++;
                 returningBag = bagsInCar[i];
@@ -257,9 +261,24 @@ public class BagsController : MonoBehaviour
             ClothToMachine ctm = bag.GetComponent<ClothToMachine>();
             if(ctm.underMachineNum>= 0 && ctm.timer < 11f)
             {
+                // shiningBags.Add(bag);
+                // ctm.isShining = true;
                 Animator bagAnim = ctm.transform.GetComponent<Animator>();
-                bagAnim.SetTrigger("blingbling");
+                bagAnim.SetBool("blingbling",true);
             }
         }
+    }
+
+
+    public void BagsOnDueShaderOff()
+    {
+        foreach(GameObject bag in bagsInCar)
+        {
+            
+            Animator bagAnimator = bag.GetComponent<Animator>();
+            bagAnimator.SetBool("blingbling",false);
+        }
+
+        
     }
 }
