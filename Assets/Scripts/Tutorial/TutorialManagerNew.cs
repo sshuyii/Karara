@@ -1574,6 +1574,8 @@ public class TutorialManagerNew : MonoBehaviour
         Show(Comic);
         Hide(mobile);
         Hide(followerNum);
+
+        ProceedToChapterOne();
     }
 
     public void Hide(CanvasGroup UIGroup)

@@ -116,7 +116,7 @@ public class StartTutorialNew : MonoBehaviour
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("StreetStyle");
 
-        print("click machine");
+        print("click skip");
 
     }
 }

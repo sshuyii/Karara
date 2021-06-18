@@ -305,6 +305,7 @@ public class TutorialTouchController : MonoBehaviour
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.PickChargingPhone();
                     break;
+                
                 case "workCloth_Slot0"://洗衣机里面的衣服
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickClothUI(0);

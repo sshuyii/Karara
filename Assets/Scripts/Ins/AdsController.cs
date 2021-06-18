@@ -167,7 +167,7 @@ public class AdsController : MonoBehaviour
         Debug.Log("背景" + currentAd);
         photoBackground.sprite = AdsDic[currentAd].sprite;
 
-        ResetPosture();
+        ResetPosture(currentAd);
 
         // todo：换衣服
 
@@ -180,9 +180,16 @@ public class AdsController : MonoBehaviour
 
 
 
-    public void ResetPosture()
+    public void ResetPosture(string currentAd)
     {
-        currentPoseIdx = 0;
+        //需要reset到能用的第一个姿势
+        foreach (PosterPosePair pair in PosterPosePairs_Chap1)
+        {
+            if(currentAd == pair.AdName)
+            {
+                currentPoseIdx = pair.myPoses[0];
+            }
+        }
         bodyImage.sprite = poses[currentPoseIdx];
 
     }

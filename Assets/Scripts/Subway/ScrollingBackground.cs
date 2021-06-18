@@ -40,11 +40,16 @@ public class ScrollingBackground : MonoBehaviour
                 }
             }
 
-            for(int i = 0; i < levels.Length; i++)
-            {
-                levels[i].transform.position += speed[i];
-            }
+            
         }
+    }
+
+    private void FixedUpdate()
+    {
+        for(int i = 0; i < levels.Length; i++)
+            {
+                levels[i].transform.position += speed[i] * Time.fixedDeltaTime;
+            }
     }
 
     private void loadChildObject(GameObject obj)

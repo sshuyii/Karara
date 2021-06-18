@@ -38,6 +38,10 @@ public class TutorialTransition : MonoBehaviour
     private float trainStartWidth;
     private Vector3 screenBounds;
 
+    [SerializeField]
+    private float timeAfterTrainStart, timeAfterTrainStop;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -67,6 +71,31 @@ public class TutorialTransition : MonoBehaviour
         ScrollingBackground.start = true;
     }
 
+    private void FixedUpdate() 
+    {
+        if(TransitionStage == 1){
+            //如果第一节车厢已经从镜头前出去了，销毁
+            if(TrainStart)
+            {
+                TrainStart.transform.position += ScrollingBackground.speed[0] * Time.fixedDeltaTime;
+
+                if(TrainStart.transform.position.x + trainStartWidth < CameraRT.position.x - screenBounds.x)
+                {
+                    Destroy(TrainStart);
+                }
+            }
+        }
+        //第二阶段：中等大小地铁
+        else if(TransitionStage == 2)
+        {
+            if(CameraRT.position.x < cameraStopX)
+            {
+                CameraRT.position += new Vector3(cameraSpeed, 0, 0) * Time.fixedDeltaTime;
+                startTime = 0;//计时归零
+            }
+        }
+
+    }
     // Update is called once per frame
     void Update()
     {
@@ -83,30 +112,6 @@ public class TutorialTransition : MonoBehaviour
             {
                 SetStage2();
                 ResetStage1();
-            }
-        }
-        
-
-
-        if(TransitionStage == 1){
-            //如果第一节车厢已经从镜头前出去了，销毁
-            if(TrainStart)
-            {
-                TrainStart.transform.position += ScrollingBackground.speed[0];
-
-                if(TrainStart.transform.position.x + trainStartWidth < CameraRT.position.x - screenBounds.x)
-                {
-                    Destroy(TrainStart);
-                }
-            }
-        }
-        //第二阶段：中等大小地铁
-        else if(TransitionStage == 2)
-        {
-            if(CameraRT.position.x < cameraStopX)
-            {
-                CameraRT.position += new Vector3(cameraSpeed, 0, 0);
-                startTime = 0;//计时归零
             }
         }
     }
@@ -135,11 +140,11 @@ public class TutorialTransition : MonoBehaviour
 
     public void ClickToProceed()
     {
-        if(startTime < 1.5f)
+        if(startTime < timeAfterTrainStop)
         {
             return;
         }
-        else if(startTime < 5f)
+        else if(startTime < timeAfterTrainStart)
         {
             if(TransitionStage == 1) return;
 
