@@ -74,6 +74,8 @@ public class ClothToMachine : MonoBehaviour
     int stage;
 
     ValueEditor ValueEditor;
+
+    private bool isOverdue = false;
     void Start()
     {
         //find the horizontal scroll snap script
@@ -146,9 +148,22 @@ public class ClothToMachine : MonoBehaviour
                 GameObject overdue = Instantiate(AllMachines.Overdue, this.gameObject.transform.position,
                         Quaternion.identity);
                 overdue.transform.SetParent(this.gameObject.transform);
+                isOverdue = true;
             }
 
         }
+
+        if(isOverdue)
+        {
+            if(underMachineNum < 0) return;
+            isFinished = AllMachines.FinishedOrNot(underMachineNum); 
+            if(isFinished) 
+            {
+               BagsController.bagsInCar.Remove(this.transform.gameObject);
+               StartCoroutine(returnClothYes());
+            }
+        }
+         
     }
 
 
@@ -256,7 +271,7 @@ public class ClothToMachine : MonoBehaviour
     }
 
 
-
+    public Image shiningImg1, shiningImg2, shiningImg3;
     public void putClothIn()
     {
 
@@ -284,7 +299,7 @@ public class ClothToMachine : MonoBehaviour
             SubwayMovement.bagNum -= 1;
             AllMachines.SetMachineAsBagUnder(underMachineNum, clothesInBag, this.gameObject);
 
-
+            
 
             //this.gameObject.transform.SetParent(AllMachines.FakeMachines[underMachineNum].gameObject.transform);// @@@
 
@@ -307,9 +322,13 @@ public class ClothToMachine : MonoBehaviour
             //myAudio.Play();
 
             AudioManager.PlayAudio(AudioType.Bag_Phase1);
-            myImage.sprite = SpriteLoader.NPCDic[this.tag].openBag;
-            secondImage.sprite = SpriteLoader.NPCDic[this.tag].openBag;
-
+            Sprite openBag = SpriteLoader.NPCDic[this.tag].openBag;
+            myImage.sprite = openBag;
+            secondImage.sprite = openBag;
+            shiningImg1.sprite = openBag;
+            shiningImg2.sprite = openBag;
+            shiningImg3.sprite = openBag;
+            
             if (timeUp) StartCoroutine(FinalCameraController.FishBossNotification.ShowFish());
             //FinalCameraController.FishBossNotification.ShowFish(); //test
 

@@ -239,6 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 983fcfa504c9f497ca53462b46b56cbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isShining: 0
   hitTime: 0
   myBagPosition: 0
   isNotice: 0
@@ -252,6 +253,9 @@ MonoBehaviour:
   totalTime: 0
   myStation: 0
   isFinished: 0
+  shiningImg1: {fileID: 2326142927407250092}
+  shiningImg2: {fileID: 6715663868707994353}
+  shiningImg3: {fileID: 842675062930318149}
 --- !u!82 &8480806449951120137
 AudioSource:
   m_ObjectHideFlags: 0
