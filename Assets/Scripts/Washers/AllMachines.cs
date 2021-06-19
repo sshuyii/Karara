@@ -144,7 +144,9 @@ public class AllMachines : MonoBehaviour
     public int ClearMachine(int idx, bool timeup)
     {
         int star = 0;
-        if (!timeup) star = 1;
+        //这里及时时间未到还了包，也不是永远加星，少了衣服就要减星！
+        // if (!timeup) star = 1;
+        if(!timeup && WasherControllerList[idx].clothNum == 4) star = 1;
         else star = WasherControllerList[idx].clothNum - 4;
         Debug.Log("star " + star.ToString());
         GameObject bag = bagsUnderMahines[idx];
@@ -173,7 +175,7 @@ public class AllMachines : MonoBehaviour
             {
                 wc.shut = 0;
                 // Hide(ClothUI);
-                StartCoroutine(wc.MachineFold());
+                StartCoroutine(wc.MachineFold(3));
                 //ClothUiAnimator.SetBool("isUnfold",false);
 
                 //change door to closed sprite

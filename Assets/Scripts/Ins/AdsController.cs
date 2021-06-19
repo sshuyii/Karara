@@ -392,6 +392,6 @@ public class AdsController : MonoBehaviour
         }
         Debug.Log("总共新增粉丝 " + num);
 
-        return num;
+        return (int)num;
     }
 }

@@ -111,8 +111,6 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
         myImage = GetComponent<Image>();
 
-
-
         startSprite = GetComponent<Image>().sprite;
 
 
@@ -220,6 +218,7 @@ public class ClothChanging : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
     public void ReturnCloth()
     {
+        InventorySlotMgt.InventoryIsFull = false;
         returnConfirmButton.gameObject.SetActive(false);
         returnBG.SetActive(false);
         longPress = false;

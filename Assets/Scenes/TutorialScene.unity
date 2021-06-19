@@ -7838,7 +7838,7 @@ PrefabInstance:
     - target: {fileID: 6255947706388716806, guid: 4e41aad428a574169a42047fca837ffc,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6255947707619718361, guid: 4e41aad428a574169a42047fca837ffc,
         type: 3}
@@ -8037,8 +8037,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 22, y: -53}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 22, y: -29.3}
+  m_SizeDelta: {x: 152, y: 152}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &700306468
 MonoBehaviour:
@@ -8128,7 +8128,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f959b38f6c02a4ff4b924ceec5f9babb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fcb307baf2c6145d0b9e64c45849fa1f, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -19149,7 +19149,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 602914918497e4ea99a32a9c0e425084, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -23485,9 +23485,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 354719323}
-        m_TargetAssemblyTypeName: TutorialDontDestroy, Assembly-CSharp
-        m_MethodName: ClickNoWay
+      - m_Target: {fileID: 1522229833}
+        m_TargetAssemblyTypeName: TutorialManagerNew, Assembly-CSharp
+        m_MethodName: ProceedToChapterOne
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -26315,6 +26315,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5827699922514673316, guid: 35c63d79974cb4ec18d8a8c40995d03d,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5827699922514673316, guid: 35c63d79974cb4ec18d8a8c40995d03d,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5827699922514673316, guid: 35c63d79974cb4ec18d8a8c40995d03d,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -127
+      objectReference: {fileID: 0}
+    - target: {fileID: 5827699922514673316, guid: 35c63d79974cb4ec18d8a8c40995d03d,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 524
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35c63d79974cb4ec18d8a8c40995d03d, type: 3}

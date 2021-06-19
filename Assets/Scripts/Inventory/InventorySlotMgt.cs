@@ -14,6 +14,7 @@ public class InventorySlotMgt : MonoBehaviour
 
     public int occupiedNum = 0;
 
+    public bool InventoryIsFull = false;
 
     [SerializeField]
     GameObject InventoryInstruction;
@@ -64,7 +65,13 @@ public class InventorySlotMgt : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
+       if(occupiedNum == 6)
+       {
+            InventoryIsFull = true;
+       }
+       else{
+           InventoryIsFull = false;
+       }
     }
 
     public void castLongPress()
@@ -99,14 +106,17 @@ public class InventorySlotMgt : MonoBehaviour
         return first;
     }
 
+    //Shuyi：好像没在用？
     public void AddClothToInventory(string clothName, int machineNum, int subwaySlotNum, GameObject bag)
     {
         occupiedNum++;
+
         int slot = GetFirstEmptySlot();
 
         if (slot < 0)
         {
-            ShowInventoryFullNotice();
+            InventoryIsFull = true;
+
             return;
         }
 
@@ -128,8 +138,10 @@ public class InventorySlotMgt : MonoBehaviour
 
     public void ShowInventoryFullNotice()
     {
-        Debug.Log("full ");
+        Debug.Log("Inventory is full ");
+
         showingFullNotice = true;
+
         InventoryFull.SetActive(true);
     }
 

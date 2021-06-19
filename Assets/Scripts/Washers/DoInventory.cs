@@ -10,6 +10,7 @@ public class DoInventory : MonoBehaviour
 {
     private InventorySlotMgt InventorySlotMgt;
     private WasherController WasherController;
+    private FinalCameraController FinalCameraController;
     
     private GameObject InventoryController;
     //this dictionary is the player inventory
@@ -24,6 +25,8 @@ public class DoInventory : MonoBehaviour
     void Start()
     {
         InventoryController = GameObject.Find("---InventoryController");
+        FinalCameraController = GameObject.Find("Main Camera").GetComponent<FinalCameraController>();
+
         InventorySlotMgt = InventoryController.GetComponent<InventorySlotMgt>();
         TouchController =  GameObject.Find("---TouchController").GetComponent<TouchController>();
 
@@ -63,7 +66,7 @@ public class DoInventory : MonoBehaviour
             if (WasherController.clothNum == 0)
             {
                 WasherController.shut = 0;
-                StartCoroutine(WasherController.MachineFold());
+                StartCoroutine(WasherController.MachineFold(3));
 
             }
 
@@ -75,18 +78,16 @@ public class DoInventory : MonoBehaviour
    
         }
 
+        //inventory里面满了
         else if (InventorySlotMgt.occupiedNum > 5 && !InventorySlotMgt.showingFullNotice)
         {
             
-            InventorySlotMgt.ShowInventoryFullNotice();
+            //Shuyi: Instead of showing inventory is full notice, go to screen1 and let fish say the sentence
+
             WasherController.shut = 0;
-            StartCoroutine(WasherController.MachineFold());
+            StartCoroutine(WasherController.MachineFold(0));
         }
 
     }
-    
-           
-            
-
     
 }

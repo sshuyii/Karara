@@ -748,6 +748,7 @@ public void CancelAllUI(bool clickMachine)
         if(LevelManager.stageTransiting &&  LevelManager.stage == 1)
         {
             StartCoroutine(LevelManager.EnterMap_Tut_S2());
+            
         }
 
         if (LevelManager.stageTransiting && LevelManager.stage == 2)

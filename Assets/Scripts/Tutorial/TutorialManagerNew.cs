@@ -328,7 +328,6 @@ public class TutorialManagerNew : MonoBehaviour
             else if(inLoop && TutorialCameraController.currentPage == 3)
             {
                 TutorialCameraController.JumpToPage(2);
-
             }
             else if (TutorialCameraController.targetPage == 1)
             {
@@ -749,7 +748,6 @@ public class TutorialManagerNew : MonoBehaviour
             FishTalk(false);
             currentFT.playingIdx = 0;
         }
-        
     }
 
 
@@ -1575,7 +1573,7 @@ public class TutorialManagerNew : MonoBehaviour
         Hide(mobile);
         Hide(followerNum);
 
-        ProceedToChapterOne();
+        // ProceedToChapterOne();
     }
 
     public void Hide(CanvasGroup UIGroup)
@@ -1611,8 +1609,6 @@ public class TutorialManagerNew : MonoBehaviour
             yield return new WaitForSeconds(.1f);
         }
 
-  
-
         FishTalkNextSentence();
     }
 
@@ -1632,7 +1628,7 @@ public class TutorialManagerNew : MonoBehaviour
         sweet.SetActive(false);
         ClothFish.SetActive(true);
         isWearingClothNum ++;
-        StartCoroutine(KararaEatSweet());
+        // StartCoroutine(KararaEatSweet());
     }
 
     IEnumerator KararaEatSweet()

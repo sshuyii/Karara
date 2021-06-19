@@ -45,6 +45,7 @@ public class WasherController : MonoBehaviour
     
     private FinalCameraController FinalCameraController;
     private SpriteLoader SpriteLoader;
+    private InventorySlotMgt InventorySlotMgt;
 
     public int clothNum;
 
@@ -89,6 +90,8 @@ public class WasherController : MonoBehaviour
         AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
         SubwayMovement = GameObject.Find("---StationController").GetComponent<SubwayMovement>();
         ValueEditor = GameObject.Find("---ValueEditor").GetComponent<ValueEditor>();
+        InventorySlotMgt = GameObject.Find("---InventoryController").GetComponent<InventorySlotMgt>();
+
 
         washingSound = AllMachines.gameObject.GetComponent<AudioSource>();
         
@@ -241,6 +244,8 @@ public class WasherController : MonoBehaviour
         //@@@
         FinalCameraController.alreadyClothUI = true;
         FinalCameraController.currentClothUI = ClothUI;
+        ClothUI.SetActive(true);
+
         DoorImage.sprite = AllMachines.openedDoor;
         Occupied.SetActive(false);
 
@@ -258,27 +263,50 @@ public class WasherController : MonoBehaviour
 
     }
     //关门！
-    public IEnumerator MachineFold()
+    public IEnumerator MachineFold(int close)
     {
+        ///Shuyi:不知为何从外部call这个function的时候，pressOK有时候不会回归true
+        //close = 1，是手动点关门,不能出现inventory is full
+        //close = 0, 是被动关门，应该出现
+        //close = 3，被动关门，不应该出现
         pressOK = false;
         FinalCameraController.machineOpen = true;
         FinalCameraController.DisableInput(true);
 
-        Animator ac = ClothUI.GetComponent<Animator>();
-        ac.SetTrigger("StartClosing");
+        // Animator ac = ClothUI.GetComponent<Animator>();
+        // ac.SetTrigger("StartClosing");
  
 
-        float Twait = (float)ac.GetCurrentAnimatorClipInfo(0).Length;
-        yield return new WaitForSeconds(Twait);
+        // float Twait = (float)ac.GetCurrentAnimatorClipInfo(0).Length;
+        // yield return new WaitForSeconds(Twait);
         
         
         FinalCameraController.alreadyClothUI = false;
         FinalCameraController.machineOpen = false;
         FinalCameraController.DisableInput(false);
-        pressOK = true;
+
+        //Shuyi: 关门暂定干脆一点，尽量避免点击之后过一段时间才关门+出声音
+        yield return new WaitForSeconds(.2f);
+
+        ClothUI.SetActive(false);
 
         DoorImage.sprite = AllMachines.closedDoor;
         AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
+
+        // yield return new WaitForSeconds(.2f);
+
+        pressOK = true;
+
+        //如果inventory is full
+        //只有拿了衣服才出现，光关门不能出现
+        if(InventorySlotMgt.InventoryIsFull == true && close == 0)
+        {
+            InventorySlotMgt.ShowInventoryFullNotice();
+
+            // FinalCameraController.GotoPage(1);
+            // FinalCameraController.FishTalkAccessFromScript("InventoryFull",true);
+            // FinalCameraController.Show(FinalCameraController.fishShoutCG);
+        }
         
         if (clothNum == 0 || myMachineState == AllMachines.MachineState.empty) Occupied.SetActive(false);
         else if(myMachineState == AllMachines.MachineState.finished || myMachineState == AllMachines.MachineState.noninteractable) Occupied.SetActive(true);
@@ -362,7 +390,7 @@ public class WasherController : MonoBehaviour
         else if (shut == 1)
         {
             shut = 0;
-            StartCoroutine(MachineFold());
+            StartCoroutine(MachineFold(1));
 
         }
     }

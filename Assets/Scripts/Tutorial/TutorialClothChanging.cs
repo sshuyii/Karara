@@ -266,6 +266,7 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         {
             //karara摇头
             TutorialManagerNew.kararaAnimator.SetTrigger("isShaking");
+            print("Karara shaking");
             return;
         }
 

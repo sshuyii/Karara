@@ -401,8 +401,12 @@ public class LevelManager : MonoBehaviour
 
     public IEnumerator EnterMap_Tut_S2()
     {
-
+        //进入map教学阶段后，教学用地铁持续播放转圈+教学包，直到点击确认后进入下一阶段
         isInstruction = true;
+        yield return new WaitForSeconds(1f);
+
+        MapTutorialBubble.SetActive(true);
+
         Animator myAnim = MapInSubway.GetComponent<Animator>();
         myAnim.SetTrigger("idle");
 
@@ -412,13 +416,20 @@ public class LevelManager : MonoBehaviour
         GoBackButton.SetActive(false);
         Hide(MapCar.GetComponent<CanvasGroup>());
         MapCar_Tut_S2.SetActive(true);
-        MapTutorialBubble.SetActive(true);
 
         yield return new WaitForSeconds(2f);
 
-        ShowHint();
-        MapTutorialBubble.SetActive(false);
+        // ShowHint();
+        // MapTutorialBubble.SetActive(false);
 
+    }
+
+    public void ClickMapTutorialBubble()
+    {
+        ShowHint();
+        MapCar_Tut_S2.SetActive(false);
+
+        MapTutorialBubble.SetActive(false);
     }
 
     public IEnumerator EnterMap_Tut_S3()
