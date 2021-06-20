@@ -309,11 +309,11 @@ public class InstagramController : MonoBehaviour
         AllTakenPhotos.Add(PicInSavePage.sprite);
         countTakenPhotos++;
         AddInsPost("Karara", PicInSavePage.sprite);
-        AddFollower();
         AdsController.UseAdAndPose();
-
-
         FinalCameraController.ChangeToApp();
+
+        //Shuyi:addfollower这个function在报错，所以暂时放到自厚了
+        AddFollower();
 
     }
 

@@ -41,6 +41,8 @@ public class LevelManager : MonoBehaviour
     public GameObject station, bagIn;
     public Sprite bagOut;
     private FinalCameraController FinalCameraController;
+    private AdsController AdsController;
+
 
     public CanvasGroup arrowButton;
 
@@ -115,7 +117,7 @@ public class LevelManager : MonoBehaviour
         LostAndFound = GameObject.Find("Lost&Found_basket").GetComponent<LostAndFound>();
         FishBossNotification = GameObject.Find("FishBossUI").GetComponent<FishBossNotification>();
         InstagramController = GameObject.Find("---InstagramController").GetComponent<InstagramController>();
-
+        AdsController = GameObject.Find("---AdsController").GetComponent<AdsController>();
 
         PathFollower = MapCar.GetComponent<PathFollower>();
         carCG = MapCar.GetComponent<CanvasGroup>();
@@ -184,6 +186,9 @@ public class LevelManager : MonoBehaviour
         SubwayMovement.pauseBeforeMove = false;
 
         stage++;
+
+        //Shuyi-进到新的stage后直接出现一张海报
+        AdsController.UpdatePosters();
 
 
         //ShowRatingSys(true);
