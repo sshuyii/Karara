@@ -155,8 +155,6 @@ public class AdsController : MonoBehaviour
     void Update()
     {
 
-
-
     }
 
 
@@ -295,8 +293,8 @@ public class AdsController : MonoBehaviour
 
 
         // update stage step 1: inform levelmanager to start the upgrade
-        if (usedAds.Count >= S1UpperBound && LevelManager.stage == 1) LevelManager.upgradeReadyOrNot = true;
-        if (usedAds.Count >= S2UpperBound && LevelManager.stage == 2) LevelManager.upgradeReadyOrNot = true;
+        if (usedAds.Count == S1UpperBound && LevelManager.stage == 1) LevelManager.upgradeReadyOrNot = true;
+        if (usedAds.Count == S2UpperBound && LevelManager.stage == 2) LevelManager.upgradeReadyOrNot = true;
     }
 
 
@@ -383,11 +381,11 @@ public class AdsController : MonoBehaviour
             for (int j = 0; j < attNum; j++)
             {
 
-                num += wearingClothes[i].attributes[j] * AdsDic[currentAd].attributes[j];
+                num += (int)wearingClothes[i].attributes[j] * AdsDic[currentAd].attributes[j];
 
-                //Debug.Log(wearingClothes[i].name + wearingClothes[i].attributes[j]);
-                //Debug.Log(AdsDic[currentAd].name + AdsDic[currentAd].attributes[j]);
-                //Debug.Log("新增粉丝 " + wearingClothes[i].attributes[j] * AdsDic[currentAd].attributes[j]);
+                Debug.Log(wearingClothes[i].name + wearingClothes[i].attributes[j]);
+                Debug.Log(AdsDic[currentAd].name + AdsDic[currentAd].attributes[j]);
+                Debug.Log("新增粉丝 " + wearingClothes[i].attributes[j] * AdsDic[currentAd].attributes[j]);
             }
         }
         Debug.Log("总共新增粉丝 " + num);
