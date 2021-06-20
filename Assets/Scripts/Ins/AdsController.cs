@@ -19,9 +19,6 @@ public class AdsController : MonoBehaviour
     private string AdsPath = "Images/Poster/Background/Chapt1";
     private string PosePath = "Images/Karara/Pose/Chapt1";
 
-    //hard coding 4 poses
-    // 1 top only 2 top + bottom  3 (top + bottom)/Everything + shoes 
-    private List<int> ClothesNumShownInPose = new List<int> { 1, 3, 2, 1 };
 
     public SpriteRenderer photoBackground;
     public SpriteRenderer bodyImage;
@@ -73,6 +70,7 @@ public class AdsController : MonoBehaviour
     {
         public string AdName;
         public List<int> myPoses;
+
     }
 
     ValueEditor ValueEditor;
@@ -364,7 +362,7 @@ public class AdsController : MonoBehaviour
         int attNum = 4;
         //先确定这个pose时展示了多少件东西 1= top only 2 = top+bottom
 
-        int ClothesNum = ClothesNumShownInPose[currentPoseIdx];
+        int ClothesNum = ValueEditor.PosterRelated.ClothesNumShownInPose[currentPoseIdx];
         int originalNum = ClothesNum;
         // 有时候只能看见everything
 

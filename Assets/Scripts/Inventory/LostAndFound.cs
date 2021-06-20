@@ -33,6 +33,8 @@ public class LostAndFound : MonoBehaviour
     
     private FinalCameraController FinalCameraController;
     // Start is called before the first frame update
+
+    
     void Start()
     {
         
@@ -58,7 +60,7 @@ public class LostAndFound : MonoBehaviour
     
     public void clickLostFound()
     {
-        
+        if(FinalCameraController.LevelManager.neverGoLandF) return;
         if (!isShowingNum)
         {
             ShaderOff();

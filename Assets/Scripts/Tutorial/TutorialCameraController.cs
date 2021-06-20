@@ -79,7 +79,7 @@ public class TutorialCameraController : MonoBehaviour
     public void ReturnToApp()
     {
         myCameraState = CameraState.Subway;
-        CameraMovement.atInventory = false;
+        CameraMovement.atInventoryOrAd = false;
         CameraMovement.JumpToPage(CameraMovement.previousPage);
         
     }
@@ -88,7 +88,7 @@ public class TutorialCameraController : MonoBehaviour
     {
         CameraMovement.previousPage = CameraMovement.currentPage;
         transform.position = new Vector3(-25, 0, -10);
-        CameraMovement.atInventory = true;
+        CameraMovement.atInventoryOrAd = true;
 
         //disable fish calling
         // TutorialManagerNew.Hide(TutorialManagerNew.scream);

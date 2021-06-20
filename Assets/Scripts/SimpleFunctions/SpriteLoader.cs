@@ -61,7 +61,8 @@ public class SpriteLoader : MonoBehaviour
 
         foreach(KeyValuePair<string,Cloth> pair in ClothDic)
         {
-            if (pair.Value.spritesInPos.Count != 4) Debug.Log("这有问题！！！！！！！" + pair.Key);
+            if (pair.Value.spritesInPos.Count != 6) Debug.Log("这有问题！！！！！！！" + pair.Key);
+            Debug.Log(pair.Key + " " + pair.Value.attributes[0] + " " + pair.Value.attributes[1]+ " " + pair.Value.attributes[2]+ " " + pair.Value.attributes[3]);
         }
 
     }
@@ -260,7 +261,7 @@ public class SpriteLoader : MonoBehaviour
                         string atbs = "a 1 1 1 1";
                         atbs = reader.ReadLine();
                         if (atbs == null) atbs = "a 1 1 1 1";
-                        //Debug.Log(atbs);
+                        // Debug.Log(atbs);
                         ClothDic.Add(picName, new Cloth(picName, newPic, thisType, owner,atbs));
 
                         // writer.WriteLine(picName + " 1 1 1 1");

@@ -69,7 +69,7 @@ public class FinalCameraController : MonoBehaviour
     private BagsController BagsController;
 
 
-
+    
     public enum AppState
     {
         Mainpage,
@@ -141,6 +141,8 @@ public class FinalCameraController : MonoBehaviour
     public FishBossNotification FishBossNotification;
     public ValueEditor ValueEditor;
     public bool fishShouting = false;
+
+    public Vector3 PosturePos;
     
     // Start is called before the first frame update
     void Start()
@@ -440,7 +442,7 @@ public void CancelAllUI(bool clickMachine)
         CancelAllUI(false,inventory);
   
         myCameraState = CameraState.Closet;
-        CameraMovement.atInventory = true;
+        CameraMovement.atInventoryOrAd = true;
         phone.SetActive(false);
         CameraMovement.previousPage = CameraMovement.currentPage;
         Show(Inventory);
@@ -543,7 +545,7 @@ public void CancelAllUI(bool clickMachine)
         //}
 
         phone.SetActive(true);
-        CameraMovement.atInventory = false;
+        CameraMovement.atInventoryOrAd = false;
         CameraMovement.JumpToPreviousPage();
         if (!isTutorial) CheckInstructionButton.SetActive(false);
         // Mask.alpha = 1;
@@ -793,6 +795,7 @@ public void CancelAllUI(bool clickMachine)
         {
             return;
         }
+        
         myCameraState = CameraState.Ad;
         if (!AdInstructionShown)
         {
@@ -803,8 +806,11 @@ public void CancelAllUI(bool clickMachine)
         phone.SetActive(false);
         Posture.SetActive(true);
         lastCameraState = myCameraState;
+        CameraMovement.previousPage = CameraMovement.currentPage;
         //transform.position = new Vector3(24, 0, -10);
         RatingSys.LeaveSubway();
+        transform.position = PosturePos;
+        CameraMovement.atInventoryOrAd = true;
     }
 
 

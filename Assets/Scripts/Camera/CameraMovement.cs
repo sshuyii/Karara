@@ -23,8 +23,8 @@ public class CameraMovement : MonoBehaviour
     private TutorialCameraController TutorialCameraController;
 
 
-    public bool atInventory = false;
-
+    public bool atInventoryOrAd = false;
+    public bool atAd= false;
 
     public int previousPage = -1;
 
@@ -106,7 +106,7 @@ public class CameraMovement : MonoBehaviour
     private void FixedUpdate()
     {
         
-        if (!going || swipping ||atInventory||stopForComic) return;
+        if (!going || swipping ||atInventoryOrAd||stopForComic) return;
 
         Vector3 target = positions[currentPage];
         movingTimer += Time.deltaTime;

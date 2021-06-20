@@ -11347,7 +11347,6 @@ Transform:
   - {fileID: 1693939988}
   - {fileID: 646372487}
   - {fileID: 1477244884}
-  - {fileID: 2043696537}
   m_Father: {fileID: 1785511299}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14374,6 +14373,7 @@ MonoBehaviour:
     shownUsedDifference: 1
     S1UpperBound: 3
     S2UpperBound: 3
+    ClothesNumShownInPose: 010000000300000002000000010000000100000002000000
 --- !u!1 &726086046
 GameObject:
   m_ObjectHideFlags: 0
@@ -18206,7 +18206,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1785511299}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -26922,15 +26922,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InstagramController: {fileID: 1188720988}
-  KararaTopImage: {fileID: 0}
-  KararaBottomImage: {fileID: 0}
-  KararaShoeImage: {fileID: 0}
-  KararaWorkImage: {fileID: 0}
-  followerNum: 3
-  targetFollowerNum: 0
-  subwayFollower: {fileID: 0}
   myCamera: {fileID: 2057514359}
-  photoBackground: {fileID: 0}
   Notice: {fileID: 1386966713}
   myFlash: {fileID: 1746608179}
   notAllowSend: 0
@@ -26942,7 +26934,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1367119714}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.9, y: 0, z: -20}
+  m_LocalPosition: {x: 0, y: 0, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2057514357}
@@ -27025,6 +27017,7 @@ MonoBehaviour:
   FishBossNotification: {fileID: 872674992}
   ValueEditor: {fileID: 0}
   fishShouting: 0
+  PosturePos: {x: 33, y: 0, z: -10}
   isShown: 0
   DemoEndButton: {fileID: 1849989982}
 --- !u!114 &1367119720
@@ -27048,7 +27041,8 @@ MonoBehaviour:
   - {x: 11.7, y: 0, z: -20}
   - {x: 17.5, y: 0, z: -20}
   - {x: 20, y: 0, z: -20}
-  atInventory: 0
+  atInventoryOrAd: 0
+  atAd: 0
   previousPage: -1
   swipping: 0
   movingDist: 0.00001
@@ -35892,6 +35886,7 @@ Transform:
   - {fileID: 773456102}
   - {fileID: 606405930}
   - {fileID: 1458842953}
+  - {fileID: 2043696537}
   - {fileID: 1852407348}
   - {fileID: 923608074}
   m_Father: {fileID: 0}
@@ -37013,7 +37008,7 @@ RectTransform:
   m_LocalScale: {x: 0.9493671, y: 0.9493671, z: 0.9493671}
   m_Children: []
   m_Father: {fileID: 1785511299}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -39857,7 +39852,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2043696537
 Transform:
   m_ObjectHideFlags: 0
@@ -39865,9 +39860,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2043696536}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.73, z: 0}
-  m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 33, y: -0.35, z: 0}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0}
   m_Children:
   - {fileID: 1214212001}
   - {fileID: 2018912648}
@@ -39875,8 +39870,8 @@ Transform:
   - {fileID: 911703978}
   - {fileID: 515187788}
   - {fileID: 551185612}
-  m_Father: {fileID: 606405930}
-  m_RootOrder: 8
+  m_Father: {fileID: 1785511299}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2048137618
 GameObject:
