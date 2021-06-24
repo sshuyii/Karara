@@ -13,6 +13,7 @@ public class Ad
 
     public bool hasTaken;
     public int poseNum = -1;
+
     // Start is called before the first frame update
     public Ad(string myName, Sprite mySprite, string atbs) {
         name = myName;
@@ -36,4 +37,8 @@ public class Ad
     {
         myPoses = poses;
     }
+
+    
+
+
 }

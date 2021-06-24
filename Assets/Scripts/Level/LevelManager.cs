@@ -358,10 +358,9 @@ public class LevelManager : MonoBehaviour
         if (stageTransiting)
         {
             UpdateStage();
+            SubwayMovement.EndTrainPause();
         }
 
-
-        SubwayMovement.EndTrainPause();
         //SubwayMovement.timerStay = SubwayMovement.stayTime - 0.01f;
     }
 

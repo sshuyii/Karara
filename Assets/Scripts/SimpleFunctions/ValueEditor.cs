@@ -45,6 +45,12 @@ public class ValueEditor : MonoBehaviour
 
       public int S1UpperBound; //3
       public int S2UpperBound; //3
+
+          //hard coding 4 poses
+    // 1 top only 2 top + bottom  3 (top + bottom)/Everything + shoes 
+      [Tooltip("1 top only 2 top + bottom  3 (top + bottom)/Everything + shoes ")]
+      public List<int> ClothesNumShownInPose;
+
     }
 
 

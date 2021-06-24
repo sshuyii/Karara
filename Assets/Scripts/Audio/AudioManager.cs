@@ -77,7 +77,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlayAudio(AudioType _type)
     {
-        //Debug.Log("the audio type" + _type);
+        Debug.Log("the audio type" );
         AudioTrack m_track = m_AudioTable[_type];
         if (m_track.source.isPlaying) m_track.source.Stop();
 
@@ -110,6 +110,7 @@ public class AudioManager : MonoBehaviour
 
     private AudioClip GetAudioClipFromTrack(AudioType _type, AudioTrack _track)
     {
+        
 
         foreach (AudioObject audio in _track.audio)
         {

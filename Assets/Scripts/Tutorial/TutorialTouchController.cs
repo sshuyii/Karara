@@ -334,8 +334,9 @@ public class TutorialTouchController : MonoBehaviour
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickExclamation();
                     break;
-
-
+                case "hiring_memo":
+                    TutorialManagerNew.ClickHiring();
+                    break;
 
             }
 

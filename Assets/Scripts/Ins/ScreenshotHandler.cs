@@ -24,41 +24,22 @@ public class ScreenshotHandler : MonoBehaviour
     private Dictionary<string, bool> usedPostures = new Dictionary<string, bool>();
 
     //record what Karara is wearing
-    private string KararaTop;
-    private string KararaBottom;
-    private string KararaShoe;
+
     private bool KararaWork;
-
-    private bool startFlash;
-    public Image KararaTopImage;
-    public Image KararaBottomImage;
-    public Image KararaShoeImage;
-    public Image KararaWorkImage;
-
-    
+ 
 
     private GameObject toothpastePost;
-    public int followerNum;
-    public int targetFollowerNum;
-    public TextMeshProUGUI subwayFollower;
-    
+
     private static ScreenshotHandler instance;
 
     public Camera myCamera;
     private bool takeScreenshotOnNextFrame;
 
-    private Image postImage;
-   
     private string ScreenCapDirectory;
-
-    private Texture2D myScreenshot;
 
     private Texture2D renderResult;
 
     private IEnumerator coroutine;
-
-    public Image photoBackground;
-    
     private int width = Screen.width;
     private int height = Screen.height;
 
@@ -93,16 +74,6 @@ public class ScreenshotHandler : MonoBehaviour
 
         if(FinalCameraController != null) AdsController = GameObject.Find("---AdsController").GetComponent<AdsController>();
 
-
-        //        postImage = GetComponent<Image>();
-        //        //print(postImage.name);
-
-        if (!FinalCameraController.isTutorial)
-        {
-            //KararaTop = KararaTopImage.sprite.name;
-            //KararaBottom = KararaBottomImage.sprite.name;
-            //KararaShoe = KararaShoeImage.sprite.name;
-        }
 
         
     }
