@@ -83,3 +83,10 @@ ehthumbs.db
 [Dd]esktop.ini
 Corridor/Library/ShaderCache/
 Corridor/Library/metadata/
+
+# VS Code
+*.vscode
+
+# Karara Files
+/[Aa]ssets/[Re]sources/[Ss]creenshots/
+/[Aa]ssets/[Re]sources/[Ss]creenshots.meta
