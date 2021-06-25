@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Image = UnityEngine.UI.Image;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -40,6 +41,9 @@ public class CameraMovement : MonoBehaviour
     private bool going = false;
 
     public bool stopForComic = false;
+
+    public GameObject Dots;
+    private Color gray,white;
     void Start()
     {
         // positions = new Vector3[4];
@@ -52,6 +56,8 @@ public class CameraMovement : MonoBehaviour
         smoothSpeed = 10f;
 
         pageDist = Mathf.Abs(positions[0].x - positions[1].x);
+        gray = new Color32(140,140,140,255);
+        white = new Color32(255,255,255,255);
     }
 
     // Update is called once per frame
@@ -67,7 +73,7 @@ public class CameraMovement : MonoBehaviour
         {
             currentPage = positions.Length - 2;
         }
-
+        
     }
 
 
@@ -98,6 +104,7 @@ public class CameraMovement : MonoBehaviour
         T_total = movingDist / smoothSpeed;
 
         going = true;
+        refreshFinish = false;
         // FinalCameraController.CancelAllUI(false);
         //StartCoroutine(Going());
 
@@ -117,11 +124,30 @@ public class CameraMovement : MonoBehaviour
         {
             transform.position = target;
             smoothSpeed = defaultSpeed;
+            if(!refreshFinish) RefreshDots();
+            
         }
     }
 
-
-
+    bool refreshFinish = false;
+    private void RefreshDots()
+    {
+        refreshFinish = true;
+        
+        int target = currentPage;
+        if(currentPage == 5) target = 4;
+        if(currentPage == 0) target = 1;
+        for(int i = 0; i < positions.Length; i ++)
+        {
+            Image dot = Dots.transform.GetChild(i).gameObject.GetComponent<Image>();
+            if(i == target) {
+                Debug.Log("Around target position " + currentPage);
+                dot.color = white;
+            }
+            else dot.color = gray;
+        }
+        
+    }
 
     IEnumerator Going()
     {

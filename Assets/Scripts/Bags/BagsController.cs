@@ -124,6 +124,7 @@ public class BagsController : MonoBehaviour
         
         WasherController wc = washers.WasherControllerList[machienNum];
         
+        wc.shut = 1;
         wc.DoorImage.sprite = washers.openedDoor;
         wc.Occupied.SetActive(false);
 
@@ -156,7 +157,13 @@ public class BagsController : MonoBehaviour
             FinalCameraController.Hide(FinalCameraController.fishShoutCG);
             WasherController wc = washers.WasherControllerList[washerNum];
             wc.DoorImage.sprite = washers.closedDoor;
-            if(wc.clothNum > 0) wc.Occupied.SetActive(true);
+            wc.shut = 0;
+            if(wc.clothNum > 0) 
+            {
+                wc.Occupied.SetActive(true);
+                wc.emptyImage.enabled = false;
+                wc.fullImage.enabled = true;
+            }
         }
         
 
@@ -191,27 +198,27 @@ public class BagsController : MonoBehaviour
 
 
 
-    public int DropAllBagsInScreen3()
-    {
-        int returnedBagNum = 0;
-        for(int i = 0; i < bagsInCar.Count; i++)
-        {
-            ClothToMachine ctm = bagsInCar[i].GetComponent<ClothToMachine>();
-            // timeup 判断可能有问题
-            if(ctm.underMachineNum == 1|| ctm.underMachineNum == 2  && ctm.timeUp)
-            {
+    // public int DropAllBagsInScreen3()
+    // {
+    //     int returnedBagNum = 0;
+    //     for(int i = 0; i < bagsInCar.Count; i++)
+    //     {
+    //         ClothToMachine ctm = bagsInCar[i].GetComponent<ClothToMachine>();
+    //         // timeup 判断可能有问题
+    //         if(ctm.underMachineNum == 1|| ctm.underMachineNum == 2  && ctm.timeUp)
+    //         {
                 
-                returnedBagNum++;
-                //Debug.Log("bags in 3 returning");
-                returningBag = bagsInCar[i];
-                int washerNum = returningBag.GetComponent<ClothToMachine>().underMachineNum;
-                WasherController wc = washers.WasherControllerList[washerNum];
-                if(wc.clothNum > 0) wc.Occupied.SetActive(true);
-                ClickReturnYes();
-            }
-        }
-        return returnedBagNum;
-    }
+    //             returnedBagNum++;
+    //             //Debug.Log("bags in 3 returning");
+    //             returningBag = bagsInCar[i];
+    //             int washerNum = returningBag.GetComponent<ClothToMachine>().underMachineNum;
+    //             WasherController wc = washers.WasherControllerList[washerNum];
+    //             if(wc.clothNum > 0) wc.Occupied.SetActive(true);
+    //             ClickReturnYes();
+    //         }
+    //     }
+    //     return returnedBagNum;
+    // }
 
     public int CountAllBagsInWasher(int washer)
     {

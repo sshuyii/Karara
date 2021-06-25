@@ -65,6 +65,7 @@ public class DoInventory : MonoBehaviour
             //如果洗衣机里没衣服了，那么直接关上
             if (WasherController.clothNum == 0)
             {
+                Debug.Log("cloth num == 0");
                 WasherController.shut = 0;
                 StartCoroutine(WasherController.MachineFold(3));
 

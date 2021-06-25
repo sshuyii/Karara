@@ -142,6 +142,9 @@ public class InstagramController : MonoBehaviour
 
 
     public GameObject KararaTutorialPost;
+
+    public GameObject KraraProfile, InsFollower,InsFollowerNumAdded,InsFollowerNum;
+    
     void Start()
     {
 
@@ -320,12 +323,16 @@ public class InstagramController : MonoBehaviour
     public void AddFollower()
     {
         // todo: make a judgement about attributes of cloth and ad attributes
-
-        fansNum += AdsController.GetNewFollowerNum();
+        int addFans = AdsController.GetNewFollowerNum();
+        fansNum += addFans;
 
         Debug.Log("总粉丝 " + fansNum);
 
         followerNum_UI.SetText(fansNum.ToString());
+
+
+        
+        StartCoroutine(AnimateAddedFollower(addFans));
 
 
         Debug.Log("总粉丝 " + followerNum_UI.text);
@@ -441,5 +448,33 @@ public class InstagramController : MonoBehaviour
         fansNum -= randomNum;
         followerNum_UI.SetText(fansNum.ToString());
     }
+    private bool showingFollowerNumIns = false;
+    public void ClickKararaProfile()
+    {
+        if(!showingFollowerNumIns)
+        {
+            InsFollower.SetActive(true);
+            
+        }
+        else{
+            InsFollower.SetActive(false);
+        }
 
+        showingFollowerNumIns = !showingFollowerNumIns;
+    }
+
+    public IEnumerator AnimateAddedFollower(int addFans)
+    {
+        ClickKararaProfile();
+        InsFollowerNum.GetComponent<TextMeshProUGUI>().text = (fansNum - addFans).ToString();
+        yield return new WaitForSeconds(1f);
+        InsFollowerNumAdded.SetActive(true);
+        InsFollowerNumAdded.GetComponent<TextMeshProUGUI>().text = "+" + addFans.ToString();
+        yield return new WaitForSeconds(1f);
+        InsFollowerNum.GetComponent<TextMeshProUGUI>().text = (fansNum).ToString();
+        InsFollowerNumAdded.SetActive(false);
+        yield return new WaitForSeconds(1f);
+        ClickKararaProfile();
+        
+    }
 }

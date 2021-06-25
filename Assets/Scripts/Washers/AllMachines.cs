@@ -179,8 +179,14 @@ public class AllMachines : MonoBehaviour
                 //ClothUiAnimator.SetBool("isUnfold",false);
 
                 //change door to closed sprite
+
+                //0624
                 wc.DoorImage.sprite = closedDoor;
-                if (wc.myMachineState == MachineState.finished || wc.myMachineState == MachineState.noninteractable) wc.Occupied.SetActive(true);
+                if (wc.myMachineState == MachineState.finished || wc.myMachineState == MachineState.noninteractable) 
+                {
+                    
+                    wc.Occupied.SetActive(true);
+                }
             }
         }
     }
@@ -195,7 +201,13 @@ public class AllMachines : MonoBehaviour
             WasherController wc = WasherControllerList[machineIdx];
             wc.buttons[slotNum - 1].GetComponent<SpriteRenderer>().enabled = true;
             wc.buttons[slotNum - 1].GetComponent<BoxCollider2D>().enabled = true;
+            if(wc.clothNum == 0)
+            {
+                wc.emptyImage.enabled = false;
+                wc.fullImage.enabled = true;
+            }
             wc.clothNum++;
+            
             Debug.Log("washer " + wc.number + " cloth num: " + wc.clothNum);
             return true;
         }

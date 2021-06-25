@@ -189,6 +189,7 @@ public class LevelManager : MonoBehaviour
 
         //Shuyi-进到新的stage后直接出现一张海报
         AdsController.UpdatePosters();
+        
 
 
         //ShowRatingSys(true);
@@ -407,7 +408,7 @@ public class LevelManager : MonoBehaviour
     {
         //进入map教学阶段后，教学用地铁持续播放转圈+教学包，直到点击确认后进入下一阶段
         isInstruction = true;
-        yield return new WaitForSeconds(1f);
+        
 
         MapTutorialBubble.SetActive(true);
 

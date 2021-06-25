@@ -8,17 +8,27 @@ using UnityEngine.SceneManagement;
 public class ValueEditor : MonoBehaviour
 {
     // Start is called before the first frame update
+
+    public bool test;
     public TimeRelated TimeRelated;
     public PosterRelated PosterRelated;
+
+    [HideInInspector]
+    public TestingValues TestingValues;
+
+    
+
     void Start()
     {
-        
+        TestingValues = transform.GetComponent<TestingValues>();
+        if(test) ReplaceValuesForTest();
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ReplaceValuesForTest()
     {
-        
+      TimeRelated = TestingValues.TimeRelated;
+      PosterRelated = TestingValues.PosterRelated;
     }
 }
 
@@ -33,6 +43,8 @@ public class ValueEditor : MonoBehaviour
         public float fishReturnBagDelay;
 
         public float scrollPage2and3Delay;
+
+        public float TrainStayTime, TrainMovingTime;
 
 
     }
@@ -53,4 +65,7 @@ public class ValueEditor : MonoBehaviour
 
     }
 
+
+    
+ 
 

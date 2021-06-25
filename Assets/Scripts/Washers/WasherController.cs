@@ -20,8 +20,10 @@ public class WasherController : MonoBehaviour
 
     public GameObject Occupied;
 
-    private SpriteRenderer emptyImage;
-    private SpriteRenderer fullImage;
+    [HideInInspector]
+    public SpriteRenderer emptyImage;
+    [HideInInspector]
+    public SpriteRenderer fullImage;
     public SpriteRenderer DoorImage;
 
     public AllMachines AllMachines;
@@ -227,7 +229,7 @@ public class WasherController : MonoBehaviour
     }
     public IEnumerator MachineUnfold()
     {
-        
+        // 开门
         pressOK = false;
         FinalCameraController.machineOpen = true;
         FinalCameraController.DisableInput(true);
@@ -308,8 +310,19 @@ public class WasherController : MonoBehaviour
             // FinalCameraController.Show(FinalCameraController.fishShoutCG);
         }
         
-        if (clothNum == 0 || myMachineState == AllMachines.MachineState.empty) Occupied.SetActive(false);
-        else if(myMachineState == AllMachines.MachineState.finished || myMachineState == AllMachines.MachineState.noninteractable) Occupied.SetActive(true);
+        
+        if (clothNum == 0 || myMachineState == AllMachines.MachineState.empty) 
+        {
+            emptyImage.enabled = true;
+            fullImage.enabled = false;
+            Occupied.SetActive(false);
+        }
+        
+        else if(myMachineState == AllMachines.MachineState.finished || myMachineState == AllMachines.MachineState.noninteractable) {
+            Occupied.SetActive(true);
+            fullImage.enabled = true;
+            emptyImage.enabled = false;
+        }
 
     }
     
@@ -466,6 +479,7 @@ public class WasherController : MonoBehaviour
 
         myMachineState = AllMachines.MachineState.full;
         DoorImage.sprite = AllMachines.openedDoor;
+        shut = 1;
 
         yield return new WaitForSeconds(ValueEditor.TimeRelated.openWasherDelay1);
         
@@ -475,6 +489,7 @@ public class WasherController : MonoBehaviour
         yield return new WaitForSeconds(ValueEditor.TimeRelated.openWasherDelay2);
 
         DoorImage.sprite = AllMachines.closedDoor;
+        shut = 0;
         AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
         
 
@@ -490,6 +505,7 @@ public class WasherController : MonoBehaviour
         yield return new WaitForSeconds(ValueEditor.TimeRelated.openWasherDelay2);
 
         DoorImage.sprite = AllMachines.closedDoor;
+        shut = 0;
         
         Light.sprite = statusEmpty;
         myMachineState = AllMachines.MachineState.empty;

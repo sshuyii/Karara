@@ -75,7 +75,9 @@ public class SubwayMovement : MonoBehaviour
     private float left2Pos;
     private float right2Pos;
 
+    [HideInInspector]
     public float moveTime;
+    [HideInInspector]
     public float stayTime;
     public float pauseTime;
     public bool pauseBeforeMove = false;
@@ -220,6 +222,8 @@ public class SubwayMovement : MonoBehaviour
         }
 
         // 不知道 real timer干什么用的
+        moveTime = ValueEditor.TimeRelated.TrainMovingTime;
+        stayTime = ValueEditor.TimeRelated.TrainStayTime;
         realTimer = (moveTime + stayTime + pauseTime) * 3 - timer;
 
         //@ demo modify : bag station 0 数量减一
@@ -257,8 +261,19 @@ public class SubwayMovement : MonoBehaviour
 
 
         //trainStop();
+
+        //StartCoroutine(PauseAsChap1Begine());
     }
 
+    private IEnumerator PauseAsChap1Begine()
+    {
+        pauseBeforeMove = true;
+        //fish talk content 3s;
+        yield return new WaitForSeconds(3f);
+
+        timerStay = stayTime - 3f;
+
+    }
 
     public IEnumerator DelayTrainStop()
     {
@@ -370,7 +385,7 @@ public class SubwayMovement : MonoBehaviour
             {
                 
                 trainMove();
-                if(LevelManager.stage == 1) ActionsOnScreen4();
+                if(!forceScroll)ActionsOnScreen4();
             }
 
         }
@@ -659,6 +674,7 @@ public class SubwayMovement : MonoBehaviour
 
         if (!forceScroll) //case 1
         {
+            ActionsOnScreen4();
             EndTrainPause();
             yield break;
         }
@@ -737,6 +753,7 @@ public class SubwayMovement : MonoBehaviour
         {
             if (cummulateStation % 2 == 0)
             {
+                Debug.Log("update poster here  1");
                 AdsController.UpdatePosters();
                 if(LostAndFound.transform.gameObject.GetComponent<SpriteRenderer>().enabled)
                     LostAndFound.clickLostFound();
@@ -747,7 +764,10 @@ public class SubwayMovement : MonoBehaviour
         else
         {
 
-            if (cummulateStation % 2 == 0) AdsController.UpdatePosters();
+            if (cummulateStation % 2 == 0) {
+                Debug.Log("update poster here  2");
+                AdsController.UpdatePosters();
+            }
         }
     }
     public void EndTrainPause()
