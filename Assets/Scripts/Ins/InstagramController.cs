@@ -316,6 +316,7 @@ public class InstagramController : MonoBehaviour
         FinalCameraController.ChangeToApp();
 
         //Shuyi:addfollower这个function在报错，所以暂时放到自厚了
+        
         AddFollower();
 
     }
@@ -323,16 +324,21 @@ public class InstagramController : MonoBehaviour
     public void AddFollower()
     {
         // todo: make a judgement about attributes of cloth and ad attributes
+        int subFans = Unfollow();
+        if(subFans > 0)
+        {
+            StartCoroutine(AnimateAddedFollower("-" ,subFans));
+            return;
+        }
+
+
         int addFans = AdsController.GetNewFollowerNum();
         fansNum += addFans;
 
         Debug.Log("总粉丝 " + fansNum);
 
         followerNum_UI.SetText(fansNum.ToString());
-
-
-        
-        StartCoroutine(AnimateAddedFollower(addFans));
+        StartCoroutine(AnimateAddedFollower("+",addFans));
 
 
         Debug.Log("总粉丝 " + followerNum_UI.text);
@@ -435,18 +441,25 @@ public class InstagramController : MonoBehaviour
             Explanation.sprite = transparent;
         }
 
-        if (condition == 1 || condition == 2) Unfollow();
+        if (condition == 1 || condition == 2) 
+        {
+
+            readyToUnfollow = true;
+        }
 
 
 
     }
-
-    private void Unfollow()
+    private bool readyToUnfollow =false;
+    private int Unfollow()
     {
+        if(!readyToUnfollow) return 0;
         //random number
         int randomNum = Random.Range(3, 8);
         fansNum -= randomNum;
         followerNum_UI.SetText(fansNum.ToString());
+        readyToUnfollow = false;
+        return randomNum;
     }
     private bool showingFollowerNumIns = false;
     public void ClickKararaProfile()
@@ -463,18 +476,24 @@ public class InstagramController : MonoBehaviour
         showingFollowerNumIns = !showingFollowerNumIns;
     }
 
-    public IEnumerator AnimateAddedFollower(int addFans)
+    public IEnumerator AnimateAddedFollower(string sign, int addFans)
     {
+        yield return new WaitForSeconds(0.5f);
         ClickKararaProfile();
-        InsFollowerNum.GetComponent<TextMeshProUGUI>().text = (fansNum - addFans).ToString();
-        yield return new WaitForSeconds(1f);
+        //InsFollowerNum.GetComponent<TextMeshProUGUI>().text = (fansNum - addFans).ToString();
+        //yield return new WaitForSeconds(1f);
         InsFollowerNumAdded.SetActive(true);
-        InsFollowerNumAdded.GetComponent<TextMeshProUGUI>().text = "+" + addFans.ToString();
-        yield return new WaitForSeconds(1f);
-        InsFollowerNum.GetComponent<TextMeshProUGUI>().text = (fansNum).ToString();
-        InsFollowerNumAdded.SetActive(false);
-        yield return new WaitForSeconds(1f);
-        ClickKararaProfile();
+        InsFollowerNumAdded.GetComponent<TextMeshProUGUI>().text = sign + addFans.ToString();
+        //yield return new WaitForSeconds(1f);
+        //InsFollowerNum.GetComponent<TextMeshProUGUI>().text = (fansNum).ToString();
+        //InsFollowerNumAdded.SetActive(false);
+        //yield return new WaitForSeconds(1f);
+        //ClickKararaProfile();
         
+    }
+
+    public void CloseKararaProfileWhenCloseINS()
+    {
+        if(showingFollowerNumIns) ClickKararaProfile();
     }
 }

@@ -66,8 +66,9 @@ public class SubwayMovement : MonoBehaviour
     public Transform left1;
     public Transform right1;
 
-    //    public RectTransform left2;
-    //    public GameObject right2;
+    public Transform left2, right2;
+
+
 
     //door initial positions
     private float left1Pos;
@@ -243,14 +244,11 @@ public class SubwayMovement : MonoBehaviour
         stationTimer = stayTime;
         //        CountDownTimer.text = "";
 
-        if (!FinalCameraController.isTutorial)
-        {
-            //get all the doors position when game starts
-            left1Pos = left1.position.x;
-            right1Pos = right1.position.x;
-        }
 
-
+        left1Pos = left1.position.x;
+        right1Pos = right1.position.x;
+        left2Pos = left2.position.x;
+        right2Pos = right2.position.x;
 
 
         //get all station names into the dictionary
@@ -442,10 +440,12 @@ public class SubwayMovement : MonoBehaviour
         if (left1.position.x > left1Pos - doorWidth)
         {
             left1.position -= new Vector3(doorMovement, 0, 0);
+            left2.position -= new Vector3(doorMovement, 0, 0);
         }
         else
         {
             left1.position = new Vector3(left1Pos - doorWidth, left1.position.y, 0);
+            left2.position = new Vector3(left2Pos - doorWidth, left2.position.y, 0);
             OpeningProcess = false;
         }
 
@@ -453,10 +453,12 @@ public class SubwayMovement : MonoBehaviour
         if (right1.position.x < right1Pos + doorWidth)
         {
             right1.position += new Vector3(doorMovement, 0, 0);
+            right2.position += new Vector3(doorMovement, 0, 0);
         }
         else
         {
             right1.position = new Vector3(right1Pos + doorWidth, right1.position.y, 0);
+            right2.position = new Vector3(right2Pos + doorWidth, right2.position.y, 0);
             OpeningProcess = false;
         }
 
@@ -478,20 +480,24 @@ public class SubwayMovement : MonoBehaviour
         if (left1.position.x < left1Pos)
         {
             left1.position += new Vector3(doorMovement, 0, 0);
+            left2.position += new Vector3(doorMovement, 0, 0);
         }
         else
         {
             left1.position = new Vector3(left1Pos, left1.position.y, 0);
+            left2.position = new Vector3(left2Pos, left2.position.y, 0);
             ClosingProcess = false;
         }
 
         if (right1.position.x > right1Pos)
         {
             right1.position -= new Vector3(doorMovement, 0, 0);
+            right2.position -= new Vector3(doorMovement, 0, 0);
         }
         else
         {
             right1.position = new Vector3(right1Pos, right1.position.y, 0);
+            right2.position = new Vector3(right2Pos, right2.position.y, 0);
             ClosingProcess = false;
         }
     }
