@@ -88,5 +88,15 @@ Corridor/Library/metadata/
 *.vscode
 
 # Karara Files
-/[Aa]ssets/[Re]sources/[Ss]creenshots/
+/[Aa]ssets/[Re]sources/[Ss]creenshots/*
 /[Aa]ssets/[Re]sources/[Ss]creenshots.meta
+
+/[Aa]ssets/[Ii]2/*
+/[Aa]ssets/[Ii]2.meta
+
+/[Aa]ssets/[Vv]ibration/*
+/[Aa]ssets/[Vv]ibration.meta
+
+
+
+

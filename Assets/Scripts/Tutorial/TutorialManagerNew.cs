@@ -18,7 +18,6 @@ public class TutorialManagerNew : MonoBehaviour
     public int stepCounter,bagClick;
     public bool forwardOneStep;
     private bool AdClick1stTime = true;
-    private bool allowScroll = false;
     [SerializeField]
     private bool machineOpen = false;
     private bool timerStop = false;
@@ -49,23 +48,23 @@ public class TutorialManagerNew : MonoBehaviour
 
     [SerializeField]
     private GameObject Exclamation, Posture, Phone, HintUI, ScrollHint, clothBag, machineFull, machineEmpty, phoneAnimation, changePostureButton,
-        machineOccupied, ClothUI, ClothFish, EmojiBubble, InventoryBackButton, Ins, Shutter, Notice, FishTalkButton, inventoryBubble, sweet;
+        machineOccupied, ClothUI, ClothFish, EmojiBubble, InventoryBackButton, Shutter, Notice, FishTalkButton, inventoryBubble, sweet;
 
     public GameObject Hint2D, HintScreen, inventoryFish;
     [SerializeField]
     private CanvasGroup CameraBackground, scream, Inventory, Flashlight, FloatingUI, RedDot, Comic;
 
     [SerializeField]
-    private Vector3 HintPosPoster, HintPosCamera, HintPosBag, MachinePos, ClothUIPos1, HintPosKarara, HintPosBackButton,
-        HintPosShutter, HintPosInsBack, ParticlePos1, KararaAInScreen1Pos;
+    private Vector3 HintPosPoster, HintPosCamera, HintPosBag, MachinePos, HintPosKarara, HintPosBackButton,
+        HintPosShutter;
 
     private Vector3[] ClothUIPos = new Vector3[3];
     private Vector3[] InventoryUIPos = new Vector3[3];
     public GameObject[] ClothUIPosObject, InventoryUIPosObject;
 
     [SerializeField]
-    private Sprite initialBody, pos0Body, pos1Body, pos0Work, pos1Work, openBag, closeBag, fullImg, emptyImg, EmojiOpenDoor, unhappyFace, happyFace,
-        EmojiCloth, EmojiHappy, EmojiUnhappy, openDoor, closeDoor, cameraBGFull, postPose1, postPose2;
+    private Sprite pos0Body, pos1Body, pos0Work, pos1Work, openBag, closeBag, fullImg, emptyImg, EmojiOpenDoor, unhappyFace,
+        EmojiCloth, EmojiHappy, openDoor, closeDoor, cameraBGFull, postPose1, postPose2;
 
     [SerializeField]
     private SpriteRenderer body, everything, machineFront, emoji, KararaFace, MachineDoor, inventoryBubbleSR;
@@ -74,18 +73,28 @@ public class TutorialManagerNew : MonoBehaviour
     [SerializeField]
     private CanvasGroup followerNum, followerAnimation, mobile;
 
-    [SerializeField]
-    private Image postKararaImage;
-
+    
     [SerializeField]
     private Animator doorAnimator, shoeAnimator, followerAnimator, phoneAnimator;
 
     public SpriteRenderer[] subwayCloth, inventoryCloth, adsCloth;
 
 
-    public Sprite workInventory, workSubway, workShoe, workShoeSubway,
-        hoodie, barefoot, transparent, SlipperInventory;
+    [Header("Ins Contents")]
+    [SerializeField]
+    private GameObject TutorialPost;
+    [SerializeField]
+    private CanvasGroup InsPage, FollowerHint;
+    [SerializeField]
+    private Image postKararaImage;
 
+
+    [Header("Work Sprites")]
+    public Sprite workInventory;
+    public Sprite workSubway;
+    public Sprite workShoe;
+    public Sprite SlipperInventory;
+    
     private float KararaPosX = -39f;
 
     public enum MachineState
@@ -113,27 +122,20 @@ public class TutorialManagerNew : MonoBehaviour
     public List<GameObject> ClothSlotList;
     public Dictionary <int, GameObject> clothSlotTable = new Dictionary <int, GameObject> ();
 
-    public bool isAlter;//用于判断穿的是哪一件工作服
-
     //inventory里穿了哪几件衣服
     public int isWearingClothNum = 0;
-    public bool isWearingShoe = false;
-
     //inventory里karara
     public Animator kararaAnimator;
     
     [SerializeField]
     private Animator ClothUiAnimator;
 
-
     public List<GameObject> ReturnNoticeList;
-
 
     private GameObject MainCamera;
 
     public TutorialTransition TutorialTransition;
     public Image progressBar;
-    public GameObject TutorialPost,TutorialPostClone;
 
     [SerializeField]
     List<GameObject> KararaList = new List<GameObject>();
@@ -162,6 +164,15 @@ public class TutorialManagerNew : MonoBehaviour
         {
             h.SetActive(false);
         }
+
+        Hide(InsPage);
+        Hide(FollowerHint);
+
+    }
+
+    void ResetFloatingUI()
+    {
+        Hide(mobile);
     }
 
     void Start()
@@ -408,7 +419,7 @@ public class TutorialManagerNew : MonoBehaviour
                     //包在洗衣机下
                     break;
                 case 6:
-                    BackToWashing();//时间开始前进
+                    // BackToWashing();//时间开始前进
                     break;
                 case 7:
                     AfterWash();
@@ -778,6 +789,23 @@ public class TutorialManagerNew : MonoBehaviour
 
         Debug.Log("idx " + idx);
         Debug.Log("fishTalking " + currentFT.content[idx]);
+    }
+
+    private List<AudioType> fishBubbles = new List<AudioType>{AudioType.FishBubble2,
+    AudioType.FishBubble3, AudioType.FishBubble4,AudioType.FishBubble5, AudioType.FishBubble6, AudioType.FishBubble7};
+    IEnumerator AnimateText(TextMeshPro text, string textContent)
+    {
+        currentFT.isPlaying = true;
+        for (int i = 0; i < (textContent.Length + 1); i++)
+        {
+            if (!currentFT.isPlaying) break;
+
+            int random = UnityEngine.Random.Range(0,5);
+            AudioManager.PlayAudio(fishBubbles[random]);
+            text.text = textContent.Substring(0, i);
+            yield return new WaitForSeconds(.05f);
+        }
+        // FishTalkNextSentence();
     }
 
 
@@ -1159,14 +1187,6 @@ public class TutorialManagerNew : MonoBehaviour
         }
     }
 
-
-
-    void PhoneOccur()
-    {
-        //TutorialCameraController.GotoPage(1);
-        Debug.Log("PhoneOccur");
-    }
-
     public void PickChargingPhone()
     {
         if (!timerStop) return;
@@ -1177,9 +1197,25 @@ public class TutorialManagerNew : MonoBehaviour
         //TutorialCameraController.GotoPage(2);
         forwardOneStep = true;//从4到5
 
-        ShowFishText(99);
+        ShowFishText(99);//close fish text on screen2
+        
+        StartCoroutine(ShowKararaAndPhone());
     }
 
+    IEnumerator ShowKararaAndPhone()
+    {
+        ShowKarara(2);
+        EmojiBubble.SetActive(false);
+       
+        yield return new WaitForSeconds(1f);
+
+        Show(mobile);
+        yield return new WaitForSeconds(4f);
+
+        timerStop = false;
+
+
+    }
 
     void BackToWashing()
     {
@@ -1322,6 +1358,8 @@ public class TutorialManagerNew : MonoBehaviour
         // HintScreen.SetActive(true);
         TutorialCameraController.myCameraState = TutorialCameraController.CameraState.Closet;
         Show(Inventory);
+
+        ResetFloatingUI();
     }
 
     
@@ -1389,9 +1427,6 @@ public class TutorialManagerNew : MonoBehaviour
 
     private void ReadyForPhoto()
     {
-        // KararaC.SetActive(false);
-        // KararaA.SetActive(true);
-
         Hint2D.SetActive(true);
         ChangeHintPos(HintPosPoster, 0);
 
@@ -1435,48 +1470,55 @@ public class TutorialManagerNew : MonoBehaviour
 
     private void GoToIns()
     {
-        Show(Ins.GetComponent<CanvasGroup>());
+        Show(InsPage);
         Posture.SetActive(false);
         TutorialCameraController.myCameraState = TutorialCameraController.CameraState.App;
-        
-        //HintPosInsBack 暂时不用
+
+        //照完相后展示tutorial post
+        if(stepCounter> 13)
+        {
+            TutorialPost.SetActive(true);
+            StartCoroutine(ShowFollowerHint());
+        }
+    }
+    IEnumerator ShowFollowerHint()
+    {
+        yield return new WaitForSeconds(1f);
+        Show(FollowerHint);
+
     }
 
     public void ClickBackButtonIns()
     {
         Debug.Log("ClickInsBack");
         if (deactiveButtons) return;
+
+        //结束阶段
+        if(stepCounter > 13)
+        {
+            //结束阶段点击直接进comic
+            StartCoroutine(AfterIns());
+            return;
+        }
+
         HintScreen.SetActive(false);
-        Hide(Ins.GetComponent<CanvasGroup>());
+        Hide(InsPage);
         Hide(CameraBackground);
         
 
         TutorialCameraController.myCameraState = TutorialCameraController.CameraState.Subway;
 
-        forwardOneStep = true;
+        // forwardOneStep = true;
 
     }
 
-
     IEnumerator AfterIns()
     {
-        // only phone
-        // Show(FloatingUI);
-        // Particle.SetActive(true);
+        Hide(InsPage);
 
-        TutorialCameraController.JumpToPage(1);//从ins回到subway scene直接跳转到包在的页面
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(1f);
 
-        //show hint arrow
-        // ReturnPrep();
-
-        // Particle.SetActive(false);
-        
-        // Show(scream);
-        //ScrollHint.transform.localRotation = new Quaternion(0, 0, 0, 0);
-        //ScrollHint.SetActive(true);
-
-        FishTalk("ReturnBag", true, 0, true);
+        ShowComic();
     }
 
 
@@ -1567,10 +1609,14 @@ public class TutorialManagerNew : MonoBehaviour
     public void ClickMobile()
     {
         ///点击mobile按钮，出现followerNum
-        Show(followerNum);
-        Hide(RedDot);
+        // Show(followerNum);
+        // Hide(RedDot);
 
-        StartCoroutine(AddFans());
+        ///点击mobile按钮，出现ins page
+        GoToIns();
+        Show(InsPage);
+
+        // StartCoroutine(AddFans());
     }
 
     IEnumerator AddFans()
@@ -1598,8 +1644,10 @@ public class TutorialManagerNew : MonoBehaviour
     public void ShowComic()
     {
         Show(Comic);
-        Hide(mobile);
+        Hide(InsPage);
         Hide(followerNum);
+
+        ResetFloatingUI();
     }
 
     public void Hide(CanvasGroup UIGroup)
@@ -1617,24 +1665,7 @@ public class TutorialManagerNew : MonoBehaviour
     }
 
 
-    private List<AudioType> fishBubbles = new List<AudioType>{  AudioType.FishBubble2,
-    AudioType.FishBubble3, AudioType.FishBubble4,AudioType.FishBubble5, AudioType.FishBubble6, AudioType.FishBubble7};
-    IEnumerator AnimateText(TextMeshPro text, string textContent)
-    {
-        currentFT.isPlaying = true;
-        for (int i = 0; i < (textContent.Length + 1); i++)
-        {
-            if (!currentFT.isPlaying) break;
-
-            int random = UnityEngine.Random.Range(0,5);
-            AudioManager.PlayAudio(fishBubbles[random]);
-            text.text = textContent.Substring(0, i);
-            yield return new WaitForSeconds(.1f);
-        }
-
-        FishTalkNextSentence();
-    }
-
+   
     void KararaTalk(Sprite sprite)
     {
         emoji.sprite = sprite;
