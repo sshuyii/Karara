@@ -281,7 +281,7 @@ public class TutorialTouchController : MonoBehaviour
             Regex mRegular = new Regex(@"Poster\d+", RegexOptions.None);
             if (mRegular.IsMatch(hit.transform.gameObject.name))
             {
-                TutorialManagerNew.ClickAd();
+                TutorialManagerNew.ClickPoster();
             }
 
             switch(hitObject)
@@ -291,10 +291,10 @@ public class TutorialTouchController : MonoBehaviour
                     // AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickMachine();
                     break;
-                case "PosterTutorial":
+                case "Poster":
                     Debug.Log("hit poster");
                     // AudioManager.PlayAudio(AudioType.UI_Dialogue);
-                    TutorialManagerNew.ClickAd();
+                    TutorialManagerNew.ClickPoster();
                     break;
                 case "full":
                     Debug.Log("hit front");
@@ -329,10 +329,6 @@ public class TutorialTouchController : MonoBehaviour
                 case "PlayerHeadSubway":
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickKarara();
-                    break;
-                case "!":
-                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
-                    TutorialManagerNew.ClickExclamation();
                     break;
                 case "hiring_memo":
                     TutorialManagerNew.ClickHiring();

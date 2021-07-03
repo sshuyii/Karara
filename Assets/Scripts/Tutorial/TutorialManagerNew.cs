@@ -14,7 +14,7 @@ using UnityEngine.Experimental.GlobalIllumination;
 
 public class TutorialManagerNew : MonoBehaviour
 {
-
+    
     public int stepCounter,bagClick;
     public bool forwardOneStep;
     private bool AdClick1stTime = true;
@@ -26,6 +26,11 @@ public class TutorialManagerNew : MonoBehaviour
     private bool forwardLater = false;
 
     [SerializeField]
+    private GameObject BlackBlocks;
+    private CanvasGroup BlackBlocksCG;
+    private Animator blackBlockAnimator;
+
+    [SerializeField]
     private bool deactiveButtons = false;
     private bool inLoop = false;
     private bool flashing = false;
@@ -34,25 +39,30 @@ public class TutorialManagerNew : MonoBehaviour
 
     private float realTimer;
     private float timer = 0;
-    public TextMeshPro timerNum;
     private TutorialCameraController TutorialCameraController;
     private FishTextManager FishTextManager;
 
 
     [SerializeField]
     TextMeshPro fishText;
+    TextMeshProUGUI fishTextUI;
+    bool ftUI = false;
+
+    [Header("Machine Related")]
+    [SerializeField]
+    private float washTotalTime;
 
 
     [SerializeField]
     TextMeshProUGUI followerNumText;
 
     [SerializeField]
-    private GameObject Exclamation, Posture, Phone, HintUI, ScrollHint, clothBag, machineFull, machineEmpty, phoneAnimation, changePostureButton,
-        machineOccupied, ClothUI, ClothFish, EmojiBubble, InventoryBackButton, Shutter, Notice, FishTalkButton, inventoryBubble, sweet;
+    private GameObject Posture, Phone, HintUI, ScrollHint, clothBag, machineFull, machineEmpty, phoneAnimation, changePostureButton,
+        machineOccupied, ClothUI, ClothFish, EmojiBubble, InventoryBackButton, Shutter, FishTalkButton, inventoryBubble, sweet;
 
     public GameObject Hint2D, HintScreen, inventoryFish;
     [SerializeField]
-    private CanvasGroup CameraBackground, scream, Inventory, Flashlight, FloatingUI, RedDot, Comic;
+    private CanvasGroup CameraBackground, Notice, scream, Inventory, Flashlight, Comic;
 
     [SerializeField]
     private Vector3 HintPosPoster, HintPosCamera, HintPosBag, MachinePos, HintPosKarara, HintPosBackButton,
@@ -63,11 +73,11 @@ public class TutorialManagerNew : MonoBehaviour
     public GameObject[] ClothUIPosObject, InventoryUIPosObject;
 
     [SerializeField]
-    private Sprite pos0Body, pos1Body, pos0Work, pos1Work, openBag, closeBag, fullImg, emptyImg, EmojiOpenDoor, unhappyFace,
+    private Sprite pos0Body, pos1Body, pos0Work, pos1Work, openBag, closeBag, fullImg, emptyImg, EmojiOpenDoor,
         EmojiCloth, EmojiHappy, openDoor, closeDoor, cameraBGFull, postPose1, postPose2;
 
     [SerializeField]
-    private SpriteRenderer body, everything, machineFront, emoji, KararaFace, MachineDoor, inventoryBubbleSR;
+    private SpriteRenderer body, everything, machineFront, emoji, MachineDoor, inventoryBubbleSR;
 
 
     [SerializeField]
@@ -75,16 +85,24 @@ public class TutorialManagerNew : MonoBehaviour
 
     
     [SerializeField]
-    private Animator doorAnimator, shoeAnimator, followerAnimator, phoneAnimator;
+    private Animator shoeAnimator, followerAnimator;
+
+    [SerializeField]
+    private List<Animator> AnimatorList = new List<Animator>();
+    private Dictionary<string, Animator> AnimatorTable = new Dictionary<string, Animator>();
 
     public SpriteRenderer[] subwayCloth, inventoryCloth, adsCloth;
+
+    [Header("Camera Related")]
+    [SerializeField]
+    private Animator shutterAnimator;
 
 
     [Header("Ins Contents")]
     [SerializeField]
     private GameObject TutorialPost;
     [SerializeField]
-    private CanvasGroup InsPage, FollowerHint;
+    private CanvasGroup InsPage, FollowerHint,phone_background;
     [SerializeField]
     private Image postKararaImage;
 
@@ -95,8 +113,6 @@ public class TutorialManagerNew : MonoBehaviour
     public Sprite workShoe;
     public Sprite SlipperInventory;
     
-    private float KararaPosX = -39f;
-
     public enum MachineState
     {
         Empty,
@@ -143,10 +159,18 @@ public class TutorialManagerNew : MonoBehaviour
     [SerializeField]
     List<GameObject> fishTextObjList = new List<GameObject>();
     List<TextMeshPro> fishTextList = new List<TextMeshPro>();
+
+    [SerializeField]
+    List<TextMeshProUGUI> fishTextUIList = new List<TextMeshProUGUI>();
     
     [SerializeField]
     List<GameObject> worldHintList = new List<GameObject>();
     Dictionary<string, Vector3> worldHintPosTable = new Dictionary<string, Vector3>();
+
+    [SerializeField]
+    List<GameObject> kararaBubbleList = new List<GameObject>();
+
+    List<TextMeshPro> kararaTextList = new List<TextMeshPro>();
     
     void ResetTutorial()
     {
@@ -155,29 +179,39 @@ public class TutorialManagerNew : MonoBehaviour
             k.SetActive(false);
         }
 
-        foreach (GameObject f in fishTextObjList)
-        {
-            f.SetActive(false);
-        }
+        ShowFishText(true, 99);
+        ShowFishText(false, 99);
 
         foreach (GameObject h in worldHintList)
         {
             h.SetActive(false);
         }
 
+        foreach (GameObject k in kararaBubbleList)
+        {
+            k.SetActive(false);
+        }
+
         Hide(InsPage);
         Hide(FollowerHint);
+        Hide(CameraBackground);
+        Hide(Notice);
+        Hide(phone_background);
 
+        Hide(BlackBlocksCG);
+
+        ResetFloatingUI();
     }
 
     void ResetFloatingUI()
     {
         Hide(mobile);
+        Hide(followerNum);
     }
 
     void Start()
     {
-        ResetTutorial();
+        deactiveButtons = true;
 
         for(int i = 0; i < fishTextObjList.Count; i++ )
         {
@@ -189,6 +223,15 @@ public class TutorialManagerNew : MonoBehaviour
             worldHintPosTable.Add(worldHintList[i].name, worldHintList[i].transform.position);
         }
 
+        for(int i = 0; i < kararaBubbleList.Count; i++ )
+        {
+            kararaTextList.Add(kararaBubbleList[i].GetComponentInChildren<TextMeshPro>());
+        }
+
+        BlackBlocksCG = BlackBlocks.GetComponent<CanvasGroup>();
+        blackBlockAnimator = BlackBlocks.GetComponent<Animator>();
+
+
         // clothBag.SetActive(false);//不然会显示在地铁外面
 
         //Set Camera position and size in stage 3  
@@ -199,7 +242,6 @@ public class TutorialManagerNew : MonoBehaviour
 
 
         //step1
-        stepCounter = 0;
         bagClick = 0;
         myMachineState = MachineState.Empty;
 
@@ -218,6 +260,7 @@ public class TutorialManagerNew : MonoBehaviour
 
         inventoryBubbleSR = inventoryBubble.GetComponentsInChildren<SpriteRenderer>()[1];
 
+        //所有inventory里的hint位置
         for(int i = 0; i < ClothUIPosObject.Length; i++)
         {   
             ClothUIPos[i] = ClothUIPosObject[i].transform.position;
@@ -226,6 +269,14 @@ public class TutorialManagerNew : MonoBehaviour
 
         }
         
+        //所有animator
+        for(int i = 0; i < AnimatorList.Count; i++)
+        {
+            AnimatorTable.Add(AnimatorList[i].gameObject.name, AnimatorList[i]);
+        }        
+
+        //放在最后防止进行到这一步时，有些变量还未赋值
+        ResetTutorial();
     }
 
 
@@ -260,13 +311,25 @@ public class TutorialManagerNew : MonoBehaviour
         TutorialTransition.TransitionStage++;
     }
 
+    private void ShowBlackBlocks(bool show)
+    {
+        if(show)
+        {
+            Show(BlackBlocksCG);
+
+            blackBlockAnimator.SetTrigger("in");
+        }
+        else{
+            blackBlockAnimator.SetTrigger("out");
+
+        }
+    }
+
     void Update()
     {
     
         if(TutorialTransition.TransitionStage == 4)
         {
-           
-
             print("TutorialTransition =" + TutorialTransition.TransitionStage );
 
             MainCamera.GetComponent<Camera>().orthographicSize = 5;
@@ -274,7 +337,9 @@ public class TutorialManagerNew : MonoBehaviour
             
             TutorialTransition.TransitionStage ++;
             //正式开始，进入车厢
-            StartCoroutine(ShowExclamation());
+            StartCoroutine(GetOnTrain());
+
+            ShowBlackBlocks(true);
         }
 
         if (!timerStop)
@@ -288,12 +353,26 @@ public class TutorialManagerNew : MonoBehaviour
             timer += Time.deltaTime;
         }
 
+
         //在inventory里穿衣服
         //穿上工作服>>穿上鞋>>>鱼开始让人还衣服
-        if(isWearingClothNum == 3 && !longTap)
-        {           
-            longTap = true;
-            StartCoroutine(LongTap());
+        // if(isWearingClothNum == 3 && !longTap)
+        // {           
+        //     longTap = true;
+        //     StartCoroutine(LongTap());
+        // }
+
+        //如果拿了三件衣服，karara闪光
+        if(pickedClothNum == 3)
+        {
+            ShowAnimation("PlayerSubwayFolder");
+        }
+
+        if(isWearingClothNum == 3)
+        {
+            StartCoroutine(ShowBackButton());
+            isWearingClothNum ++;
+
         }
 
         //还掉鞋之后出现返回地铁按钮
@@ -352,8 +431,6 @@ public class TutorialManagerNew : MonoBehaviour
                 if (!machineOpen)
                 {
                     Debug.Log("前提");
-                    EmojiBubble.SetActive(true);
-                    KararaTalk(EmojiOpenDoor);
                     HintUI.SetActive(true);
                 }
 
@@ -364,8 +441,8 @@ public class TutorialManagerNew : MonoBehaviour
                
                 TutorialCameraController.targetPage = 2;
 
-                if (machineOpen) FishTalk("CloseDoor",true, 0, false);
-                else FishTalk("Right",true, 0, false);
+                if (machineOpen) FishTalk("CloseDoor",true, 0, false, false);
+                else FishTalk("Right",true, 0, false, false);
             }
             else if(inLoop && TutorialCameraController.currentPage == 3)
             {
@@ -394,46 +471,39 @@ public class TutorialManagerNew : MonoBehaviour
             switch (stepCounter)
             {
                 case 1:
-                    ShowCameraBG();
+                    KararaStepOne();
                     break;
 
                 case 2:
-                    StartCoroutine(BackToSubway());
-                    StartCoroutine(ScrollTeaching(1));
-                    // ShowKarara(1);
+                    KararaStepTwo();
                     break;
+
                 case 3:
-                    scrollTeaching = false;
-
-                    FishTalk("Late", true, 0, true);
-
+                    KararaStepThree();
                     break;
+
                 case 4:
-                    //鱼讲完话前进
-                    BagOccur();
-                    //包出现在screen1
-                    //鱼说话，put cloth in machine
+                    BackToSubway();
                     break;
+
                 case 5:
-                    //鱼讲完话前进
-                    //包在洗衣机下
+                    KararaCalled();
                     break;
+
                 case 6:
-                    // BackToWashing();//时间开始前进
+                    scrollTeaching = false;
+                    FishTalk("Late", true, 0, false, true);
                     break;
+
                 case 7:
-                    AfterWash();
-                    //从洗完到小循环前提
+                    BagOccur();
                     break;
+
                 case 8:
-                    StartCoroutine(JumpToFish());
-                    //小循环-小循环跳出
                     break;
                 case 9:
-                    AfterPickUpCloth();
                     break;
                 case 10:
-                    ShowInventory();
                     break;
                 case 11:
                     //还了鞋之后就可以显示返回地铁的按钮
@@ -443,22 +513,12 @@ public class TutorialManagerNew : MonoBehaviour
 
                     break;
                 case 12:
-                    ReadyForPhoto();
                     break;
                 case 13:
-                    //照相界面下面有个黑条，改变姿势的透明图层需要变小一点
-                    RectTransform rt = changePostureButton.GetComponent<RectTransform>();
-                    rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, 20);
-                    rt.sizeDelta = new Vector2 (700, 500);
-
-                    ShowCameraBG();
                     break;
                 case 14:
-                    GoToIns();
                     break;
                 case 15:
-                    //从ins直接回到screen2
-                    StartCoroutine(AfterIns());
                     break;
 
                 case 16:
@@ -480,68 +540,169 @@ public class TutorialManagerNew : MonoBehaviour
         }
     }
 
+    private void KararaStepOne()
+    {
+        Debug.Log("karara step 1");
+        ShowKarara(4, true,  "Poster");
+    }
+
+    private void KararaStepTwo()
+    {
+        Debug.Log("karara step 2");
+        ShowKarara(3, true, "cool");
+    }
+
+    private void KararaStepThree()
+    {
+        Debug.Log("karara step 3");
+        ShowKarara(2, true, "Hey");
+    }
+
+    private void KararaCalled()
+    {
+        ShowKararaBubble(2, "karara?");
+        ShowFishText(true, 99);
+
+        ShowBlackBlocks(false);
+
+        StartCoroutine(ScrollTeaching(1));
+    }
+
+
     private void CalculateTime()
     {
-       
-        realTimer = 5f - timer;
+        realTimer = washTotalTime - timer;
         
-        timerNum.text = "0:0" + Mathf.RoundToInt(realTimer).ToString();
+        // timerNum.text = "0:0" + Mathf.RoundToInt(realTimer).ToString();
 
-
-        if(realTimer<0)
+        if(realTimer < 0)
         {
             AudioManager.PlayAudio(AudioType.Machine_Finished);
             myMachineState = MachineState.Finish;
-            forwardOneStep = true;
+            // forwardOneStep = true;
+            AfterWash();
+            returning = true;
         }
 
     }
 
-    private void ShowKarara(int i)
+    private void ShowKarara(int index, bool showTalk, string text)
     {
         foreach (GameObject karara in KararaList)
         {
             karara.SetActive(false);
         }
-        if(i > KararaList.Count) return;
+        if(index > KararaList.Count) return;//如果i=99，就把所有的都deactive
 
-        KararaList[i].SetActive(true);
+        KararaList[index].SetActive(true);
+
+        if(showTalk) ShowKararaBubble(index, text);
     }
 
-    private void ShowFishText(int i)
-    {   
-        foreach (TextMeshPro ft in fishTextList)
+    private void ShowKararaBubble(int index, string text)
+    {
+        foreach (GameObject b in kararaBubbleList)
         {
-            ft.gameObject.transform.parent.gameObject.SetActive(false);
+            b.SetActive(false);
         }
-        
-        if(i > fishTextList.Count) return;
+    
+        if(index > kararaBubbleList.Count) return;
 
-        fishTextList[i].gameObject.transform.parent.gameObject.SetActive(true);
+        StartCoroutine(ShowKararaBubble(index));
+        kararaTextList[index].text = text;
+
     }
 
+    IEnumerator ShowKararaBubble(int index)
+    {
+        yield return new WaitForSeconds(0.6f);
+        kararaBubbleList[index].SetActive(true); 
+    }
+    
+    private void ShowFishText(bool isUI, int i)
+    {   
+        if(!isUI)
+        {
+            foreach (TextMeshPro ft in fishTextList)
+            {
+                ft.gameObject.transform.parent.gameObject.SetActive(false);
+                Debug.Log(ft.gameObject.transform.parent.gameObject.name + "is deactivated");
+            }
 
+            if(i > fishTextList.Count) return;
+            
+            fishTextList[i].gameObject.transform.parent.gameObject.SetActive(true);
 
-    IEnumerator ShowExclamation()
+        }
+        else
+        {
+            foreach (TextMeshProUGUI ft in fishTextUIList)
+            {
+                ft.gameObject.transform.parent.gameObject.SetActive(false);
+                Debug.Log(ft.gameObject.transform.parent.gameObject.name + "is deactivated");
+
+            }
+
+            if(i > fishTextUIList.Count) return;
+
+            fishTextUIList[i].gameObject.transform.parent.gameObject.SetActive(true);
+
+        }
+
+    }
+
+    private void ShowAnimation(string animatorName)
+    {
+        if(AnimatorTable.ContainsKey(animatorName) == false)//如果给的名字不存在，把所有animator都停掉
+        {
+            Debug.Log(animatorName + "does not exist!");
+            if(animatorName == "none")
+            {
+                foreach(Animator a in AnimatorList)
+                {
+                    a.SetBool("hint", false);
+                    Debug.Log(a.gameObject.name + "is disabled");
+                }
+            }
+            return;
+        }
+
+        List<Animator> AnimatorListTemp = new List<Animator>();
+
+        foreach (Animator a in AnimatorList)
+        {
+            AnimatorListTemp.Add(a);
+        }
+        AnimatorListTemp.Remove(AnimatorTable[animatorName]);
+
+        foreach (Animator a in AnimatorListTemp)
+        {
+            a.SetBool("hint", false);
+        }
+        AnimatorTable[animatorName].SetBool("hint", true);
+        Debug.Log(AnimatorTable[animatorName].gameObject.name + "is enabled");
+        
+    }
+    public void Proceed()
+    {
+        forwardOneStep = true;
+
+    }
+
+    IEnumerator GetOnTrain()
     {
         yield return new WaitForSeconds(1f);
         //门打开
-        doorAnimator.SetTrigger("doorOpen");
+        AnimatorTable["doors"].SetTrigger("doorOpen");
         
-        float Twait = (float)doorAnimator.GetCurrentAnimatorClipInfo(0).Length;
-        yield return new WaitForSeconds(Twait);
-
-
+        float Twait = (float)AnimatorTable["doors"].GetCurrentAnimatorClipInfo(0).Length;
+        yield return new WaitForSeconds(Twait + 1f);
 
         //karara出现
-        ShowKarara(0);
+        ShowKarara(4, false, "");
 
-        //门关上
-        yield return new WaitForSeconds(1f);
-
-        Exclamation.SetActive(true);
-
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
+        ShowKararaBubble(0, "Laundry?");
 
         if(stepCounter == 0)
         {
@@ -559,38 +720,32 @@ public class TutorialManagerNew : MonoBehaviour
         }
     }
 
-    public void ClickAd()
+    public void ClickPoster()
     {
-        StopCoroutine(ShowExclamation());
+        ShowAnimation("none");
 
         if (deactiveButtons) return;
+        if(!posterEnabled) return;
+
+        posterEnabled = false;
         
         AudioManager.PlayAudio(AudioType.Poster_Enter);
 
         Debug.Log("ClickAd");
-        if (AdClick1stTime)
-        {
-            StartCoroutine(ShowHintInAd());
 
-            Exclamation.SetActive(false);
-            forwardOneStep = true;
-        }
-        else
-        {
-            if(stepCounter != 12) 
-            {
-                //todo:可能要替换成其他的，比如震动一下，鱼说一句话
-                //这几个能到screen 4的阶段都在显示scream
-                return;
-            }
-                 
             //穿上工作服了
             body.sprite = pos1Work;
             
             Shutter.SetActive(true);
             Hint2D.SetActive(false);
-            forwardOneStep = true;
-        }
+
+            //照相界面下面有个黑条，改变姿势的透明图层需要变小一点
+            RectTransform rt = changePostureButton.GetComponent<RectTransform>();
+            rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, 20);
+            rt.sizeDelta = new Vector2 (700, 500);
+
+            ShowCameraBG();
+
     }
 
     IEnumerator ShowShutterHint()
@@ -617,130 +772,62 @@ public class TutorialManagerNew : MonoBehaviour
     private void ShowCameraBG()
     {
         Debug.Log("ShowCameraBG");
-        if (AdClick1stTime)
-        {
-            Posture.SetActive(true);
-            Show(CameraBackground);
-            ChangeHintPos(HintPosCamera, 3);
-            // body.sprite = initialBody;
-            body.sprite = pos0Body;//0601版本里没细化两个subwayscene的姿势
 
+        Posture.SetActive(true);
+        Show(CameraBackground);
 
-        }
-        else
-        {
-            // set all children
-            Posture.SetActive(true);
-            Show(CameraBackground);
-            CameraBackground.GetComponent<Image>().sprite = cameraBGFull;
-
-            StartCoroutine(ShowShutterHint());
-
-
-            //身上穿的衣服
-            // if(isAlter) {body.sprite = pos0WorkAlter;}
-            // else {body.sprite = pos0Work;}            
-            
-            everything.sprite = null;
-            HintScreen.transform.localPosition = HintPosShutter;
-            
-        }
-
+        everything.sprite = null;
+        HintScreen.transform.localPosition = HintPosShutter;
     }
 
 
     [SerializeField]
     int clickTime = 0;
 
-    public void ClickChangePosture()
+    public void ClickPosture()
     {
         if (deactiveButtons) return;
 
-
         AudioManager.PlayAudio(AudioType.Photo_Pose);
-        Debug.Log("ClickChangePosture");
+        Debug.Log("ClickPosture");
 
-        if (AdClick1stTime)
-        {
-            clickTime ++;
+        clickTime ++;
 
             if(clickTime == 1)
             {
-                body.sprite = pos1Body;
-            }
-            // else if(clickTime == 2)
-            // {   
-            //     body.sprite = pos1Body;
-            // }
-            else if(clickTime == 2)
-            {
-                AdClick1stTime = false;
-                StopCoroutine(ShowHintInAd());
-                Hint2D.SetActive(false);
-
-                forwardOneStep = true;
-               
-                //reset clickTime for 2nd time
-                clickTime = 0;
-            }
-        }
-        else if(stepCounter == 13)
-        {
-            clickTime ++;
-       
-
-            if(clickTime == 1)
-            {
-                // //身上穿的衣服
-                // if(isAlter) {body.sprite = pos0WorkAlter;}
-                // else {body.sprite = pos0Work;}
+                //身上穿的衣服
                 body.sprite = pos0Work;
 
                 //第一次发的post
                 isInitialPosture = false;
-                // if(isAlter) {postKararaImage.sprite = postPose1Alter;}
-                // else {postKararaImage.sprite = postPose1;}
-
+            
                 postKararaImage.sprite = postPose1;
-       
             }
             else if(clickTime == 2)
             {   
-                // //身上穿的衣服
-                // if(isAlter) {body.sprite = pos1WorkAlter;}
-                // else {body.sprite = pos1Work;}
+                //身上穿的衣服
                 body.sprite = pos1Work;
 
-
-                clickTime = 0;
+                clickTime = 0;//reset
 
                 //第一次发的post
                 isInitialPosture = true;
-                // if(isAlter) {postKararaImage.sprite = postPose2Alter;}
-                // else {postKararaImage.sprite = postPose2;}
+                
                 postKararaImage.sprite = postPose2;
-            }
-
-            Debug.Log("ClickChangePosture 2nd");
-        }
-
+            }        
     }
 
-    IEnumerator BackToSubway()
+    private void BackToSubway()
     {
-        //出现fish喊话
-        Show(scream);
-        yield return new WaitForSeconds(0.5f);
-
-        ShowKarara(3);
-        yield return new WaitForSeconds(0.5f);
-        Hide(CameraBackground);
-        Posture.SetActive(false);
+        ///鱼开始喊话
+        FishTalk("come", true, 0, true, false);
+        ShowKararaBubble(99, "");
     }
 
 
     IEnumerator ScrollTeaching(int targetPage)
     {
+        ShowFishText(true, 99);
         yield return new WaitForSeconds(1.5f);
         Show(scream);
         TutorialCameraController.allowScroll = true;
@@ -750,29 +837,31 @@ public class TutorialManagerNew : MonoBehaviour
 
         scrollTeaching = true;
         ScrollHint.SetActive(true);
-
+        deactiveButtons = false;
     }
 
-    private void FishTalk(string keyWord, bool animateOrNot, int screen, bool forward)
+    private void FishTalk(string keyWord, bool animateOrNot, int screen, bool isUI, bool forward)
     {
-        ShowFishText(screen);
+        ShowFishText(isUI, screen);
 
         FishTalkButton.SetActive(true);
         currentFT = FishTextManager.GetText(keyWord);
         fishForward = forward;
         currentFS = screen;
+        ftUI = isUI;
 
-        FishTalk(animateOrNot, screen, forward);
+        FishTalk(animateOrNot, forward);
     }
 
-    private void FishTalk(bool animateOrNot, int screen, bool forward)
+    private void FishTalk(bool animateOrNot, bool forward)
     {
-        fishText = fishTextList[screen];
+        if(ftUI) fishTextUI = fishTextUIList[currentFS];
+        else fishText = fishTextList[currentFS];
 
         int idx = currentFT.playingIdx;
         if (animateOrNot) 
         {
-            lastRoutine = StartCoroutine(AnimateText(fishText, currentFT.content[idx]));
+            lastRoutine = StartCoroutine(AnimateText(fishText, fishTextUI, currentFT.content[idx]));
         }
         else
         {
@@ -784,16 +873,24 @@ public class TutorialManagerNew : MonoBehaviour
                 forwardOneStep = forward;
             }
 
-            fishText.text = currentFT.content[idx];
+            //直接显示所有内容
+            if(ftUI) 
+            {
+                fishTextUI.text = currentFT.content[idx];
+            }
+            else {
+                fishText.text = currentFT.content[idx];   
+            }
         }
 
         Debug.Log("idx " + idx);
         Debug.Log("fishTalking " + currentFT.content[idx]);
     }
 
-    private List<AudioType> fishBubbles = new List<AudioType>{AudioType.FishBubble2,
-    AudioType.FishBubble3, AudioType.FishBubble4,AudioType.FishBubble5, AudioType.FishBubble6, AudioType.FishBubble7};
-    IEnumerator AnimateText(TextMeshPro text, string textContent)
+    private List<AudioType> fishBubbles = new List<AudioType> {AudioType.FishBubble2,
+        AudioType.FishBubble3, AudioType.FishBubble4,AudioType.FishBubble5, AudioType.FishBubble6, AudioType.FishBubble7};
+
+    IEnumerator AnimateText(TextMeshPro text, TextMeshProUGUI textUI, string textContent)
     {
         currentFT.isPlaying = true;
         for (int i = 0; i < (textContent.Length + 1); i++)
@@ -802,10 +899,13 @@ public class TutorialManagerNew : MonoBehaviour
 
             int random = UnityEngine.Random.Range(0,5);
             AudioManager.PlayAudio(fishBubbles[random]);
-            text.text = textContent.Substring(0, i);
+            if(ftUI) textUI.text = textContent.Substring(0, i);
+            else text.text = textContent.Substring(0, i);
             yield return new WaitForSeconds(.05f);
+
+            //如果进行到最后一句话的最后一个字母，FishTalkButton可以被拿掉
+            if(i == textContent.Length && currentFT.playingIdx > currentFT.content.Count - 2) FishTalkButton.SetActive(false);
         }
-        // FishTalkNextSentence();
     }
 
 
@@ -826,10 +926,8 @@ public class TutorialManagerNew : MonoBehaviour
     {
         currentFT.isPlaying = false;
         StopCoroutine(lastRoutine);
-        FishTalk(false, currentFS, fishForward);
+        FishTalk(false, fishForward);
     }
-
-
 
     private void FishTalkNextSentence()
     {
@@ -837,12 +935,12 @@ public class TutorialManagerNew : MonoBehaviour
         currentFT.playingIdx = currentFT.playingIdx+1;
         Debug.Log("reset " + currentFT.playingIdx);
 
-        if (currentFT.playingIdx < currentFT.content.Count) FishTalk(true, 0, false);
+        if (currentFT.playingIdx < currentFT.content.Count) FishTalk(true, false);
         else
         {
             Debug.Log("reset 0 ");
             currentFT.playingIdx = currentFT.playingIdx - 1;
-            FishTalk(false, 0, false);
+            FishTalk(false, false);
             currentFT.playingIdx = 0;
         }
     }
@@ -853,6 +951,7 @@ public class TutorialManagerNew : MonoBehaviour
     {
         HintUI.SetActive(true);
         clothBag.SetActive(true);
+        ShowAnimation("ClothBag");
     }
 
     public void ClickBag()
@@ -861,18 +960,17 @@ public class TutorialManagerNew : MonoBehaviour
         if (deactiveButtons) return;
         
         bagClick++;
+        ShowAnimation("none");
         Debug.Log("Bag click " + bagClick.ToString());
 
-        if(bagClick == 1)
+        if(bagClick == 1)//从screen1到洗衣机下方
         {
-            // AudioManager.AdjustPitch(AudioType.Bag_Phase1, 0.5f);
             AudioManager.PlayAudio(AudioType.Bag_Phase1);
             StartCoroutine(BeforeWash());
         }
 
-        else if(bagClick == 2)
+        else if(bagClick == 2)//洗衣机下方，衣服进洗衣机
         {
-            // AudioManager.AdjustPitch(AudioType.Bag_Phase1, 0.6f);
             AudioManager.PlayAudio(AudioType.Bag_Phase1);
             HintUI.SetActive(false);//点完包后提示消失一会儿，等洗衣机开门动画播完之后再出现在洗衣机上
 
@@ -883,9 +981,10 @@ public class TutorialManagerNew : MonoBehaviour
             if (inLoop)
             {
                 //du地一声
+                //出现return UI，但是不能点
+                StartCoroutine(ShowReturnNotice());
                 AudioManager.PlayAudio(AudioType.No);
                 bagClick = 2;
-                StartCoroutine(ChangeFace());
             }
 
             else if(returning)
@@ -903,6 +1002,8 @@ public class TutorialManagerNew : MonoBehaviour
         }
     }
 
+    bool returnBagFirstTime = true;
+
     IEnumerator ShowReturnNotice()
     {
         yield return new WaitForSeconds(0.2f);
@@ -910,25 +1011,8 @@ public class TutorialManagerNew : MonoBehaviour
 
         yield return new WaitForSeconds(0.2f);
 
-        Notice.SetActive(true);    
+        Show(Notice);   
     }
-
-
-    private IEnumerator ChangeFace()
-    {
-        Debug.Log("change face");
-        KararaTalk(EmojiOpenDoor);
-        KararaFace.sprite = unhappyFace;
-        // KararaTalk(EmojiUnhappy);
-
-        yield return new WaitForSeconds(2f);
-
-        HintUI.transform.localPosition = MachinePos;
-
-        //KararaFace.sprite = happyFace;//维持不开心表情
-
-    }
-
     private IEnumerator BeforeWash()
     {
         deactiveButtons = true;
@@ -941,7 +1025,7 @@ public class TutorialManagerNew : MonoBehaviour
         
         yield return new WaitForSeconds(0.1f);
 
-        FishTalk("ClickBag", true, 1, false);
+        FishTalk("ClickBag", true, 0, true, false);
         
         HintUI.transform.localPosition = newPos;
         //TutorialCameraController.GotoPage(2);
@@ -976,13 +1060,13 @@ public class TutorialManagerNew : MonoBehaviour
         MachineDoor.sprite = closeDoor;
         AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
 
-        FishTalk("StartWashing", true, 1, false);
+        FishTalk("StartWashing", true, 0, true, false);
 
         yield return new WaitForSeconds(0.2f);//等一会儿再出现提示ui
         HintUI.transform.localPosition = MachinePos;
         HintUI.SetActive(true);
 
-        forwardOneStep = true;
+        // forwardOneStep = true;
     }
 
     public void ClickMachine()
@@ -1001,6 +1085,8 @@ public class TutorialManagerNew : MonoBehaviour
                 AudioManager.PlayAudio(AudioType.Machine_Washing);
                 Debug.Log("start washing");
 
+                ShowFishText(true, 99);
+
                 machineFull.SetActive(true);
                 machineEmpty.SetActive(false);
                 HintUI.SetActive(false);
@@ -1008,22 +1094,21 @@ public class TutorialManagerNew : MonoBehaviour
                 myMachineState = MachineState.Washing;
 
                 StartCoroutine(StopTimerAndForward());
-                //进入找到手机的部分
-                // forwardOneStep = true;
-
                 break;
+
             case MachineState.Finish:
                 if(deactiveButtons) return;
+                ShowAnimation("none");
                 if (!machineOpen) OpenMachine();
                 else CloseMachine();
 
                 //如果第二次打开了洗衣机门，鱼要阻止
-                if (stepCounter == 8)
-                {
-                    Show(scream);
-                    FishTalk("Open2ndTime", true, 0, false);
+                // if (stepCounter == 8)
+                // {
+                //     Show(scream);
+                //     FishTalk("Open2ndTime", true, 0, false, false);
 
-                }
+                // }
                 break;
         }
     }
@@ -1032,7 +1117,7 @@ public class TutorialManagerNew : MonoBehaviour
     IEnumerator StopTimerAndForward()
     {
         yield return new WaitForSeconds(1.5f);
-        phoneAnimator.SetTrigger("isCharged");
+        AnimatorTable["phone_particle"].SetTrigger("isCharged");
 
         //todo：直接按clip长度走，不用每次都改具体时间？
         yield return new WaitForSeconds(2f);
@@ -1043,7 +1128,7 @@ public class TutorialManagerNew : MonoBehaviour
         timerStop = true;
 
         //鱼说话：谁丢手机了？
-        FishTalk("LostPhone", true, 1, false);
+        FishTalk("LostPhone", true, 0, true, false);
         // forwardOneStep = true;
     }
 
@@ -1054,30 +1139,30 @@ public class TutorialManagerNew : MonoBehaviour
 
         AudioManager.PlayAudio(AudioType.Machine_OpenDoor);
 
+        StartCoroutine(OpenDoor(0.2f));
+
+
         if (isFirstOpen)
         {
             Debug.Log("isFirstOpen and open machine");
 
-            //箭头在第一件没被拿走的衣服上
-            ChangeHintPos(ClothUIPos[0], 0);
             Hint2D.SetActive(false);
             HintUI.SetActive(false);
 
-
             StartCoroutine(OpenCloseDoor(0.2f));
         }
-        else if(inLoop)
-        {
-            Debug.Log("in loop and open machine");
-            StartCoroutine(OpenDoor(0.2f));
+        // else if(inLoop)
+        // {
+        //     Debug.Log("in loop and open machine");
+        //     StartCoroutine(OpenDoor(0.2f));
 
-            KararaTalk(EmojiCloth);
-        }
-        else {
-            // MachineDoor.sprite = openDoor;
-            StartCoroutine(OpenDoor(0.3f));
+        //     KararaTalk(EmojiCloth);
+        // }
+        // else {
+        //     // MachineDoor.sprite = openDoor;
+        //     StartCoroutine(OpenDoor(0.3f));
 
-        }
+        // }
     }
 
     IEnumerator OpenCloseDoor(float time)
@@ -1101,13 +1186,34 @@ public class TutorialManagerNew : MonoBehaviour
         AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
 
         machineOpen = false;
-        // ClothUI.SetActive(false);
+        
         ClothUiAnimator.SetTrigger("CloseImmediantly");
         HintScreen.SetActive(false);
 
-        deactiveButtons = false;//打开过程有一定时间，到时间前不可再次点击
         isFirstOpen = false;
-        forwardOneStep = true;
+        deactiveButtons = true;
+        inLoop = true;
+
+        yield return new WaitForSeconds(0.3f);
+
+        Show(scream);
+        // CloseMachine();
+
+        HintUI.SetActive(false);
+        yield return new WaitForSeconds(0.3f);
+
+        TutorialCameraController.ChangeCameraSpeed(5f);
+        TutorialCameraController.GotoPage(1);
+        Hide(scream);
+
+        FishTalk("CloseDoor",true, 0, false, false);
+
+        deactiveButtons = false;
+
+        TutorialCameraController.allowScroll = true;
+        TutorialCameraController.targetPage = 2;
+        
+        // forwardOneStep = true;
 
     }
 
@@ -1149,7 +1255,6 @@ public class TutorialManagerNew : MonoBehaviour
 
 
         machineOccupied.SetActive(true);
-        KararaTalk(EmojiOpenDoor);
         ClothUiAnimator.SetTrigger("StartClosing");
         // ClothUI.SetActive(false);
         float t =  ClothUiAnimator.GetCurrentAnimatorClipInfo(0).Length;
@@ -1195,47 +1300,39 @@ public class TutorialManagerNew : MonoBehaviour
         Debug.Log("PickChargingPhone");
         Phone.SetActive(false);
         //TutorialCameraController.GotoPage(2);
-        forwardOneStep = true;//从4到5
 
-        ShowFishText(99);//close fish text on screen2
-        
-        StartCoroutine(ShowKararaAndPhone());
+        ShowFishText(true, 99);//close fish text on screen2
+        // ClickMobile();
+
+        Show(mobile);
+        ShowKarara(1, false, "");
+        timerStop = false;
     }
 
     IEnumerator ShowKararaAndPhone()
     {
-        ShowKarara(2);
+        ShowKarara(1, false, "");
         EmojiBubble.SetActive(false);
        
         yield return new WaitForSeconds(1f);
 
         Show(mobile);
-        yield return new WaitForSeconds(4f);
-
         timerStop = false;
 
-
-    }
-
-    void BackToWashing()
-    {
-        ShowKarara(2);
-        EmojiBubble.SetActive(false);
-       
-        timerStop = false;
     }
 
 
     void AfterWash()
     {
-        
-        //myMachineState = MachineState.Finish;
         machineFull.SetActive(false);
         machineEmpty.SetActive(true);
         machineOccupied.SetActive(true);
 
-        EmojiBubble.SetActive(true);
-        KararaTalk(EmojiOpenDoor);
+        ShowKararaBubble(1, "Open");
+        ShowAnimation("Machine0");
+
+
+        // FishTalk("ReturnBagPre", true, 1, false, true);
 
         HintUI.SetActive(true);
         HintUI.transform.localPosition = MachinePos;
@@ -1298,10 +1395,10 @@ public class TutorialManagerNew : MonoBehaviour
 
 
         deactiveButtons = false;
-        forwardOneStep = true;
+        // forwardOneStep = true;
         //fish continue talking
         Show(scream);
-        FishTalk("NoTouchCloth", true, 0, false);
+        FishTalk("NoTouchCloth", true, 0, false, false);
 
     }
 
@@ -1323,8 +1420,7 @@ public class TutorialManagerNew : MonoBehaviour
         TutorialCameraController.GotoPage(1);
         Hide(scream);
 
-        forwardLater = false;
-        FishTalk("CloseDoor",true, 0, false);
+        FishTalk("CloseDoor",true, 0, false, false);
 
         deactiveButtons = false;
 
@@ -1335,7 +1431,6 @@ public class TutorialManagerNew : MonoBehaviour
     private void AfterPickUpCloth()
     {
         Debug.Log("AfterPickUp");
-        KararaTalk(EmojiHappy);
 
         Hint2D.SetActive(true);
         ChangeHintPos(HintPosKarara,0);
@@ -1343,12 +1438,14 @@ public class TutorialManagerNew : MonoBehaviour
 
     public void ClickKarara()
     {
-        if(stepCounter < 9) return;
+        if(pickedClothNum != 3) return;
         if(stepCounter > 10) return;//过了阶段再点击要给个提示，告诉玩家可以点，但是现在不要点
         if (deactiveButtons) return;
+
         Hint2D.SetActive(false);
-        forwardOneStep = true;
         Hide(scream);
+
+        ShowInventory();
     }
 
 
@@ -1392,8 +1489,8 @@ public class TutorialManagerNew : MonoBehaviour
 
     public void ClickBackButton()
     {
-        if (deactiveButtons) return;
-        if(!putClothBack) return;
+        // if (deactiveButtons) return;
+        // if(!putClothBack) return;
 
         //真正回到地铁
         TutorialCameraController.ReturnToApp();
@@ -1408,9 +1505,12 @@ public class TutorialManagerNew : MonoBehaviour
         //karara现在穿着工作服和拖鞋啦
         GameObject.Find("PlayerEverythingSubway").GetComponent<SpriteRenderer>().enabled = true;
 
-        ShowKarara(2);
-        forwardOneStep = true;
+        ShowKarara(2, false, "");
+        TutorialCameraController.GotoPage(4);
+        posterEnabled = true;
+
     }
+    private bool posterEnabled = true;
 
     IEnumerator FishTalkInventory()
     {
@@ -1425,67 +1525,57 @@ public class TutorialManagerNew : MonoBehaviour
     }
 
 
-    private void ReadyForPhoto()
-    {
-        Hint2D.SetActive(true);
-        ChangeHintPos(HintPosPoster, 0);
-
-        TutorialCameraController.allowScroll = true;
-        TutorialCameraController.targetPage = 4;
-
-        //暂时不用教第二次滑动
-        //暂时还是教一下
-        ScrollHint.SetActive(true);
-        ScrollHint.GetComponentInChildren<Animator>().SetTrigger("SecondTime");
-        // ScrollHint.transform.localRotation = new Quaternion(0,0,180,0);
-        // foreach (Transform child in ScrollHint.transform)
-        // {
-        //     // child.localRotation = new Quaternion(0, 0, 180, 0);
-        //     child.localScale = new Vector3(-1, 0, 0);
-
-        // }
-    }
-
-
     public void ClickShutter()
     {
         AudioManager.PlayAudio(AudioType.Photo_Shutter);
+        shutterAnimator.SetTrigger("click");
+
         HintScreen.SetActive(false);
         Hide(CameraBackground);
 
         Flashlight.alpha = 1;
-
         flashing = true;
         
         Debug.Log("click shutter");
-        forwardOneStep = true;
         
         string pose = postKararaImage.sprite.name;
         PlayerPrefs.SetInt("KararaPose", (int)Char.GetNumericValue(pose[pose.Length -1]));
 	    PlayerPrefs.Save();
+
+        GoToIns();
     }
-
-
-
 
     private void GoToIns()
     {
         Show(InsPage);
+        Show(phone_background);
+        phone_background.blocksRaycasts = false;
         Posture.SetActive(false);
         TutorialCameraController.myCameraState = TutorialCameraController.CameraState.App;
 
         //照完相后展示tutorial post
-        if(stepCounter> 13)
-        {
-            TutorialPost.SetActive(true);
-            StartCoroutine(ShowFollowerHint());
-        }
+        TutorialPost.SetActive(true);
     }
     IEnumerator ShowFollowerHint()
     {
-        yield return new WaitForSeconds(1f);
-        Show(FollowerHint);
+        yield return new WaitForSeconds(0.2f);
 
+        Animator followerHintAnimator = FollowerHint.gameObject.GetComponent<Animator>();
+        followerHintAnimator.SetTrigger("go");
+
+        float Twait = (float)followerHintAnimator.GetCurrentAnimatorClipInfo(1).Length;
+
+        yield return new WaitForSeconds(Twait);
+
+        Show(followerNum);
+
+        yield return new WaitForSeconds(1f);
+
+        Hide(InsPage);
+        Hide(phone_background);
+
+
+        //wait until the animation is over
     }
 
     public void ClickBackButtonIns()
@@ -1493,32 +1583,13 @@ public class TutorialManagerNew : MonoBehaviour
         Debug.Log("ClickInsBack");
         if (deactiveButtons) return;
 
-        //结束阶段
-        if(stepCounter > 13)
-        {
-            //结束阶段点击直接进comic
-            StartCoroutine(AfterIns());
-            return;
-        }
-
         HintScreen.SetActive(false);
-        Hide(InsPage);
         Hide(CameraBackground);
-        
 
         TutorialCameraController.myCameraState = TutorialCameraController.CameraState.Subway;
 
-        // forwardOneStep = true;
+        StartCoroutine(ShowFollowerHint());
 
-    }
-
-    IEnumerator AfterIns()
-    {
-        Hide(InsPage);
-
-        yield return new WaitForSeconds(1f);
-
-        ShowComic();
     }
 
 
@@ -1533,7 +1604,6 @@ public class TutorialManagerNew : MonoBehaviour
         HintUI.transform.localPosition = HintPosBag;
         returning = true;
     }
-
  
     IEnumerator PreReturn()
     {
@@ -1571,7 +1641,7 @@ public class TutorialManagerNew : MonoBehaviour
     public void ReturnYes()
     {
         //ui消失
-        Notice.SetActive(false);
+        Hide(Notice);   
         HintUI.SetActive(false);
 
         StartCoroutine(PreReturn());
@@ -1580,12 +1650,12 @@ public class TutorialManagerNew : MonoBehaviour
     public void ReturnNo()
     {
         //ui消失
-        Notice.SetActive(false);
-
+        Hide(Notice);   
+        ShowFishText(false, 99);
         StartCoroutine(ReturnNoAfter());
-
         bagClick = 2;
     }
+
     IEnumerator ReturnNoAfter()
     {
         yield return new WaitForSeconds(0.3f);
@@ -1593,6 +1663,7 @@ public class TutorialManagerNew : MonoBehaviour
         //关门
         HintUI.SetActive(true);
         MachineDoor.sprite = closeDoor;
+        returnBagFirstTime = false;
         AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
     }
 
@@ -1603,20 +1674,7 @@ public class TutorialManagerNew : MonoBehaviour
 
         TutorialCameraController.GotoPage(1);
 
-        FishTalk("MultipleSentence", true, 0, true);
-    }
-
-    public void ClickMobile()
-    {
-        ///点击mobile按钮，出现followerNum
-        // Show(followerNum);
-        // Hide(RedDot);
-
-        ///点击mobile按钮，出现ins page
-        GoToIns();
-        Show(InsPage);
-
-        // StartCoroutine(AddFans());
+        FishTalk("MultipleSentence", true, 0, false, true);
     }
 
     IEnumerator AddFans()
@@ -1632,13 +1690,6 @@ public class TutorialManagerNew : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         ShowComic();
-    }
-
-
-    public void ClickExclamation()
-    {
-        Hint2D.SetActive(false);
-        forwardOneStep = true;
     }
     
     public void ShowComic()
@@ -1664,13 +1715,6 @@ public class TutorialManagerNew : MonoBehaviour
         UIGroup.interactable = true;
     }
 
-
-   
-    void KararaTalk(Sprite sprite)
-    {
-        emoji.sprite = sprite;
-    }
-
     public void ProceedToChapterOne()
     {
         
@@ -1692,9 +1736,7 @@ public class TutorialManagerNew : MonoBehaviour
         // inventoryBubble.SetActive(true);
         // yield return new WaitForSeconds(2f);
         // inventoryBubble.SetActive(false);
-
     }
-
 
     private void UpdateProgressBar()
     {
