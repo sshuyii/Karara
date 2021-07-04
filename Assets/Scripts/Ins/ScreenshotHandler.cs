@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
+using iOS = UnityEngine.iOS;
 using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 using TMPro;
@@ -40,8 +41,16 @@ public class ScreenshotHandler : MonoBehaviour
     private Texture2D renderResult;
 
     private IEnumerator coroutine;
-    private int width = Screen.width;
-    private int height = Screen.height;
+
+    [Range(0f,1f)]
+    public float widthMultipler;
+
+    [Range(0,600)]
+    public int heightOffset;
+    [Range(0,200)]
+    public int widthOffset;
+    private int width;
+    private int height;
 
 
     public CanvasGroup Notice;
@@ -74,8 +83,27 @@ public class ScreenshotHandler : MonoBehaviour
 
         if(FinalCameraController != null) AdsController = GameObject.Find("---AdsController").GetComponent<AdsController>();
 
-
+        width = Screen.width;
+        height = Screen.height;
         
+        //simulator 里不work 希望在真机work
+        if(iOS.Device.generation == iOS.DeviceGeneration.iPhone6 ||
+        iOS.Device.generation == iOS.DeviceGeneration.iPhone6S ||
+        iOS.Device.generation == iOS.DeviceGeneration.iPhone6Plus ||
+        iOS.Device.generation == iOS.DeviceGeneration.iPhone6SPlus ||
+        iOS.Device.generation == iOS.DeviceGeneration.iPhone7 ||
+        iOS.Device.generation == iOS.DeviceGeneration.iPhone7Plus ||
+        iOS.Device.generation == iOS.DeviceGeneration.iPhone8 ||
+        iOS.Device.generation == iOS.DeviceGeneration.iPhone8Plus) 
+        { 
+            heightOffset = 200;
+        }
+        else{
+            heightOffset = 500;
+        }
+
+
+        Debug.Log("width:" + width.ToString()+" height:" + height.ToString());   
     }
 
     
@@ -216,7 +244,7 @@ public class ScreenshotHandler : MonoBehaviour
             renderResult.ReadPixels(rect, 0, 0);
 
             byte[] byteArray = renderResult.EncodeToPNG();
-            System.IO.File.WriteAllBytes(Application.dataPath + "/Resources/Screenshots/CameraScreenshot"+InstagramController.takenNum+".png", byteArray);
+            // System.IO.File.WriteAllBytes(Application.dataPath + "/Resources/Screenshots/CameraScreenshot"+InstagramController.takenNum+".png", byteArray);
 
             renderResult.Apply();
             RenderTexture.ReleaseTemporary(renderTexture);
@@ -228,7 +256,7 @@ public class ScreenshotHandler : MonoBehaviour
     
     private void TakeScreenshot(int width, int height)
     {
-        Debug.Log("width:" + width.ToString());   
+        Debug.Log("width:" + width.ToString()+" h:" + height.ToString());   
         myCamera.targetTexture = RenderTexture.GetTemporary(width, height, 16);
         takeScreenshotOnNextFrame = true;
     }
@@ -249,10 +277,10 @@ public class ScreenshotHandler : MonoBehaviour
 
         //hide notice bubble
         int repeatCondition = 0;
-        if(!FinalCameraController.isTutorial)
-        {
-            FinalCameraController.Hide(Notice);
-        }
+        // if(!FinalCameraController.isTutorial)
+        // {
+        //     FinalCameraController.Hide(Notice);
+        // }
         if (!AdsController.IsThisAdOk())
         {
             repeatCondition = 2;
@@ -301,20 +329,28 @@ public class ScreenshotHandler : MonoBehaviour
     //todo: crop image not by perfect pixels, but relative to the screen size
     Texture2D CropImage()
     {
-        Texture2D tex = new Texture2D(width, width, TextureFormat.RGB24, false);
-        
-        
-        //Height of image in pixels
-        for (int y = 0; y < tex.height; y++)
-        {
-            //Width of image in pixels
-            for (int x = 0; x < tex.width; x++)
-            {
-                Color cPixelColour = renderResult.GetPixel(x ,  y + height/2 - Mathf.FloorToInt(0.5f * width));
-                tex.SetPixel(x, y, cPixelColour);
-            }
-        }
+        width = Screen.width;
+        height = Screen.height;
+        int texWidth = Mathf.FloorToInt(Screen.width * widthMultipler);
+
+        Texture2D tex = new Texture2D(texWidth, texWidth, TextureFormat.RGB24, false);
+        Debug.Log("width:" + width + " w " + renderResult.width);
+        Color[] pix = renderResult.GetPixels(widthOffset,heightOffset,texWidth,texWidth);
+        tex.SetPixels(pix);
         tex.Apply();
+        
+        // //Height of image in pixels
+        // for (int y = heightOffset; y < tex.height+heightOffset; y++)
+        // {
+        //     //Width of image in pixels
+        //     for (int x = widthOffset; x < tex.width + widthOffset; x++)
+        //     {
+        //         // Color cPixelColour = renderResult.GetPixel(x,  y + height/2 - Mathf.FloorToInt(0.5f * width));
+        //         Color cPixelColour = renderResult.GetPixel(x , y );
+        //         tex.SetPixel(x-widthOffset, y-heightOffset, cPixelColour);
+        //     }
+        // }
+        // tex.Apply();
         return tex;
     }
 

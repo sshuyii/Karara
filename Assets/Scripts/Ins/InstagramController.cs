@@ -479,11 +479,13 @@ public class InstagramController : MonoBehaviour
     public IEnumerator AnimateAddedFollower(string sign, int addFans)
     {
         yield return new WaitForSeconds(0.5f);
-        ClickKararaProfile();
+        // ClickKararaProfile();
         //InsFollowerNum.GetComponent<TextMeshProUGUI>().text = (fansNum - addFans).ToString();
         //yield return new WaitForSeconds(1f);
         InsFollowerNumAdded.SetActive(true);
-        InsFollowerNumAdded.GetComponent<TextMeshProUGUI>().text = sign + addFans.ToString();
+        InsFollowerNumAdded.GetComponentInChildren<TextMeshProUGUI>().text = sign + addFans.ToString();
+        yield return new WaitForSeconds(1f);
+        InsFollowerNumAdded.SetActive(false);
         //yield return new WaitForSeconds(1f);
         //InsFollowerNum.GetComponent<TextMeshProUGUI>().text = (fansNum).ToString();
         //InsFollowerNumAdded.SetActive(false);

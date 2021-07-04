@@ -464,11 +464,18 @@ public class WasherController : MonoBehaviour
     private void AddClothToCollection()
     {
         string bagOwnerName = currentBag.GetComponent<ClothToMachine>().owner.name;
-
+        List<Sprite> theirClothes = FinalCameraController.AllStationClothList[bagOwnerName];
+        Dictionary<string,int> clothNames = new Dictionary<string, int>();
+        foreach(Sprite cloth in theirClothes) clothNames.Add(cloth.name,1);
         foreach (GameObject thisButton in buttons)
         {
-            FinalCameraController.AllStationClothList[bagOwnerName]
-                .Add(thisButton.GetComponent<SpriteRenderer>().sprite);
+            Sprite thisCloth = thisButton.GetComponent<SpriteRenderer>().sprite;
+            if(! clothNames.ContainsKey(thisCloth.name))
+            {
+                FinalCameraController.AllStationClothList[bagOwnerName]
+                .Add(thisCloth);
+            }
+            
         }
     }
 
