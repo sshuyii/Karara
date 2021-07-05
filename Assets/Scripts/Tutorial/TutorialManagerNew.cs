@@ -11,19 +11,17 @@ using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
 using Image = UnityEngine.UI.Image;
 using UnityEngine.Experimental.GlobalIllumination;
+using TMPro.Examples;
 
 public class TutorialManagerNew : MonoBehaviour
 {
     
     public int stepCounter,bagClick;
     public bool forwardOneStep;
-    private bool AdClick1stTime = true;
-    [SerializeField]
     private bool machineOpen = false;
     private bool timerStop = false;
     private bool isFirstOpen = true;
     private bool scrollTeaching = false;
-    private bool forwardLater = false;
 
     [SerializeField]
     private GameObject BlackBlocks;
@@ -40,6 +38,8 @@ public class TutorialManagerNew : MonoBehaviour
     private float realTimer;
     private float timer = 0;
     private TutorialCameraController TutorialCameraController;
+    private CameraMovement CameraMovement;
+    private CanvasGroup bottomDotsCG;
     private FishTextManager FishTextManager;
 
 
@@ -58,7 +58,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     [SerializeField]
     private GameObject Posture, Phone, HintUI, ScrollHint, clothBag, machineFull, machineEmpty, phoneAnimation, changePostureButton,
-        machineOccupied, ClothUI, ClothFish, EmojiBubble, InventoryBackButton, Shutter, FishTalkButton, inventoryBubble, sweet;
+        machineOccupied, ClothUI, ClothFish, EmojiBubble, InventoryBackButton, Shutter, FishTalkButton, sweet;
 
     public GameObject Hint2D, HintScreen, inventoryFish;
     [SerializeField]
@@ -119,18 +119,18 @@ public class TutorialManagerNew : MonoBehaviour
         Washing,
         Finish
     }
-
     MachineState myMachineState;
+
+    //fish talk相关内容
     FishText currentFT;
     bool fishForward;
     int currentFS;
-
     Coroutine lastRoutine = null;
     AudioManager AudioManager;
 
+
     //穿上一件，另一件放回洗衣机
     public bool workClothOn = false;
-    public bool putClothBack = false;//需要放回去一件衣服
     public bool workShoeOn = false;
 
     //偷了几件衣服
@@ -200,6 +200,8 @@ public class TutorialManagerNew : MonoBehaviour
 
         Hide(BlackBlocksCG);
 
+        Hide(bottomDotsCG);
+
         ResetFloatingUI();
     }
 
@@ -235,8 +237,11 @@ public class TutorialManagerNew : MonoBehaviour
         // clothBag.SetActive(false);//不然会显示在地铁外面
 
         //Set Camera position and size in stage 3  
-        TutorialCameraController = GameObject.Find("Main Camera").GetComponent<TutorialCameraController>();
         MainCamera = GameObject.Find("Main Camera"); 
+        TutorialCameraController = MainCamera.GetComponent<TutorialCameraController>();
+        CameraMovement = MainCamera.GetComponent<CameraMovement>();
+        bottomDotsCG = CameraMovement.Dots.GetComponent<CanvasGroup>();
+
         AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
         FishTextManager = GameObject.Find("---FishTextManager").GetComponent<FishTextManager>();
 
@@ -257,8 +262,6 @@ public class TutorialManagerNew : MonoBehaviour
         {
             clothSlotTable.Add(i, ClothSlotList[i]);
         }
-
-        inventoryBubbleSR = inventoryBubble.GetComponentsInChildren<SpriteRenderer>()[1];
 
         //所有inventory里的hint位置
         for(int i = 0; i < ClothUIPosObject.Length; i++)
@@ -353,19 +356,13 @@ public class TutorialManagerNew : MonoBehaviour
             timer += Time.deltaTime;
         }
 
-
-        //在inventory里穿衣服
-        //穿上工作服>>穿上鞋>>>鱼开始让人还衣服
-        // if(isWearingClothNum == 3 && !longTap)
-        // {           
-        //     longTap = true;
-        //     StartCoroutine(LongTap());
-        // }
-
         //如果拿了三件衣服，karara闪光
         if(pickedClothNum == 3)
         {
             ShowAnimation("PlayerSubwayFolder");
+            ShowKararaBubble(1, "put on");
+
+            pickedClothNum = 99;
         }
 
         if(isWearingClothNum == 3)
@@ -374,13 +371,6 @@ public class TutorialManagerNew : MonoBehaviour
             isWearingClothNum ++;
 
         }
-
-        //还掉鞋之后出现返回地铁按钮
-        if(putClothBack && stepCounter == 10)
-        {
-            forwardOneStep = true;
-        }
-
 
         if(flashing)
         {
@@ -397,17 +387,6 @@ public class TutorialManagerNew : MonoBehaviour
         {
             Hide(scream);
         }
-
-
-        if (inLoop && TutorialCameraController.currentPage == 4)
-        {
-            TutorialCameraController.JumpToPage(3);
-            Debug.Log("what's going on????");
-
-        }
-
-
-
 
         if (TutorialCameraController.reachTarget)
         {
@@ -432,6 +411,7 @@ public class TutorialManagerNew : MonoBehaviour
                 {
                     Debug.Log("前提");
                     HintUI.SetActive(true);
+                    ShowKararaBubble(1, "open");
                 }
 
                 TutorialCameraController.targetPage = 1;
@@ -448,14 +428,8 @@ public class TutorialManagerNew : MonoBehaviour
             {
                 TutorialCameraController.JumpToPage(2);
             }
-            else if (TutorialCameraController.targetPage == 1)
-            {
-
-                //FishTalk("Return this bag!",true);
-                // after ins ->return prep
-            }
             
-                TutorialCameraController.targetPage = -1;
+            TutorialCameraController.targetPage = -1;
         }
 
         //if(currentFT.isPlaying)
@@ -487,7 +461,7 @@ public class TutorialManagerNew : MonoBehaviour
                     break;
 
                 case 5:
-                    KararaCalled();
+                    PlayerControll();
                     break;
 
                 case 6:
@@ -558,12 +532,13 @@ public class TutorialManagerNew : MonoBehaviour
         ShowKarara(2, true, "Hey");
     }
 
-    private void KararaCalled()
+    private void PlayerControll()
     {
         ShowKararaBubble(2, "karara?");
         ShowFishText(true, 99);
 
         ShowBlackBlocks(false);
+        Show(bottomDotsCG);
 
         StartCoroutine(ScrollTeaching(1));
     }
@@ -599,7 +574,7 @@ public class TutorialManagerNew : MonoBehaviour
         if(showTalk) ShowKararaBubble(index, text);
     }
 
-    private void ShowKararaBubble(int index, string text)
+    public void ShowKararaBubble(int index, string text)
     {
         foreach (GameObject b in kararaBubbleList)
         {
@@ -1028,9 +1003,9 @@ public class TutorialManagerNew : MonoBehaviour
         FishTalk("ClickBag", true, 0, true, false);
         
         HintUI.transform.localPosition = newPos;
-        //TutorialCameraController.GotoPage(2);
-
+        
         deactiveButtons = false;
+        ShowAnimation("ClothBag");
     }
 
 
@@ -1061,6 +1036,7 @@ public class TutorialManagerNew : MonoBehaviour
         AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
 
         FishTalk("StartWashing", true, 0, true, false);
+        ShowAnimation("Machine0");
 
         yield return new WaitForSeconds(0.2f);//等一会儿再出现提示ui
         HintUI.transform.localPosition = MachinePos;
@@ -1077,7 +1053,7 @@ public class TutorialManagerNew : MonoBehaviour
             AudioManager.PlayAudio(AudioType.No);
             return;
         }
-        
+        ShowAnimation("none");
         switch (myMachineState)
         {
             case MachineState.Empty:
@@ -1117,7 +1093,7 @@ public class TutorialManagerNew : MonoBehaviour
     IEnumerator StopTimerAndForward()
     {
         yield return new WaitForSeconds(1.5f);
-        AnimatorTable["phone_particle"].SetTrigger("isCharged");
+        AnimatorTable["phone_lowBattery"].SetTrigger("isCharged");
 
         //todo：直接按clip长度走，不用每次都改具体时间？
         yield return new WaitForSeconds(2f);
@@ -1167,54 +1143,52 @@ public class TutorialManagerNew : MonoBehaviour
 
     IEnumerator OpenCloseDoor(float time)
     {
-         ///门打开后出现一下衣服，立即关上
+        ///门打开后出现一下衣服，立即关上
+
+        //开门
         machineOccupied.SetActive(false);
         MachineDoor.sprite = openDoor;
         AudioManager.PlayAudio(AudioType.Machine_OpenDoor);
 
         yield return new WaitForSeconds(time);
 
-        // ClothUI.SetActive(true);
         ClothUiAnimator.SetTrigger("StartShowing");
         
         float Twait = ClothUiAnimator.GetCurrentAnimatorClipInfo(0).Length;
         Debug.Log("TWait: " + Twait);
         yield return new WaitForSeconds(Twait);
-   
 
+        //关门 
         MachineDoor.sprite = closeDoor;
         AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
-
         machineOpen = false;
         
         ClothUiAnimator.SetTrigger("CloseImmediantly");
         HintScreen.SetActive(false);
+        HintUI.SetActive(false);
 
         isFirstOpen = false;
         deactiveButtons = true;
         inLoop = true;
-
         yield return new WaitForSeconds(0.3f);
 
         Show(scream);
-        // CloseMachine();
-
-        HintUI.SetActive(false);
         yield return new WaitForSeconds(0.3f);
 
+        //切换到screen1
         TutorialCameraController.ChangeCameraSpeed(5f);
         TutorialCameraController.GotoPage(1);
-        Hide(scream);
-
         FishTalk("CloseDoor",true, 0, false, false);
+
+        //reset screen2
+        Hide(scream);
+        ShowAnimation("Machine0");
+        ShowKararaBubble(99 ,"");
 
         deactiveButtons = false;
 
         TutorialCameraController.allowScroll = true;
         TutorialCameraController.targetPage = 2;
-        
-        // forwardOneStep = true;
-
     }
 
      IEnumerator OpenDoor(float time)
@@ -1299,10 +1273,8 @@ public class TutorialManagerNew : MonoBehaviour
 
         Debug.Log("PickChargingPhone");
         Phone.SetActive(false);
-        //TutorialCameraController.GotoPage(2);
 
         ShowFishText(true, 99);//close fish text on screen2
-        // ClickMobile();
 
         Show(mobile);
         ShowKarara(1, false, "");
@@ -1330,9 +1302,6 @@ public class TutorialManagerNew : MonoBehaviour
 
         ShowKararaBubble(1, "Open");
         ShowAnimation("Machine0");
-
-
-        // FishTalk("ReturnBagPre", true, 1, false, true);
 
         HintUI.SetActive(true);
         HintUI.transform.localPosition = MachinePos;
@@ -1438,7 +1407,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     public void ClickKarara()
     {
-        if(pickedClothNum != 3) return;
+        if(pickedClothNum != 99) return;
         if(stepCounter > 10) return;//过了阶段再点击要给个提示，告诉玩家可以点，但是现在不要点
         if (deactiveButtons) return;
 
@@ -1471,26 +1440,10 @@ public class TutorialManagerNew : MonoBehaviour
         HintScreen.transform.localPosition = HintPosBackButton;
     }
     
-    IEnumerator KararaTalkInventory(Sprite emoji)
-    {
-        //出现karara对话框，需要有个动画吸引玩家注意力
-        yield return new WaitForSeconds(0.1f);
-        kararaAnimator.SetTrigger("isShaking");
-
-        yield return new WaitForSeconds(1f);
-
-        inventoryBubble.SetActive(true);
-        inventoryBubbleSR.sprite = emoji;
-
-        //对话框出现3s后消失（暂时
-        yield return new WaitForSeconds(3f);
-        inventoryBubble.SetActive(false);
-    }
 
     public void ClickBackButton()
     {
         // if (deactiveButtons) return;
-        // if(!putClothBack) return;
 
         //真正回到地铁
         TutorialCameraController.ReturnToApp();
@@ -1500,14 +1453,16 @@ public class TutorialManagerNew : MonoBehaviour
 
         HintScreen.SetActive(false);
 
-        // TutorialCameraController.JumpToPage(4);
-
         //karara现在穿着工作服和拖鞋啦
         GameObject.Find("PlayerEverythingSubway").GetComponent<SpriteRenderer>().enabled = true;
 
-        ShowKarara(2, false, "");
         TutorialCameraController.GotoPage(4);
         posterEnabled = true;
+
+        //准备提示和教学场景
+        ShowKarara(2, false, "");
+        ShowKararaBubble(2, "photo");
+        ShowAnimation("Poster");
 
     }
     private bool posterEnabled = true;
@@ -1573,7 +1528,6 @@ public class TutorialManagerNew : MonoBehaviour
 
         Hide(InsPage);
         Hide(phone_background);
-
 
         //wait until the animation is over
     }
@@ -1728,16 +1682,6 @@ public class TutorialManagerNew : MonoBehaviour
         isWearingClothNum ++;
         // StartCoroutine(KararaEatSweet());
     }
-
-    IEnumerator KararaEatSweet()
-    {
-        kararaAnimator.SetTrigger("sweet");
-        yield return new WaitForSeconds(0.3f);
-        // inventoryBubble.SetActive(true);
-        // yield return new WaitForSeconds(2f);
-        // inventoryBubble.SetActive(false);
-    }
-
     private void UpdateProgressBar()
     {
         progressBar.fillAmount = timer/5f;
