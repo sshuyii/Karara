@@ -5,7 +5,7 @@ using System.Net.Mime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using I2.Loc;
+// using I2.Loc;
 public class SubwayMovement : MonoBehaviour
 {
 
@@ -842,8 +842,8 @@ public class SubwayMovement : MonoBehaviour
         Banner.SetActive(false);
         BagsController.BagsOnDueShaderOff();
         atInitailStation = false;
-        LocalizedString locString = "Fish/DoYourJob";
-        string translation = locString;
+        // LocalizedString locString = "Fish/DoYourJob";
+        // string translation = locString;
         //FinalCameraController.fishTalkText.text = translation;
         if (LevelManager.stage > 1) LevelManager.countStationS2++;
 

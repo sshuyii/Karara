@@ -53,8 +53,7 @@ public class FinalCameraController : MonoBehaviour
     public Sprite startSprite;
 
 
-    public GameObject instruction, instructionContent, inventoryInstruction, mapInstruction, cameraInstruction, Posture,
-        phone,CheckInstructionButton;
+    public GameObject instruction, instructionContent, inventoryInstruction, mapInstruction, cameraInstruction, Posture,CheckInstructionButton;
     private GameObject activeInstruction;
     public InventorySlotMgt inventorySlotMgt;
 
@@ -143,6 +142,7 @@ public class FinalCameraController : MonoBehaviour
     public bool fishShouting = false;
 
     public Vector3 PosturePos;
+    public GameObject phoneFrame;
     
     // Start is called before the first frame update
     void Start()
@@ -443,9 +443,11 @@ public void CancelAllUI(bool clickMachine)
   
         myCameraState = CameraState.Closet;
         CameraMovement.atInventoryOrAd = true;
-        phone.SetActive(false);
+        // phone.SetActive(false);
         CameraMovement.previousPage = CameraMovement.currentPage;
+        RatingSys.LeaveSubway(false);
         Show(Inventory);
+
 
         // Mask.alpha = 0;
         if (!isTutorial) CheckInstructionButton.SetActive(true);
@@ -544,7 +546,7 @@ public void CancelAllUI(bool clickMachine)
         //    LevelManager.UpdateStage();
         //}
 
-        phone.SetActive(true);
+        // phone.SetActive(true);
         CameraMovement.atInventoryOrAd = false;
         CameraMovement.JumpToPreviousPage();
         if (!isTutorial) CheckInstructionButton.SetActive(false);
@@ -566,6 +568,7 @@ public void CancelAllUI(bool clickMachine)
             {
                 myCameraState = lastCameraState;
                 RatingSys.GoBackToSubway();
+                phoneFrame.SetActive(false);
                 //todo: kind of connfused
             }
             else
@@ -584,6 +587,7 @@ public void CancelAllUI(bool clickMachine)
                 
                 myCameraState = CameraState.Subway;
                 RatingSys.GoBackToSubway();
+                phoneFrame.SetActive(false);
             }
 
             
@@ -622,10 +626,10 @@ public void CancelAllUI(bool clickMachine)
 
         CancelAllUI(false);
 
-        phone.SetActive(false);
+        // phone.SetActive(false);
         Hide(fishShoutCG);
         CheckInstructionButton.SetActive(false);
-        Debug.Log("change to app0");
+ 
         StartCoroutine(ScrollToTop(mainpageScrollRect));
         StartCoroutine(ScrollToTop(albumScrollRect));
 
@@ -637,10 +641,13 @@ public void CancelAllUI(bool clickMachine)
 
         lastCameraState = myCameraState;
         myCameraState = CameraState.App;
-        RatingSys.LeaveSubway();
+        RatingSys.LeaveSubway(true);
+        phoneFrame.SetActive(true); 
         myAppState = AppState.Mainpage;
         Show(frontPage);
         Show(appBackground);
+              
+        Debug.Log("change to app0");
         
         
     }
@@ -761,8 +768,9 @@ public void CancelAllUI(bool clickMachine)
 
         lastCameraState = myCameraState;
         myCameraState = CameraState.Map;
-        RatingSys.LeaveSubway();
-        phone.SetActive(false);
+        RatingSys.LeaveSubway(true);
+        phoneFrame.SetActive(true);
+        // phone.SetActive(false);
         Show(SubwayMap);
 
 
@@ -803,13 +811,14 @@ public void CancelAllUI(bool clickMachine)
             AdInstructionShown = true;
         }
         Show(TakePhoto);
-        phone.SetActive(false);
+        // phone.SetActive(false);
         Posture.SetActive(true);
         lastCameraState = myCameraState;
         CameraMovement.previousPage = CameraMovement.currentPage;
         //transform.position = new Vector3(24, 0, -10);
-        RatingSys.LeaveSubway();
-        transform.position = PosturePos;
+        RatingSys.LeaveSubway(true);
+        phoneFrame.SetActive(true);
+        // transform.position = PosturePos;
         CameraMovement.atInventoryOrAd = true;
     }
 

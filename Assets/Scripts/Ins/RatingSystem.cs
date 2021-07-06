@@ -17,10 +17,11 @@ public class RatingSystem : MonoBehaviour
     // Start is called before the first frame update
     LevelManager LevelManager;
 
-    
+    private Transform Dots;
     void Start()
     {
         LevelManager = GameObject.Find("---LevelManager").GetComponent<LevelManager>();
+        Dots = this.transform.Find("bottomDots");
     }
 
     // Update is called once per frame
@@ -35,16 +36,22 @@ public class RatingSystem : MonoBehaviour
         if(withParticleEffect) StartCoroutine(ParticleEffect());
     }
 
-    public void LeaveSubway() {
+    public void LeaveSubway(bool onlyHideDots) {
         //this.gameObject.SetActive(false);
+        Dots.GetComponent<CanvasGroup>().alpha = 0f;
+
+        if(onlyHideDots) return;
+            
+
         CanvasGroup UIGroup = this.gameObject.GetComponent<CanvasGroup>();
         UIGroup.alpha = 0f; //this makes everything transparent
         UIGroup.blocksRaycasts = false; //this prevents the UI element to receive input events
         UIGroup.interactable = false;
+
     }
 
     public void GoBackToSubway() {
-
+        Dots.GetComponent<CanvasGroup>().alpha = 1f;
         CanvasGroup UIGroup = this.gameObject.GetComponent<CanvasGroup>();
         UIGroup.alpha = 1f; //this makes everything transparent
         UIGroup.blocksRaycasts = true; //this prevents the UI element to receive input events

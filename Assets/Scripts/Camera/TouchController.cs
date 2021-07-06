@@ -283,14 +283,14 @@ public class TouchController : MonoBehaviour
                     FinalCameraController.clickSetting();
                     break;
 
-                case "subwayMap":
-                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
-                    FinalCameraController.ChangeToMap();
-                    break;
-                case "subwayMap_Top":
-                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
-                    FinalCameraController.ChangeToMap();
-                    break;
+                // case "subwayMap":
+                //     AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                //     FinalCameraController.ChangeToMap();
+                //     break;
+                // case "subwayMap_Top":
+                //     AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                //     FinalCameraController.ChangeToMap();
+                //     break;
                 case "Lost&Found_basket":
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     LostAndFound.clickLostFound();
@@ -298,7 +298,14 @@ public class TouchController : MonoBehaviour
             }
 
 
-            Regex mRegular = new Regex(@"Poster\d+", RegexOptions.None);
+            Regex mRegular = new Regex(@"subwayMap.*", RegexOptions.None);
+            if (mRegular.IsMatch(hit.transform.gameObject.name))
+            {
+                AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                FinalCameraController.ChangeToMap();
+            }
+
+            mRegular = new Regex(@"Poster\d+", RegexOptions.None);
             if (mRegular.IsMatch(hit.transform.gameObject.name))
             {
                 AdsController.ClickBackground(hit.transform.GetComponent<SpriteRenderer>().sprite.name);

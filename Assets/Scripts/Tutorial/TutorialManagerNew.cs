@@ -73,11 +73,11 @@ public class TutorialManagerNew : MonoBehaviour
     public GameObject[] ClothUIPosObject, InventoryUIPosObject;
 
     [SerializeField]
-    private Sprite pos0Body, pos1Body, pos0Work, pos1Work, openBag, closeBag, fullImg, emptyImg, EmojiOpenDoor,
-        EmojiCloth, EmojiHappy, openDoor, closeDoor, cameraBGFull, postPose1, postPose2;
+    private Sprite pos0Work, pos1Work, openBag, closeBag, fullImg, emptyImg,
+        EmojiCloth, EmojiHappy, openDoor, closeDoor, postPose1, postPose2;
 
     [SerializeField]
-    private SpriteRenderer body, everything, machineFront, emoji, MachineDoor, inventoryBubbleSR;
+    private SpriteRenderer body, everything, machineFront, emoji, MachineDoor;
 
 
     [SerializeField]
@@ -102,7 +102,7 @@ public class TutorialManagerNew : MonoBehaviour
     [SerializeField]
     private GameObject TutorialPost;
     [SerializeField]
-    private CanvasGroup InsPage, FollowerHint,phone_background;
+    private CanvasGroup InsPage, FollowerHint,phone_background,Memo;
     [SerializeField]
     private Image postKararaImage;
 
@@ -193,6 +193,7 @@ public class TutorialManagerNew : MonoBehaviour
         }
 
         Hide(InsPage);
+        Hide(Memo);
         Hide(FollowerHint);
         Hide(CameraBackground);
         Hide(Notice);
@@ -427,6 +428,15 @@ public class TutorialManagerNew : MonoBehaviour
             else if(inLoop && TutorialCameraController.currentPage == 3)
             {
                 TutorialCameraController.JumpToPage(2);
+            }
+            //如果照完照片，回到screen2
+            else if(stepCounter == 7)
+            {
+                //鱼说话，要玩家脱衣服or还包？
+                Hide(scream);
+                FishTalk("ReturnBag", true, 0, true, true);
+                ShowAnimation("PlayerSubwayFolder");
+                
             }
             
             TutorialCameraController.targetPage = -1;
@@ -1397,23 +1407,17 @@ public class TutorialManagerNew : MonoBehaviour
         TutorialCameraController.targetPage = 2;
     }
 
-    private void AfterPickUpCloth()
-    {
-        Debug.Log("AfterPickUp");
-
-        Hint2D.SetActive(true);
-        ChangeHintPos(HintPosKarara,0);
-    }
-
     public void ClickKarara()
     {
         if(pickedClothNum != 99) return;
         if(stepCounter > 10) return;//过了阶段再点击要给个提示，告诉玩家可以点，但是现在不要点
         if (deactiveButtons) return;
 
+        //disable a lot of things
         Hint2D.SetActive(false);
         Hide(scream);
-
+        ShowFishText(true, 99);
+        
         ShowInventory();
     }
 
@@ -1424,8 +1428,10 @@ public class TutorialManagerNew : MonoBehaviour
         // HintScreen.SetActive(true);
         TutorialCameraController.myCameraState = TutorialCameraController.CameraState.Closet;
         Show(Inventory);
-
+        
         ResetFloatingUI();
+
+        FishTalk("ReturnCloth", false, 0, true, true);
     }
 
     
@@ -1443,13 +1449,21 @@ public class TutorialManagerNew : MonoBehaviour
 
     public void ClickBackButton()
     {
-        // if (deactiveButtons) return;
+        //if (deactiveButtons) return;
 
         //真正回到地铁
         TutorialCameraController.ReturnToApp();
         TutorialCameraController.myCameraState = TutorialCameraController.CameraState.Subway;
 
         Hide(Inventory);
+        //当karara照完相回来开始还衣服
+        if(stepCounter == 8)
+        {
+            
+            FishTalk("ReturnBag", true, 0, true, false);
+            ShowAnimation("ClothBag");
+            return;
+        }
 
         HintScreen.SetActive(false);
 
@@ -1510,7 +1524,10 @@ public class TutorialManagerNew : MonoBehaviour
 
         //照完相后展示tutorial post
         TutorialPost.SetActive(true);
+
+        StartCoroutine(ShowFollowerHint());
     }
+
     IEnumerator ShowFollowerHint()
     {
         yield return new WaitForSeconds(0.2f);
@@ -1527,7 +1544,7 @@ public class TutorialManagerNew : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         Hide(InsPage);
-        Hide(phone_background);
+        Show(Memo);
 
         //wait until the animation is over
     }
@@ -1539,11 +1556,22 @@ public class TutorialManagerNew : MonoBehaviour
 
         HintScreen.SetActive(false);
         Hide(CameraBackground);
+        Hide(phone_background);
+        Hide(Memo);
+        Hide(InsPage);
+        Show(mobile);
+
 
         TutorialCameraController.myCameraState = TutorialCameraController.CameraState.Subway;
 
-        StartCoroutine(ShowFollowerHint());
-
+        //第一次发完照片从ins回到地铁，滑到screen2
+        if(stepCounter == 7)
+        {
+            TutorialCameraController.targetPage = 2;
+            Show(scream);
+            ShowKarara(1, false, "");
+            ShowAnimation("PlayerSubwayFolder");
+        }
     }
 
 
