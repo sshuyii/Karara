@@ -58,6 +58,8 @@ public class TutorialTouchController : MonoBehaviour
     private LostAndFound LostAndFound;
     //private AdsController AdsController;
     private AudioManager AudioManager;
+
+    public RectTransform TapRT;
     void Start()
     {
         myInputState = InputState.None;
@@ -74,18 +76,17 @@ public class TutorialTouchController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
         // @@@
+        if (EventSystem.current.currentSelectedGameObject != null)
+        {
+            return;
+        }
+
         if (TutorialCameraController.myCameraState != TutorialCameraController.CameraState.Subway)
         {
             return;
         }
 
-        if (EventSystem.current.currentSelectedGameObject != null)
-        {
-            return;
-        }
 
         if (Input.touchCount == 0)
         {
@@ -100,6 +101,7 @@ public class TutorialTouchController : MonoBehaviour
         {
             if (Input.GetTouch(i).phase == TouchPhase.Began)
             {
+
                 if (Input.GetTouch(i).tapCount == 2)
                 {
                     //Debug.Log("Double Tap");
@@ -116,6 +118,8 @@ public class TutorialTouchController : MonoBehaviour
         if (Input.touchCount == 1) // user is touching the screen with a single touch
         {
             touch = Input.GetTouch(0); // get the touch
+            ShowTapSpot();
+
 
       
             if (touch.phase == TouchPhase.Began) //check for the first touch
@@ -258,12 +262,22 @@ public class TutorialTouchController : MonoBehaviour
                     Debug.Log("Tap");
                     myInputState = InputState.Tap;
 
+                    ShowTapSpot();
                     checkTap();
                     checkCollider();
                 }
             }
-
         }
+    }
+
+    private void ShowTapSpot()
+    {
+        CanvasScaler scaler = TapRT.gameObject.GetComponentInParent<CanvasScaler>();
+
+        TapRT.gameObject.GetComponent<Animator>().SetTrigger("tap");
+
+        TapRT.anchoredPosition = new Vector2(touch.position.x * scaler.referenceResolution.x / Screen.width, 
+            touch.position.y * scaler.referenceResolution.y / Screen.height);
 
     }
 
@@ -272,7 +286,9 @@ public class TutorialTouchController : MonoBehaviour
         lp.z = 0;
         Vector3 screenPoint = Camera.main.ScreenToWorldPoint(lp);
         hit = Physics2D.Raycast(screenPoint, Vector2.zero);
-        Debug.Log("checkTap");
+        Debug.Log("checkTap = " + screenPoint);
+
+
         if (hit.collider != null)
         {
 
@@ -310,10 +326,6 @@ public class TutorialTouchController : MonoBehaviour
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickClothUI(0);
                     break;
-                // case "workClothAlter_Slot2":
-                //     AudioManager.PlayAudio(AudioType.UI_Dialogue);
-                //     TutorialManagerNew.ClickClothUI(2);
-                    // break;
                 case "workShoe_Slot1":
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     TutorialManagerNew.ClickClothUI(1);
@@ -333,6 +345,13 @@ public class TutorialTouchController : MonoBehaviour
                 case "hiring_memo":
                     TutorialManagerNew.ClickHiring();
                     break;
+                case"ReturnNotice_New_Yes":
+                    TutorialManagerNew.ReturnYes();
+                    break;
+                case"liquid":
+                    TutorialManagerNew.ClickLiquid();
+                    break;
+
 
             }
 

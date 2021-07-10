@@ -102,7 +102,7 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
                 TutorialManagerNew.workClothOn = true;
 
                 //karara讲话
-                TutorialManagerNew.ShowKararaBubble(5,"nice");
+                TutorialManagerNew.ShowKararaBubble(5,"nice", false);
         }
         else if(clothName == 2 && !TutorialManagerNew.workShoeOn)
         {
@@ -185,8 +185,7 @@ public class TutorialClothChanging : MonoBehaviour, IPointerDownHandler, IPointe
         if(clothName != 2) return;
         myAnimator.SetBool("isShining", false);
 
-        //fish boss stop talking
-        TutorialManagerNew.inventoryFish.SetActive(false);
+        TutorialManagerNew.putBack = true;
 
 
         //这个script是挂在inventory的衣服UI上的
