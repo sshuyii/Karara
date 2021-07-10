@@ -178,6 +178,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e7afaa2519e9444f87e13464b1c9385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  generateFile: 0
+  languageCode: 0
+  Text2DList: []
+  TextUIList:
+  - key: InventoryFull
+    objInScene: {fileID: 2246724577196498284}
+    contentENG: KARARA! YOU TOOK TOO MANY CLOTHES!! STOP!!!
+    contentCHN: "Karara! \u4F60\u5FEB\u4F4F\u624B\uFF0C\u4F60\u62FF\u4E86\u592A\u591A\u8863\u670D\u4E86\uFF01"
+  - key: ' MapTutorial'
+    objInScene: {fileID: 1244733229}
+    contentENG: KARARA!!! RETURN CLOTHES ONCE THE TRAIN REACHES THE SAME STATION
+      FOR THE SECOND TIME!!
+    contentCHN: "Karara! \u8BB0\u5F97\u5728\u7B2C\u4E8C\u6B21\u5230\u8FBE\u540C\u4E00\u7AD9\u524D\u8FD8\u8863\u670D\u5440\uFF01"
+  CHNFont: {fileID: 0}
+  CHNFontMaterial: {fileID: 0}
+  ENGFont: {fileID: 0}
+  ENGFontMaterial: {fileID: 0}
 --- !u!1 &11789120
 GameObject:
   m_ObjectHideFlags: 0
@@ -1218,7 +1235,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &36059812
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1226,12 +1243,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 36059811}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 783867336}
-  m_RootOrder: 14
+  m_Father: {fileID: 774911678}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -14319,6 +14336,43 @@ Transform:
   m_Father: {fileID: 1785511299}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &774911677
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 774911678}
+  m_Layer: 5
+  m_Name: photoFrameParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &774911678
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774911677}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1228013506}
+  - {fileID: 36059812}
+  m_Father: {fileID: 783867336}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &775857968
 GameObject:
   m_ObjectHideFlags: 0
@@ -14644,7 +14698,7 @@ RectTransform:
   - {fileID: 90406462}
   - {fileID: 1576299785}
   - {fileID: 331196}
-  - {fileID: 36059812}
+  - {fileID: 774911678}
   - {fileID: 367220899}
   - {fileID: 380592419}
   - {fileID: 229963820}
@@ -22227,55 +22281,86 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FishTextList:
   - key: Concentrate
-    content:
+    content: []
+    contentENG:
     - CONCENTRATE ON YOUR WORK! DO THE LAUNDRY!!
+    contentCHN:
+    - "\u8BA4\u771F\u5DE5\u4F5C\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: bag1
-    content:
+    content: []
+    contentENG:
     - You did a great job!
+    contentCHN:
+    - "\u5E72\u5F97\u597D\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: bag2
-    content:
+    content: []
+    contentENG:
     - Good!
+    contentCHN:
+    - "\u68D2\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: bag3
-    content:
+    content: []
+    contentENG:
     - Emmm... Work harder!
+    contentCHN:
+    - "\u522B\u5077\u61D2\uFF0C\u5FEB\u5E72\u6D3B\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: ReturnFinishedBags
-    content:
+    content: []
+    contentENG:
     - HURRY UP! RETURN BAGS IN TIME!!
+    contentCHN:
+    - "\u8D76\u5FEB\u70B9\uFF01\u51C6\u65F6\u8FD8\u5305\u5440\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: A
-    content:
+    content: []
+    contentENG:
     - WHY AREN'T ALL THE CLOTHES IN THE BAG? PUT THEM BACK BEFORE YOU RETURN!!
+    contentCHN:
+    - "\u4E3A\u4EC0\u4E48\u5305\u91CC\u5C11\u8863\u670D\u4E86\uFF1F\u8FD8\u5305\u524D\u628A\u6240\u6709\u8863\u670D\u90FD\u653E\u56DE\u53BB\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: B
-    content:
+    content: []
+    contentENG:
     - SEE! OUR RATING IS DOWN BECAUSE YOU FORGOT TO PUT ALL THE CLOTHES BACK BEFORE
       RETURN!!
+    contentCHN:
+    - "\u4F60\u770B\u770B\uFF01\u56E0\u4E3A\u4F60\u5C11\u8FD8\u4E86\u8863\u670D\u6211\u4EEC\u5E97\u7684\u8BC4\u5206\u90FD\u964D\u4E86\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: C
-    content:
+    content: []
+    contentENG:
+    - SEE! OUR RATING IS DOWN BECAUSE YOU FORGOT TO PUT ALL THE CLOTHES BACK BEFORE
+      RETURN!!
+    contentCHN:
     - SEE! OUR RATING IS DOWN BECAUSE YOU FORGOT TO PUT ALL THE CLOTHES BACK BEFORE
       RETURN!!
     isPlaying: 0
     playingIdx: 0
   - key: D
-    content:
+    content: []
+    contentENG:
     - THAT'S RIGHT KARARA! RETURN BAGS IN TIME AND WE EARN FRAME!!
+    contentCHN:
+    - "\u5E72\u5F97\u597DKarara\uFF01\u6309\u65F6\u8FD8\u5305\u6211\u4EEC\u624D\u80FD\u4FDD\u6301\u597D\u8BC4\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: InventoryFull
-    content:
+    content: []
+    contentENG:
     - KARARA! YOU TOOK TOO MANY CLOTHES!! STOP!!!
+    contentCHN:
+    - "Karara! \u4F60\u5FEB\u4F4F\u624B\uFF0C\u4F60\u62FF\u4E86\u592A\u591A\u8863\u670D\u4E86\uFF01"
     isPlaying: 0
     playingIdx: 0
 --- !u!4 &1170965925
@@ -22366,6 +22451,41 @@ RectTransform:
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -10.0558, y: -162.6286}
   m_SizeDelta: {x: 1005.3916, y: 1067.4249}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1177090380
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1177090381}
+  m_Layer: 5
+  m_Name: 
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1177090381
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1177090380}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 380592419}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1184108610
 GameObject:
@@ -24067,6 +24187,163 @@ CanvasGroup:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1226475598}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!1 &1228013505
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1228013506}
+  - component: {fileID: 1228013509}
+  - component: {fileID: 1228013508}
+  - component: {fileID: 1228013507}
+  - component: {fileID: 1228013510}
+  m_Layer: 5
+  m_Name: InvisibleExitButton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1228013506
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228013505}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 774911678}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 800, y: 1600}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1228013507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228013505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1228013508}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1367119719}
+        m_TargetAssemblyTypeName: FinalCameraController, Assembly-CSharp
+        m_MethodName: ClickInvisibleBackButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2141448768}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: UIButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1228013508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228013505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: d7f409a287fc14824a84a822ef378d81, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1228013509
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228013505}
+  m_CullTransparentMesh: 1
+--- !u!225 &1228013510
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228013505}
   m_Enabled: 1
   m_Alpha: 1
   m_Interactable: 1
@@ -25950,8 +26227,9 @@ MonoBehaviour:
   ValueEditor: {fileID: 0}
   fishShouting: 0
   PosturePos: {x: 33, y: 0, z: -10}
-  phoneFrame: {fileID: 36059811}
+  phoneFrame: {fileID: 774911677}
   isShown: 0
+  StationForButton: {fileID: 1206487186}
   DemoEndButton: {fileID: 1849989982}
 --- !u!114 &1367119720
 MonoBehaviour:
@@ -39782,6 +40060,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 565f19af68b134618aaf5ff7ce404c2c, type: 3}
+--- !u!114 &2246724577196498284 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2814799888135059873, guid: 565f19af68b134618aaf5ff7ce404c2c,
+    type: 3}
+  m_PrefabInstance: {fileID: 2246724577196498283}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &2262184051060028218
 RectTransform:
   m_ObjectHideFlags: 0
@@ -40527,7 +40817,7 @@ PrefabInstance:
     - target: {fileID: 4388146059729905696, guid: f4db8ddb3762b4b28bfc3b24eb9485b8,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4388146059729905696, guid: f4db8ddb3762b4b28bfc3b24eb9485b8,
         type: 3}
@@ -42922,8 +43212,8 @@ RectTransform:
   m_Father: {fileID: 80825563}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 790.5548, y: 1174.4412}
   m_Pivot: {x: 0, y: 1}

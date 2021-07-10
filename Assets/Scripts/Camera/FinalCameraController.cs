@@ -44,6 +44,7 @@ public class FinalCameraController : MonoBehaviour
 
     [HideInInspector]
     public CameraMovement CameraMovement;
+    
 
     //public CameraMovement myHSS;
 
@@ -143,6 +144,7 @@ public class FinalCameraController : MonoBehaviour
 
     public Vector3 PosturePos;
     public GameObject phoneFrame;
+    
     
     // Start is called before the first frame update
     void Start()
@@ -472,6 +474,30 @@ public void CancelAllUI(bool clickMachine)
         fishTalk.SetActive(false);
 
         //print("clickLateComic");
+    }
+
+
+    [SerializeField]
+    private StationForButton StationForButton;
+    public void ClickInvisibleBackButton()
+    {
+        
+        if(myCameraState == CameraState.App)
+        {
+            AppBackButton();
+        }
+        else if(myCameraState == CameraState.Map)
+        {
+            ChangeToSubway();
+            LevelManager.EndMapTutorial();
+            StationForButton.ExitMap();
+            
+        }
+        else if(myCameraState == CameraState.Ad)
+        {
+            ChangeToSubway();
+        }
+        
     }
 
     public void AppBackButton()

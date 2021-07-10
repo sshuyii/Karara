@@ -859,8 +859,13 @@ public class TutorialManagerNew : MonoBehaviour
         fishForward = forward;
         currentFS = screen;
         ftUI = isUI;
+<<<<<<< HEAD
 
         FishTalk(animateOrNot);
+=======
+        // Debug.Log(currentFT.key + " fish text length " +currentFT.content.Count + " playing " + currentFT.playingIdx);
+        FishTalk(animateOrNot, forward);
+>>>>>>> 7541bdfae2f265aa5b054b8c8fbeaee999e3bd5d
     }
 
     private void FishTalk(bool animateOrNot)

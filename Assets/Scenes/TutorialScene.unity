@@ -5661,6 +5661,7 @@ RectTransform:
   m_AnchoredPosition: {x: -0.60009766, y: -42}
   m_SizeDelta: {x: 651, y: 651}
   m_Pivot: {x: 0.5, y: 0.5}
+<<<<<<< HEAD
 --- !u!114 &367567077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5734,6 +5735,8 @@ RectTransform:
   m_AnchoredPosition: {x: -384.13, y: -703.6245}
   m_SizeDelta: {x: 206, y: 276}
   m_Pivot: {x: 0.5, y: 0.5}
+=======
+>>>>>>> 7541bdfae2f265aa5b054b8c8fbeaee999e3bd5d
 --- !u!1 &391757769
 GameObject:
   m_ObjectHideFlags: 0
@@ -6805,32 +6808,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 344445a89b4f74a0e9a0a766903df87e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mTerm: Fish/DoYourJob
-  mTermSecondary: fonts
-  PrimaryTermModifier: 0
-  SecondaryTermModifier: 0
-  TermPrefix: 
-  TermSuffix: 
-  LocalizeOnAwake: 1
-  IgnoreRTL: 0
-  MaxCharactersInRTL: 0
-  IgnoreNumbersInRTL: 1
-  CorrectAlignmentForRTL: 1
-  AddSpacesToJoinedLanguages: 0
-  AllowLocalizedParameters: 1
-  TranslatedObjects: []
-  LocalizeEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  AlwaysForceLocalize: 0
-  LocalizeCallBack:
-    Target: {fileID: 0}
-    MethodName: 
-  mGUI_ShowReferences: 0
-  mGUI_ShowTems: 1
-  mGUI_ShowCallback: 0
-  mLocalizeTarget: {fileID: 1471076171}
-  mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_Label
 --- !u!114 &505079630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8473,32 +8450,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 344445a89b4f74a0e9a0a766903df87e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mTerm: Fish/DoYourJob
-  mTermSecondary: fonts
-  PrimaryTermModifier: 0
-  SecondaryTermModifier: 0
-  TermPrefix: 
-  TermSuffix: 
-  LocalizeOnAwake: 1
-  IgnoreRTL: 0
-  MaxCharactersInRTL: 0
-  IgnoreNumbersInRTL: 1
-  CorrectAlignmentForRTL: 1
-  AddSpacesToJoinedLanguages: 0
-  AllowLocalizedParameters: 1
-  TranslatedObjects: []
-  LocalizeEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  AlwaysForceLocalize: 0
-  LocalizeCallBack:
-    Target: {fileID: 0}
-    MethodName: 
-  mGUI_ShowReferences: 0
-  mGUI_ShowTems: 1
-  mGUI_ShowCallback: 0
-  mLocalizeTarget: {fileID: 1471076171}
-  mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_Label
 --- !u!114 &682925289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9826,32 +9777,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 344445a89b4f74a0e9a0a766903df87e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mTerm: Fish/DoYourJob
-  mTermSecondary: fonts
-  PrimaryTermModifier: 0
-  SecondaryTermModifier: 0
-  TermPrefix: 
-  TermSuffix: 
-  LocalizeOnAwake: 1
-  IgnoreRTL: 0
-  MaxCharactersInRTL: 0
-  IgnoreNumbersInRTL: 1
-  CorrectAlignmentForRTL: 1
-  AddSpacesToJoinedLanguages: 0
-  AllowLocalizedParameters: 1
-  TranslatedObjects: []
-  LocalizeEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  AlwaysForceLocalize: 0
-  LocalizeCallBack:
-    Target: {fileID: 0}
-    MethodName: 
-  mGUI_ShowReferences: 0
-  mGUI_ShowTems: 1
-  mGUI_ShowCallback: 0
-  mLocalizeTarget: {fileID: 1471076171}
-  mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_Label
 --- !u!224 &784141027
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12918,60 +12843,100 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FishTextList:
   - key: CloseDoor
-    content:
+    content: []
+    contentENG:
     - What are you doing! Close the door!
+    contentCHN:
+    - "\u4F60\u5728\u5E72\u4EC0\u4E48\uFF01\u5FEB\u5173\u4E0A\u6D17\u8863\u673A\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: Right
-    content:
+    content: []
+    contentENG:
     - Right!
+    contentCHN:
+    - "\u5E72\u5F97\u597D\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: Late
-    content:
+    content: []
+    contentENG:
     - Karara!!!! You are late! Where have you been!
     - See the bag here! Do your job now! Pick it up and start washing!
+    contentCHN:
+    - "Karara!!!! \u4F60\u600E\u4E48\u6765\u8FD9\u4E48\u665A\uFF01"
+    - "\u770B\u770B\u8FD9\u4E9B\u5305\uFF01\u5FEB\u5F00\u59CB\u5E72\u6D3B\u5427\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: ReturnBag
-    content:
+    content: []
+    contentENG:
     - What have you done with your customer's clothes! Return them!!
+    contentCHN:
+    - "\u522B\u4E71\u52A8\u5BA2\u6237\u7684\u8863\u670D\uFF01\u5FEB\u8FD8\u56DE\u53BB\uFF01"
     isPlaying: 0
     playingIdx: 0
+<<<<<<< HEAD
   - key: ReturnBagPre
     content:
+=======
+  - key: MultipleSentence
+    content: []
+    contentENG:
+>>>>>>> 7541bdfae2f265aa5b054b8c8fbeaee999e3bd5d
     - That's right Karara! Don't you ever dare touch customers' clothes!
     - And get here everyday on time! Your job is to
+    contentCHN:
+    - "\u522B\u518D\u4E71\u52A8\u5BA2\u6237\u8863\u670D\u5566"
+    - "\u4EE5\u540E\u6BCF\u5929\u8981\u6309\u65F6\u4E0A\u73ED\u5440\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: Open2ndTime
-    content:
+    content: []
+    contentENG:
     - Told you close the door! Listen to me!
+    contentCHN:
+    - "\u544A\u8BC9\u4F60\u4E86\u5FEB\u5173\u4E0A\u6D17\u8863\u673A\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: NoTouchCloth
-    content:
+    content: []
+    contentENG:
     - Put that cloth back! Don't you dare touch your customer's cloth!!
+    contentCHN:
+    - "\u628A\u8863\u670D\u653E\u56DE\u6D17\u8863\u673A\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: ClickBag
-    content:
+    content: []
+    contentENG:
     - Click bag
+    contentCHN:
+    - "\u70B9\u90A3\u4E2A\u5305\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: StartWashing
-    content:
+    content: []
+    contentENG:
     - Start washing
+    contentCHN:
+    - "\u6D17\u8863\u670D\u5566"
     isPlaying: 0
     playingIdx: 0
   - key: LostPhone
-    content:
+    content: []
+    contentENG:
     - Some one's phone
+    contentCHN:
+    - "\u67D0\u4EBA\u7684\u624B\u673A"
     isPlaying: 0
     playingIdx: 0
   - key: come
-    content:
+    content: []
+    contentENG:
     - Karara! Come here!
+    contentCHN:
+    - "Karara! \u4F60\u8FC7\u6765\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: ReturnCloth
@@ -17938,32 +17903,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 344445a89b4f74a0e9a0a766903df87e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mTerm: Fish/DoYourJob
-  mTermSecondary: fonts
-  PrimaryTermModifier: 0
-  SecondaryTermModifier: 0
-  TermPrefix: 
-  TermSuffix: 
-  LocalizeOnAwake: 1
-  IgnoreRTL: 0
-  MaxCharactersInRTL: 0
-  IgnoreNumbersInRTL: 1
-  CorrectAlignmentForRTL: 1
-  AddSpacesToJoinedLanguages: 0
-  AllowLocalizedParameters: 1
-  TranslatedObjects: []
-  LocalizeEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  AlwaysForceLocalize: 0
-  LocalizeCallBack:
-    Target: {fileID: 0}
-    MethodName: 
-  mGUI_ShowReferences: 0
-  mGUI_ShowTems: 1
-  mGUI_ShowCallback: 0
-  mLocalizeTarget: {fileID: 1471076171}
-  mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_Label
 --- !u!224 &1321464721
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19670,6 +19609,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+<<<<<<< HEAD
 --- !u!114 &1471076171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19683,6 +19623,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mTarget: {fileID: 98011754}
+=======
+>>>>>>> 7541bdfae2f265aa5b054b8c8fbeaee999e3bd5d
 --- !u!1 &1479377716
 GameObject:
   m_ObjectHideFlags: 0
@@ -21636,7 +21578,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Concentrate on your work! Do the laundry!
+  m_text: 'Concentrate on your work! Do the laundry! '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
@@ -21760,32 +21702,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 344445a89b4f74a0e9a0a766903df87e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mTerm: Fish/DoYourJob
-  mTermSecondary: fonts
-  PrimaryTermModifier: 0
-  SecondaryTermModifier: 0
-  TermPrefix: 
-  TermSuffix: 
-  LocalizeOnAwake: 1
-  IgnoreRTL: 0
-  MaxCharactersInRTL: 0
-  IgnoreNumbersInRTL: 1
-  CorrectAlignmentForRTL: 1
-  AddSpacesToJoinedLanguages: 0
-  AllowLocalizedParameters: 1
-  TranslatedObjects: []
-  LocalizeEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  AlwaysForceLocalize: 0
-  LocalizeCallBack:
-    Target: {fileID: 0}
-    MethodName: 
-  mGUI_ShowReferences: 0
-  mGUI_ShowTems: 1
-  mGUI_ShowCallback: 0
-  mLocalizeTarget: {fileID: 1471076171}
-  mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_Label
 --- !u!1 &1618709461
 GameObject:
   m_ObjectHideFlags: 0
@@ -24539,8 +24455,179 @@ Animator:
     type: 3}
   m_PrefabInstance: {fileID: 7855800714027189672}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< HEAD
 --- !u!1001 &1807183274
 PrefabInstance:
+=======
+--- !u!1 &1812583558
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1812583560}
+  - component: {fileID: 1812583559}
+  m_Layer: 0
+  m_Name: ---Translator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1812583559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812583558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e7afaa2519e9444f87e13464b1c9385, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generateFile: 0
+  languageCode: 0
+  Text2DList: []
+  TextUIList: []
+--- !u!4 &1812583560
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812583558}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -412.8252, y: 402.17715, z: -3594.8525}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1835628510
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1835628511}
+  - component: {fileID: 1835628513}
+  - component: {fileID: 1835628512}
+  m_Layer: 0
+  m_Name: phone_particle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1835628511
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835628510}
+  m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 4.1582537, y: 1.9670167, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1465941638}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!95 &1835628512
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835628510}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 029f04c43a13b42a68d3298670ec048b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!212 &1835628513
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835628510}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 2
+  m_Sprite: {fileID: 21300000, guid: 57c93650ee1c9405993fb175e453594b, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 2.37, y: 2.37}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!1 &1840438452
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1840438454}
+  - component: {fileID: 1840438453}
+  m_Layer: 0
+  m_Name: ---AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1840438453
+MonoBehaviour:
+>>>>>>> 7541bdfae2f265aa5b054b8c8fbeaee999e3bd5d
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
