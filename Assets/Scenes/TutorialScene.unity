@@ -5019,140 +5019,6 @@ RectTransform:
   m_AnchoredPosition: {x: -384.13, y: -703.6245}
   m_SizeDelta: {x: 206, y: 276}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &388934638
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 388934639}
-  - component: {fileID: 388934641}
-  - component: {fileID: 388934640}
-  m_Layer: 5
-  m_Name: Text (TMP)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &388934639
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 388934638}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.13368984}
-  m_LocalScale: {x: 1, y: 1, z: 0.013368985}
-  m_Children: []
-  m_Father: {fileID: 1791355508}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 98, y: -14}
-  m_SizeDelta: {x: 200, y: 50}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &388934640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 388934638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_text: +3
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_fontColor32:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontSize: 40
-  m_fontSizeBase: 40
-  m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
-  m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_wordSpacing: 0
-  m_lineSpacing: 0
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_enableKerning: 1
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_parseCtrlCharacters: 1
-  m_isOrthographic: 1
-  m_isCullingEnabled: 0
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 1
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
-  m_isUsingLegacyAnimationComponent: 0
-  m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_baseMaterial: {fileID: 0}
-  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!222 &388934641
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 388934638}
-  m_CullTransparentMesh: 1
 --- !u!1 &391757769
 GameObject:
   m_ObjectHideFlags: 0
@@ -6204,32 +6070,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 344445a89b4f74a0e9a0a766903df87e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mTerm: Fish/DoYourJob
-  mTermSecondary: fonts
-  PrimaryTermModifier: 0
-  SecondaryTermModifier: 0
-  TermPrefix: 
-  TermSuffix: 
-  LocalizeOnAwake: 1
-  IgnoreRTL: 0
-  MaxCharactersInRTL: 0
-  IgnoreNumbersInRTL: 1
-  CorrectAlignmentForRTL: 1
-  AddSpacesToJoinedLanguages: 0
-  AllowLocalizedParameters: 1
-  TranslatedObjects: []
-  LocalizeEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  AlwaysForceLocalize: 0
-  LocalizeCallBack:
-    Target: {fileID: 0}
-    MethodName: 
-  mGUI_ShowReferences: 0
-  mGUI_ShowTems: 1
-  mGUI_ShowCallback: 0
-  mLocalizeTarget: {fileID: 1471076171}
-  mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_Label
 --- !u!114 &505079630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7870,32 +7710,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 344445a89b4f74a0e9a0a766903df87e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mTerm: Fish/DoYourJob
-  mTermSecondary: fonts
-  PrimaryTermModifier: 0
-  SecondaryTermModifier: 0
-  TermPrefix: 
-  TermSuffix: 
-  LocalizeOnAwake: 1
-  IgnoreRTL: 0
-  MaxCharactersInRTL: 0
-  IgnoreNumbersInRTL: 1
-  CorrectAlignmentForRTL: 1
-  AddSpacesToJoinedLanguages: 0
-  AllowLocalizedParameters: 1
-  TranslatedObjects: []
-  LocalizeEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  AlwaysForceLocalize: 0
-  LocalizeCallBack:
-    Target: {fileID: 0}
-    MethodName: 
-  mGUI_ShowReferences: 0
-  mGUI_ShowTems: 1
-  mGUI_ShowCallback: 0
-  mLocalizeTarget: {fileID: 1471076171}
-  mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_Label
 --- !u!114 &682925289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9234,32 +9048,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 344445a89b4f74a0e9a0a766903df87e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mTerm: Fish/DoYourJob
-  mTermSecondary: fonts
-  PrimaryTermModifier: 0
-  SecondaryTermModifier: 0
-  TermPrefix: 
-  TermSuffix: 
-  LocalizeOnAwake: 1
-  IgnoreRTL: 0
-  MaxCharactersInRTL: 0
-  IgnoreNumbersInRTL: 1
-  CorrectAlignmentForRTL: 1
-  AddSpacesToJoinedLanguages: 0
-  AllowLocalizedParameters: 1
-  TranslatedObjects: []
-  LocalizeEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  AlwaysForceLocalize: 0
-  LocalizeCallBack:
-    Target: {fileID: 0}
-    MethodName: 
-  mGUI_ShowReferences: 0
-  mGUI_ShowTems: 1
-  mGUI_ShowCallback: 0
-  mLocalizeTarget: {fileID: 1471076171}
-  mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_Label
 --- !u!224 &784141027
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12274,60 +12062,95 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FishTextList:
   - key: CloseDoor
-    content:
+    content: []
+    contentENG:
     - What are you doing! Close the door!
+    contentCHN:
+    - "\u4F60\u5728\u5E72\u4EC0\u4E48\uFF01\u5FEB\u5173\u4E0A\u6D17\u8863\u673A\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: Right
-    content:
+    content: []
+    contentENG:
     - Right!
+    contentCHN:
+    - "\u5E72\u5F97\u597D\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: Late
-    content:
+    content: []
+    contentENG:
     - Karara!!!! You are late! Where have you been!
     - See the bag here! Do your job now! Pick it up and start washing!
+    contentCHN:
+    - "Karara!!!! \u4F60\u600E\u4E48\u6765\u8FD9\u4E48\u665A\uFF01"
+    - "\u770B\u770B\u8FD9\u4E9B\u5305\uFF01\u5FEB\u5F00\u59CB\u5E72\u6D3B\u5427\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: ReturnBag
-    content:
+    content: []
+    contentENG:
     - What have you done with your customer's clothes! Return them!!
+    contentCHN:
+    - "\u522B\u4E71\u52A8\u5BA2\u6237\u7684\u8863\u670D\uFF01\u5FEB\u8FD8\u56DE\u53BB\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: MultipleSentence
-    content:
+    content: []
+    contentENG:
     - That's right Karara! Don't you ever dare touch customers' clothes!
     - And get here everyday on time! Your job is to
+    contentCHN:
+    - "\u522B\u518D\u4E71\u52A8\u5BA2\u6237\u8863\u670D\u5566"
+    - "\u4EE5\u540E\u6BCF\u5929\u8981\u6309\u65F6\u4E0A\u73ED\u5440\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: Open2ndTime
-    content:
+    content: []
+    contentENG:
     - Told you close the door! Listen to me!
+    contentCHN:
+    - "\u544A\u8BC9\u4F60\u4E86\u5FEB\u5173\u4E0A\u6D17\u8863\u673A\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: NoTouchCloth
-    content:
+    content: []
+    contentENG:
     - Put that cloth back! Don't you dare touch your customer's cloth!!
+    contentCHN:
+    - "\u628A\u8863\u670D\u653E\u56DE\u6D17\u8863\u673A\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: ClickBag
-    content:
+    content: []
+    contentENG:
     - Click bag
+    contentCHN:
+    - "\u70B9\u90A3\u4E2A\u5305\uFF01"
     isPlaying: 0
     playingIdx: 0
   - key: StartWashing
-    content:
+    content: []
+    contentENG:
     - Start washing
+    contentCHN:
+    - "\u6D17\u8863\u670D\u5566"
     isPlaying: 0
     playingIdx: 0
   - key: LostPhone
-    content:
+    content: []
+    contentENG:
     - Some one's phone
+    contentCHN:
+    - "\u67D0\u4EBA\u7684\u624B\u673A"
     isPlaying: 0
     playingIdx: 0
   - key: come
-    content:
+    content: []
+    contentENG:
     - Karara! Come here!
+    contentCHN:
+    - "Karara! \u4F60\u8FC7\u6765\uFF01"
     isPlaying: 0
     playingIdx: 0
 --- !u!4 &957381868
@@ -17110,32 +16933,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 344445a89b4f74a0e9a0a766903df87e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mTerm: Fish/DoYourJob
-  mTermSecondary: fonts
-  PrimaryTermModifier: 0
-  SecondaryTermModifier: 0
-  TermPrefix: 
-  TermSuffix: 
-  LocalizeOnAwake: 1
-  IgnoreRTL: 0
-  MaxCharactersInRTL: 0
-  IgnoreNumbersInRTL: 1
-  CorrectAlignmentForRTL: 1
-  AddSpacesToJoinedLanguages: 0
-  AllowLocalizedParameters: 1
-  TranslatedObjects: []
-  LocalizeEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  AlwaysForceLocalize: 0
-  LocalizeCallBack:
-    Target: {fileID: 0}
-    MethodName: 
-  mGUI_ShowReferences: 0
-  mGUI_ShowTems: 1
-  mGUI_ShowCallback: 0
-  mLocalizeTarget: {fileID: 1471076171}
-  mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_Label
 --- !u!224 &1321464721
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18697,19 +18494,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1471076171
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d96a6c3ea7d28744aacc367115a71af5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mTarget: {fileID: 0}
 --- !u!1 &1479377716
 GameObject:
   m_ObjectHideFlags: 0
@@ -20503,7 +20287,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Concentrate on your work! Do the laundry!
+  m_text: 'Concentrate on your work! Do the laundry! '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
@@ -20627,32 +20411,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 344445a89b4f74a0e9a0a766903df87e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mTerm: Fish/DoYourJob
-  mTermSecondary: fonts
-  PrimaryTermModifier: 0
-  SecondaryTermModifier: 0
-  TermPrefix: 
-  TermSuffix: 
-  LocalizeOnAwake: 1
-  IgnoreRTL: 0
-  MaxCharactersInRTL: 0
-  IgnoreNumbersInRTL: 1
-  CorrectAlignmentForRTL: 1
-  AddSpacesToJoinedLanguages: 0
-  AllowLocalizedParameters: 1
-  TranslatedObjects: []
-  LocalizeEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  AlwaysForceLocalize: 0
-  LocalizeCallBack:
-    Target: {fileID: 0}
-    MethodName: 
-  mGUI_ShowReferences: 0
-  mGUI_ShowTems: 1
-  mGUI_ShowCallback: 0
-  mLocalizeTarget: {fileID: 1471076171}
-  mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_Label
 --- !u!1 &1618709461
 GameObject:
   m_ObjectHideFlags: 0
@@ -22234,7 +21992,7 @@ PrefabInstance:
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
@@ -22244,7 +22002,7 @@ PrefabInstance:
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
@@ -22254,7 +22012,7 @@ PrefabInstance:
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
@@ -22294,12 +22052,12 @@ PrefabInstance:
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 417
       objectReference: {fileID: 0}
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -350
       objectReference: {fileID: 0}
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
@@ -23045,49 +22803,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 665344260}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1791355507 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5918576108799237489, guid: f4db8ddb3762b4b28bfc3b24eb9485b8,
-    type: 3}
-  m_PrefabInstance: {fileID: 921958503}
-  m_PrefabAsset: {fileID: 0}
---- !u!224 &1791355508 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 714135904751380431, guid: f4db8ddb3762b4b28bfc3b24eb9485b8,
-    type: 3}
-  m_PrefabInstance: {fileID: 921958503}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1791355509
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1791355507}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ddb44794b88d74222b1271956b5595e9, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!225 &1791355511
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1791355507}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
 --- !u!1 &1795318587
 GameObject:
   m_ObjectHideFlags: 0
@@ -23299,6 +23014,53 @@ Animator:
     type: 3}
   m_PrefabInstance: {fileID: 7855800714027189672}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1812583558
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1812583560}
+  - component: {fileID: 1812583559}
+  m_Layer: 0
+  m_Name: ---Translator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1812583559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812583558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e7afaa2519e9444f87e13464b1c9385, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generateFile: 0
+  languageCode: 0
+  Text2DList: []
+  TextUIList: []
+--- !u!4 &1812583560
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812583558}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -412.8252, y: 402.17715, z: -3594.8525}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1835628510
 GameObject:
   m_ObjectHideFlags: 0

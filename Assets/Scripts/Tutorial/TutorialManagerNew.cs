@@ -849,7 +849,7 @@ public class TutorialManagerNew : MonoBehaviour
         fishForward = forward;
         currentFS = screen;
         ftUI = isUI;
-
+        // Debug.Log(currentFT.key + " fish text length " +currentFT.content.Count + " playing " + currentFT.playingIdx);
         FishTalk(animateOrNot, forward);
     }
 
