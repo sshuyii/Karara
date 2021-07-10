@@ -21,12 +21,8 @@ public class RatingSystem : MonoBehaviour
     void Start()
     {
         LevelManager = GameObject.Find("---LevelManager").GetComponent<LevelManager>();
-<<<<<<< HEAD
         Dots = this.transform.Find("bottomDots");
-=======
-        Dots = this.transform.FindChild("bottomDots");
-        mobile = this.transform.FindChild("mobile");
->>>>>>> 7541bdfae2f265aa5b054b8c8fbeaee999e3bd5d
+        mobile = this.transform.Find("mobile");
     }
 
     // Update is called once per frame
