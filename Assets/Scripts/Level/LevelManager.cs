@@ -21,11 +21,6 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private GameObject MapInSubway;
 
-
-
-
-
-
     //    public CanvasGroup startScreen;
     public CanvasGroup chapterOne;
     public GameObject hintArrow;
@@ -106,6 +101,13 @@ public class LevelManager : MonoBehaviour
     enum returnBagState
     {
         stageOne
+    }
+
+
+    private void Reset()
+    {   
+        ///use this function to inactivate gameObjects and canvasgroups
+
     }
     void Start()
     {

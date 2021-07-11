@@ -276,7 +276,7 @@ public class ClothToMachine : MonoBehaviour
     {
 
 
-        FinalCameraController.CancelAllUI(false);
+        FinalCameraController.CancelAllUI(false, false);
 
         if (FinalCameraController.isSwipping) return;
 
@@ -338,16 +338,22 @@ public class ClothToMachine : MonoBehaviour
 
         }
         //return clothes
-        else if (hitTime > 1)
-        {
-            AudioManager.PlayAudio(AudioType.Bag_Phase1);
-            isFinished = AllMachines.FinishedOrNot(underMachineNum);
-            if (isFinished && !FinalCameraController.alreadyNotice)
-            {
-                BagsController.ShowReturnNotice(thisBag, underMachineNum);
-            }
-            hitTime++;
-        }
+        // else if (hitTime > 1)
+        // {
+        //     AudioManager.PlayAudio(AudioType.Bag_Phase1);
+        //     isFinished = AllMachines.FinishedOrNot(underMachineNum);
+        //     if (isFinished && !FinalCameraController.alreadyNotice)
+        //     {
+        //         BagsController.ShowReturnNotice(thisBag, underMachineNum);
+        //     }
+        //     hitTime++;
+        // }
+
+    }
+
+    public void ShowReturnNotice()
+    {
+        BagsController.ShowReturnNotice(thisBag, underMachineNum);
 
     }
 

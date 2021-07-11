@@ -288,13 +288,14 @@ public class WasherController : MonoBehaviour
         FinalCameraController.DisableInput(false);
 
         //Shuyi: 关门暂定干脆一点，尽量避免点击之后过一段时间才关门+出声音
-        yield return new WaitForSeconds(.2f);
-
-        ClothUI.SetActive(false);
-
         DoorImage.sprite = AllMachines.closedDoor;
         AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
 
+        yield return new WaitForSeconds(0.2f);
+
+        ClothUI.SetActive(false);
+
+        
         // yield return new WaitForSeconds(.2f);
 
         pressOK = true;
@@ -391,7 +392,7 @@ public class WasherController : MonoBehaviour
     public void clickMachine()
     {
 
-        FinalCameraController.CancelAllUI(true);
+        FinalCameraController.CancelAllUI(true, true);
         //print("presssssssed");
 
         if (shut == 0)

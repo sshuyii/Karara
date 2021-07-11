@@ -124,9 +124,10 @@ public class BagsController : MonoBehaviour
         
         WasherController wc = washers.WasherControllerList[machienNum];
         
-        wc.shut = 1;
-        wc.DoorImage.sprite = washers.openedDoor;
-        wc.Occupied.SetActive(false);
+        wc.clickMachine();
+        // wc.shut = 1;
+        // wc.DoorImage.sprite = washers.openedDoor;
+        // wc.Occupied.SetActive(false);
 
         int absentClothNum = wc.clothNum - 4; // 0 -1 -2 -3 -4 五种情况
         int oneStarForBag = 0;
@@ -145,7 +146,8 @@ public class BagsController : MonoBehaviour
         FinalCameraController.alreadyNotice = false;
        
     }
-    public void ClickReturnNo(bool DropBagOrNot) {
+    public void ClickReturnNo(bool DropBagOrNot) 
+    {
         HideNotice();
 
         if(returningBag != null && !DropBagOrNot)
@@ -169,12 +171,15 @@ public class BagsController : MonoBehaviour
 
     }
 
-    public void ClickReturnYes() {
-        foreach(GameObject notice in returnNotices)
-        {
-            notice.SetActive(false);
-        }
+    public void ClickReturnYes() 
+    {
+        //Shuyi: CancelAllUI should do the same as the foreach loop
+        // foreach(GameObject notice in returnNotices)
+        // {
+        //     notice.SetActive(false);
+        // }
         FinalCameraController.alreadyNotice = false;
+        FinalCameraController.CancelAllUI(false, false);
         
         StartCoroutine(returningBag.GetComponent<ClothToMachine>().returnClothYes());
         bagsInCar.Remove(returningBag);

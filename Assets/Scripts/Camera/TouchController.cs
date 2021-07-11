@@ -295,6 +295,7 @@ public class TouchController : MonoBehaviour
                     AudioManager.PlayAudio(AudioType.UI_Dialogue);
                     LostAndFound.clickLostFound();
                     break;
+
             }
 
 

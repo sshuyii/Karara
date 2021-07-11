@@ -691,7 +691,7 @@ public class SubwayMovement : MonoBehaviour
             BagsController.HideNotice();
         }
 
-        FinalCameraController.CancelAllUI(false);
+        FinalCameraController.CancelAllUI(false, false);
         FinalCameraController.enableScroll = false;
 
         Show(FinalCameraController.disableInputCG);
