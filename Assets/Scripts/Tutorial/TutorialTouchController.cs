@@ -345,14 +345,12 @@ public class TutorialTouchController : MonoBehaviour
                 case "hiring_memo":
                     TutorialManagerNew.ClickHiring();
                     break;
-                case"ReturnNotice_New_Yes":
-                    TutorialManagerNew.ReturnYes();
+                case"Return_Button":
+                    TutorialManagerNew.ClickReturn();
                     break;
-                case"liquid":
-                    TutorialManagerNew.ClickLiquid();
-                    break;
-
-
+                // case"liquid":
+                //     TutorialManagerNew.ClickLiquid();
+                //     break;
             }
 
             Debug.Log(hit.transform.gameObject.name);
