@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 53572512644481231}
   - component: {fileID: 53572512644481230}
   - component: {fileID: 9038810210409572302}
+  - component: {fileID: 4138316852612284878}
   m_Layer: 5
   m_Name: returnNotice
   m_TagString: Untagged
@@ -155,6 +156,18 @@ MonoBehaviour:
   UI_minusCloth: {fileID: 665168599525355237}
   starNum: {fileID: 5707695562524310481}
   clothNum: {fileID: 7044397154250930807}
+--- !u!225 &4138316852612284878
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53572512644481224}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &368741697619086309
 GameObject:
   m_ObjectHideFlags: 0
