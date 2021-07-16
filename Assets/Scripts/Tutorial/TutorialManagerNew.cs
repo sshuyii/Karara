@@ -17,6 +17,8 @@ using TreeEditor;
 public class TutorialManagerNew : MonoBehaviour
 {
     
+    public Material outlineMat;
+    private Material norMat;
     public int stepCounter,bagClick;
     public bool forwardOneStep;
     private bool machineOpen = false;
@@ -170,12 +172,13 @@ public class TutorialManagerNew : MonoBehaviour
     List<GameObject> fishTextObjList = new List<GameObject>();
     List<TextMeshPro> fishTextList = new List<TextMeshPro>();
 
-    [SerializeField]
-    List<TextMeshProUGUI> fishTextUIList = new List<TextMeshProUGUI>();
+    [SerializeField] List<TextMeshProUGUI> fishTextUIList = new List<TextMeshProUGUI>();
     
-    [SerializeField]
-    List<GameObject> worldHintList = new List<GameObject>();
-    Dictionary<string, Vector3> worldHintPosTable = new Dictionary<string, Vector3>();
+
+    [SerializeField] GameObject hint;
+    [SerializeField] GameObject hintScreenPos;
+    [SerializeField] List<GameObject> worldHintList = new List<GameObject>();
+    Dictionary<string, Vector2> worldHintPosTable = new Dictionary<string, Vector2>();
 
     [SerializeField]
     List<GameObject> kararaBubbleList = new List<GameObject>();
@@ -222,6 +225,8 @@ public class TutorialManagerNew : MonoBehaviour
         Hide(bottomDotsCG);
         Hide(ProceedCG);
 
+        Hide(hint.GetComponent<CanvasGroup>());
+
         ClothUI.SetActive(false);
         liquid.SetActive(false);
         ReturnNotice.SetActive(false);
@@ -245,9 +250,17 @@ public class TutorialManagerNew : MonoBehaviour
             fishTextList.Add(fishTextObjList[i].GetComponentInChildren<TextMeshPro>());
         }
 
+        // List<Transform> worldHintTransformList = hint.GetComponentsInChildren<Transform>;
+        foreach (Transform child in hintScreenPos.transform)
+        {
+            worldHintList.Add(child.gameObject);
+        }           
+
         for(int i = 0; i < worldHintList.Count; i++ )
         {
-            worldHintPosTable.Add(worldHintList[i].name, worldHintList[i].transform.position);
+            RectTransform rt = worldHintList[i].GetComponent<RectTransform>();
+            Vector2 temp = rt.anchoredPosition;
+            worldHintPosTable.Add(worldHintList[i].name, temp);
         }
 
         for(int i = 0; i < kararaBubbleList.Count; i++ )
@@ -748,7 +761,7 @@ public class TutorialManagerNew : MonoBehaviour
     public void ClickPoster()
     {
         if (!buttonTable["Poster"]) return;
-        Clickable(new String[] {});
+        Clickable(new String[] {"none"});
 
         ShowAnimation("none");
 
@@ -975,18 +988,17 @@ public class TutorialManagerNew : MonoBehaviour
 
     private void BagOccur()
     {
-        HintUI.SetActive(true);
         clothBag.SetActive(true);
-        ShowAnimation("ClothBag");
+        TutorialStep("ClothBag");
     }
 
     public void ClickBag()
     {
         ///called when click bag
-        if (deactiveButtons) return;
-        
+        if(!buttonTable["ClothBag"]) return;
+        TutorialStep("none");
+
         bagClick++;
-        ShowAnimation("none");
         Debug.Log("Bag click " + bagClick.ToString());
 
         if(bagClick == 1)//从screen1到洗衣机下方
@@ -997,9 +1009,7 @@ public class TutorialManagerNew : MonoBehaviour
 
         else if(bagClick == 2)//洗衣机下方，衣服进洗衣机
         {
-            AudioManager.PlayAudio(AudioType.Bag_Phase1);
-            HintUI.SetActive(false);//点完包后提示消失一会儿，等洗衣机开门动画播完之后再出现在洗衣机上
-            
+            AudioManager.PlayAudio(AudioType.Bag_Phase1);            
             ThrowClothToMachine();
         }
         else
@@ -1037,9 +1047,6 @@ public class TutorialManagerNew : MonoBehaviour
     private IEnumerator BeforeWash()
     {
         deactiveButtons = true;        
-        ShowAnimation("none");
-
-        //HintUI.SetActive(false);
         TutorialCameraController.GotoPage(2);
 
         //localPosition!!!!
@@ -1357,11 +1364,30 @@ public class TutorialManagerNew : MonoBehaviour
 
     bool[] clothUIAvailable = {true, true, true};
     
+    public void ClothOutline(Image img, bool normal)
+    {
+        Color norCol = new Color(1f, 1f, 1f, 1f);
+        Color outlineCol = new Color(0f, 0f, 0f, 0.75f);
+
+        if(normal)
+        {
+            img.color = norCol;
+            img.material = null;
+            img.gameObject.GetComponent<Outline>().enabled = false;
+        }
+        else{
+            img.color = outlineCol;
+            img.material = outlineMat;
+            img.gameObject.GetComponent<Outline>().enabled = true;
+
+        }
+    }
+
+
     public void ClickClothUI(int slotNum)
     {
         if (deactiveButtons) return;
-        Color tmp;
-
+        
         //已经穿上工作服了之后，针对放回洗衣机的那件衣服，不可以再拿了
         if(photoTaken)//教学可以从洗衣机这里还衣服
         {
@@ -1369,8 +1395,7 @@ public class TutorialManagerNew : MonoBehaviour
             {
                 clothUIAvailable[slotNum] = true;
 
-                tmp = new Color(1f, 1f, 1f, 1f);
-                clothSlotTable[slotNum].GetComponent<SpriteRenderer>().color = tmp;
+                ClothOutline(clothSlotTable[slotNum].GetComponent<Image>(), true);
 
                 //接下来可以教还包了
                 FishTalk("ReturnBag", true, 0, true, false);
@@ -1380,16 +1405,16 @@ public class TutorialManagerNew : MonoBehaviour
 
             return;
         }
-        else
-        {
+        else//拿衣服的环节
+        {                
+            if(!clothUIAvailable[slotNum]) return;//拿过就不要再拿了
+
             pickedClothNum ++;
             //点的衣服的发光层取消
             clothSlotTable[slotNum].transform.GetChild (0).gameObject.SetActive(false);
             clothUIAvailable[slotNum] = false; 
 
-            tmp = new Color(0.4f, 0.4f, 0.4f, 0.2f);
-            clothSlotTable[slotNum].GetComponent<SpriteRenderer>().color = tmp;
-            print("color = " + clothSlotTable[slotNum].GetComponent<SpriteRenderer>().color);
+            ClothOutline(clothSlotTable[slotNum].GetComponent<Image>(), false);
 
             for(int i = 0; i < clothUIAvailable.Length; i++)
             {
@@ -1404,7 +1429,7 @@ public class TutorialManagerNew : MonoBehaviour
             {
                 machineOccupied.SetActive(false);
                 machineEmpty.GetComponent<SpriteRenderer>().sprite = emptyImg;
-                Clickable(new string[] {});
+                Clickable(new string[] {"none"});
 
                 Hint2D.SetActive(false);
                 HintUI.SetActive(false);
@@ -1511,7 +1536,7 @@ public class TutorialManagerNew : MonoBehaviour
         Hide(Inventory);
 
         //当karara照完相回来开始还衣服
-        if(putBack)
+        if(putBack)//目前用不到这一步，不在inventory里教学还衣服
         {
             FishTalk("ReturnBag", true, 0, true, false);
             ShowAnimation("ClothBag");
@@ -1733,14 +1758,21 @@ public class TutorialManagerNew : MonoBehaviour
         ShowComic();
     }
 
+    public void TutorialStep(string name)
+    {
+        Clickable(new string[]{name});
+        ShowAnimation(name);
+        ShowHint(name);
+    }
+
     public void Clickable(string[] buttons)
     {
+        ///只有这个list内的东西可以点击
         for(int i = 0; i < buttonNames.Count; i ++)
         {
             buttonTable[buttonNames[i]] = false;
         }
-
-        if(buttons.Length == 0) return;
+        if(buttons[0] == "none") return;
 
         for (int i = 0; i < buttons.Length; i ++)
         {
@@ -1750,6 +1782,21 @@ public class TutorialManagerNew : MonoBehaviour
             }
         }
     }    
+
+    private void ShowHint(string name)
+    {   
+        CanvasGroup cg = hint.GetComponent<CanvasGroup>();
+
+        if(name == "none")
+        {
+            Hide(cg);
+            return;
+        }
+        Show(cg);
+
+        RectTransform rt = hint.GetComponent<RectTransform>();
+        rt.anchoredPosition = worldHintPosTable[name];
+    }
 
     public void ShowComic()
     {
