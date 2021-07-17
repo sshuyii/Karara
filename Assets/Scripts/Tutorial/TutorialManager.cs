@@ -379,7 +379,7 @@ public class TutorialManager : MonoBehaviour
         
         
         //don't show fish dialogue if not in fish page
-        if (FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
+        if (FinalCameraController.myCameraState == CameraState.Subway)
         {
             if (FinalCameraController.mySubwayState == FinalCameraController.SubwayState.Two)
             {
@@ -423,7 +423,7 @@ public class TutorialManager : MonoBehaviour
                 }
             }
         }
-        else if(FinalCameraController.myCameraState == FinalCameraController.CameraState.Ad)
+        else if(FinalCameraController.myCameraState == CameraState.Ad)
         {
             //exception is when taking photo in the beginning of the tutorial
             if(!pause )
@@ -431,7 +431,7 @@ public class TutorialManager : MonoBehaviour
                 tutorialDialogueState = DialogueState.none;
             }
         }
-        else if(FinalCameraController.myCameraState == FinalCameraController.CameraState.Closet)
+        else if(FinalCameraController.myCameraState == CameraState.Closet)
         {
             screamImage.enabled = false;
             //在换装界面set好位置
@@ -459,7 +459,7 @@ public class TutorialManager : MonoBehaviour
         
 
         //make sure that karara only appears at the end and start when player is taught to swipe
-//        if (tutorialNumber == 1 && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
+//        if (tutorialNumber == 1 && FinalCameraController.myCameraState == CameraState.Subway)
 //        {
 //            if (FinalCameraController.mySubwayState == FinalCameraController.SubwayState.Four ||
 //                FinalCameraController.mySubwayState == FinalCameraController.SubwayState.One)
@@ -859,7 +859,7 @@ public class TutorialManager : MonoBehaviour
         
         
         //take a photo scene
-        if (FinalCameraController.myCameraState == FinalCameraController.CameraState.Ad)
+        if (FinalCameraController.myCameraState == CameraState.Ad)
         {
 //            touchImage.enabled = true;
 //

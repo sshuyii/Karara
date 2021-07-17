@@ -82,7 +82,7 @@ public class TutorialTouchController : MonoBehaviour
             return;
         }
 
-        if (TutorialCameraController.myCameraState != TutorialCameraController.CameraState.Subway)
+        if (TutorialCameraController.myCameraState !=CameraState.Subway)
         {
             return;
         }
@@ -224,7 +224,7 @@ public class TutorialTouchController : MonoBehaviour
                             //Debug.Log("Right Swipe");
                             leftSwipe = false;
                             myInputState = InputState.RightSwipe;
-                            if (TutorialCameraController.allowScroll  && TutorialCameraController.myCameraState == TutorialCameraController.CameraState.Subway)
+                            if (TutorialCameraController.allowScroll  && TutorialCameraController.myCameraState == CameraState.Subway)
                             {
                                 cameraMovement.Go2Page(cameraMovement.currentPage - 1);
                                 //cameraMovement.currentPage += -1;
@@ -238,7 +238,7 @@ public class TutorialTouchController : MonoBehaviour
 
                             myInputState = InputState.LeftSwipe;
 
-                            if (TutorialCameraController.allowScroll && TutorialCameraController.myCameraState == TutorialCameraController.CameraState.Subway)
+                            if (TutorialCameraController.allowScroll && TutorialCameraController.myCameraState == CameraState.Subway)
                             {
                                 cameraMovement.Go2Page(cameraMovement.currentPage + 1);
                                 //cameraMovement.currentPage += 1;

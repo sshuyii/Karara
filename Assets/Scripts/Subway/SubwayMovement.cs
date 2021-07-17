@@ -188,6 +188,7 @@ public class SubwayMovement : MonoBehaviour
     int[] ClothNumInScroll = new int[3] { 1, 1, 1 };
     int cummulateStation = 0;
     ValueEditor ValueEditor;
+    private FishBoss FishBoss;
 
     // Start is called before the first frame update
     void Start()
@@ -198,7 +199,7 @@ public class SubwayMovement : MonoBehaviour
         AdsController = GameObject.Find("---AdsController").GetComponent<AdsController>();
         AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
         ValueEditor = GameObject.Find("---ValueEditor").GetComponent<ValueEditor>();
-
+        FishBoss = GameObject.Find("---FishBoss").GetComponent<FishBoss>();
 
         if (!FinalCameraController.isTutorial)
         {
@@ -709,7 +710,9 @@ public class SubwayMovement : MonoBehaviour
         if(!hasBagtoReturn) // case 2
         {
             FinalCameraController.GotoPage(1);
-            FinalCameraController.FishTalkAccessFromScript("D",true);
+            FishBoss.ResetFish();
+            FishBoss.FishTalk("D",false,false);
+            
         }
         else 
         {
@@ -730,7 +733,8 @@ public class SubwayMovement : MonoBehaviour
                         LevelManager.MiniNotices[i].GetComponentInChildren<TextMeshPro>().text = Math.Abs(clothNum).ToString();
                         if(!LevelManager.UIRateShown) {
                         //case 3
-                            FinalCameraController.FishTalkAccessFromScript("C",true);
+                            FishBoss.ResetFish();
+                            FishBoss.FishTalk("C",false,false);
                             LevelManager.ShowUIRate();
                             yield return new WaitForSeconds(1f);
                         }
@@ -738,7 +742,8 @@ public class SubwayMovement : MonoBehaviour
                     yield return new WaitForSeconds(1f);
                     LevelManager.MiniNotices[i].SetActive(false);
                     BagsController.DropAllBagsInWasher(i);
-                    FinalCameraController.FishTalkAccessFromScript("B",true);
+                    FishBoss.ResetFish();
+                    FishBoss.FishTalk("B",false,false);
                 }
                 
             }
@@ -877,20 +882,6 @@ public class SubwayMovement : MonoBehaviour
         OpenDoor();
     }
 
-
-    private string GenerateFishTalkForPause()
-    {
-        string[] strList = new string[] { "You did a great job!", "Pretty Good!", "Emmm... You need to work harder", " " };
-
-        string str = "!";
-        int idx = bagNum;// bags under frount desk
-
-
-        if (idx < strList.Length) str = strList[bagNum];
-
-        return str;
-
-    }
 
 
     public void Hide(CanvasGroup UIGroup)

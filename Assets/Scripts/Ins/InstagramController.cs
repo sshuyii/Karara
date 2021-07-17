@@ -358,7 +358,7 @@ public class InstagramController : MonoBehaviour
         storedName = maxOwner;
         storedRating = rating;
 
-        if (FinalCameraController.myCameraState == FinalCameraController.CameraState.App)
+        if (FinalCameraController.myCameraState == CameraState.App)
         {
             waitingForRefresh = true;
             return;

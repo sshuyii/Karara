@@ -86,14 +86,7 @@ public class FinalCameraController : MonoBehaviour
 
     public AppState lastAppState;
 
-    public enum CameraState
-    {
-        Subway,
-        Closet,
-        Map,
-        App,
-        Ad
-    }
+
 
     public enum SubwayState
     {
@@ -112,9 +105,6 @@ public class FinalCameraController : MonoBehaviour
     [HideInInspector]
     public bool alreadyClothUI = false;
     public GameObject currentClothUI;
-
-    private FishTextManager FishTextManager;
-    FishText currentFT;
 
 
     //public GameObject generatedNotice;
@@ -138,7 +128,7 @@ public class FinalCameraController : MonoBehaviour
     private bool InventoryInstructionShown = false;
     private bool AdInstructionShown = false;
 
-    public FishBossNotification FishBossNotification;
+    public FishBoss FishBoss;
     public ValueEditor ValueEditor;
     public bool fishShouting = false;
 
@@ -164,21 +154,19 @@ public class FinalCameraController : MonoBehaviour
         InstagramController = GameObject.Find("---InstagramController").GetComponent<InstagramController>();
         RatingSys = GameObject.Find("FloatingUI").GetComponent<RatingSystem>();
         inventorySlotMgt = GameObject.Find("---InventoryController").GetComponent<InventorySlotMgt>();
-        FishBossNotification = GameObject.Find("FishBossUI").GetComponent<FishBossNotification>();
+        FishBoss = GameObject.Find("---FishBoss").GetComponent<FishBoss>();
         BagsController = GameObject.Find("---BagsController").GetComponent<BagsController>();
-        FishTextManager = GameObject.Find("---FishTextManager").GetComponent<FishTextManager>();
+
         ValueEditor = GameObject.Find("---ValueEditor").GetComponent<ValueEditor>();
-        FishBossNotification.HideFish();
    
 
-        fishTalk.SetActive(false);
+        
         Hide(frontPage);
         Hide(TakePhoto);
         Posture.SetActive(false);
 
 
 
-        fishTalkText = fishTalk.gameObject.GetComponentInChildren<TextMeshPro>();
         Hide(Inventory);
         Hide(fishShoutCG);
 
@@ -250,13 +238,13 @@ public void CancelAllUI(bool clickMachine, bool returnNotice)
         ChapterEndChecker();
 
 
-        // if(fishShouting && myCameraState == CameraState.Subway && CameraMovement.currentPage == 1)
-        // {
-        //     fishShoutCG.alpha = 0f;
-        // }
-        // else if(fishShouting){
-        //     fishShoutCG.alpha = 1f;
-        // }
+        if(fishShouting && myCameraState == CameraState.Subway && CameraMovement.currentPage == 1)
+        {
+            fishShoutCG.alpha = 0f;
+        }
+        else if(fishShouting){
+            fishShoutCG.alpha = 1f;
+        }
 
 
         if (TouchController.myInputState == TouchController.InputState.LeftSwipe||
@@ -281,27 +269,8 @@ public void CancelAllUI(bool clickMachine, bool returnNotice)
         if (myCameraState == CameraState.Subway && !isSwipping)
         {
             CheckScreenNum();
-
-            if (transform.position.x < 5 && transform.position.x > -5 )
-            {
-                if(FishBossNotification.isActive)FishBossNotification.HideFish();
-                fishShoutCG.alpha = 0f;
-            }
-            else if (transform.position.x > 5 )
-            {
-                if(fishShouting)
-                {
-                    fishShoutCG.alpha = 1f;
-                }
-                //FishBossNotification.ShowFish();
-            }
-
-            //Show(subwayBackground);
         }
-        else if (myCameraState != CameraState.Subway && FishBossNotification.isActive)
-        {
-            FishBossNotification.HideFish();
-        }
+
 
 
 
@@ -364,45 +333,19 @@ public void CancelAllUI(bool clickMachine, bool returnNotice)
 
     public void BossTalk()
     {
-        
-        if (isfishTalking == false)
-        {
-            fishTalk.SetActive(true);
-            FishTalk("Concentrate");
-        }
-        else fishTalk.SetActive(false);
-        isfishTalking = !isfishTalking;
+        FishBoss.FishTalk("Concentrate",false,false);
     }
 
     public void FishTalkAccessFromScript(string keyWord, bool reset)
     {
-        // CancelAllUI(false);
-        if(reset) isfishTalking = false;
-        if (isfishTalking == false)
-        {
-            fishTalk.SetActive(true);
-            FishTalk(keyWord);
-        }
-        else fishTalk.SetActive(false);
-        isfishTalking = !isfishTalking;
+        if(reset) FishBoss.ResetFish();
+        FishBoss.FishTalk(keyWord,false,false);
 
     }
 
-    public void FishTalk(string keyWord)
-    {
-        currentFT = FishTextManager.GetText(keyWord);
-        int idx = Random.Range(0, currentFT.content.Count);
-        fishTalkText.text = currentFT.content[currentFT.playingIdx];
-    }
 
-    
 
-    public void ClickWhileFishTalking()
-    {
-
-    }
-
-        void CheckScreenNum()
+    void CheckScreenNum()
     {
 
         switch (CameraMovement.currentPage)
@@ -992,8 +935,8 @@ public void CancelAllUI(bool clickMachine, bool returnNotice)
 
         if(myCameraState == CameraState.Subway)
         {
-            if (mySubwayState == SubwayState.One) fishTalkText.text = toSay;
-            else FishBossNotification.ShowFish(toSay);
+            FishBoss.FishTalk(toSay,false,false);
+            
         }
         
     }

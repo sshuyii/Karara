@@ -338,7 +338,7 @@ public class WasherController : MonoBehaviour
 
     public void clickMachineNewMethod()
     {
-        if(FinalCameraController.myCameraState != FinalCameraController.CameraState.Subway)
+        if(FinalCameraController.myCameraState != CameraState.Subway)
         {
             return;
         }
@@ -370,7 +370,6 @@ public class WasherController : MonoBehaviour
         {   
             string talk = "Return bags on time!";
             FinalCameraController.fishTalkText.text = talk;
-            FinalCameraController.FishBossNotification.ShowFish(talk);
         }
 
 

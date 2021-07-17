@@ -56,7 +56,7 @@ public class TouchController : MonoBehaviour
 
     private LostAndFound LostAndFound;
     private AdsController AdsController;
-    private AudioManager AudioManager;
+    private ClickUIButton UIResponder;
 
     public GameObject DebugOutput;
 
@@ -69,7 +69,7 @@ public class TouchController : MonoBehaviour
         {
             LostAndFound = GameObject.Find("Lost&Found_basket").GetComponent<LostAndFound>();
             AdsController = GameObject.Find("---AdsController").GetComponent<AdsController>();
-            AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
+            UIResponder = GameObject.Find("---UIResponder").GetComponent<ClickUIButton>();
         }
 
 
@@ -85,10 +85,30 @@ public class TouchController : MonoBehaviour
     void Update()
     {
 
+        for (var i = 0; i < Input.touchCount; ++i)
+        {
+            touch = Input.GetTouch(0); 
+            if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+            {
+                Vector3 touchPos = touch.position;
+                touchPos.x -= Screen.width/2;
+                touchPos.y -= Screen.height/2;
+                UIResponder.ClickButton(true,touchPos);
+                break;
+            }
+            if (touch.phase == TouchPhase.Began)
+            {
+                Vector3 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
+                Debug.Log("tap pos pixel" + touchPos.ToString());
+
+                UIResponder.ClickButton(false,touchPos);
+            }
+        }
+
 
         // @@@
         //&& EventSystem.current.IsPointerOverGameObject()
-        if (FinalCameraController.myCameraState != FinalCameraController.CameraState.Subway)
+        if (FinalCameraController.myCameraState != CameraState.Subway)
         {
             return;
         }
@@ -148,7 +168,7 @@ public class TouchController : MonoBehaviour
                 lp = touch.position;
                 //                //print("lp = " + lp);
 
-                if (FinalCameraController.enableScroll && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
+                if (FinalCameraController.enableScroll && FinalCameraController.myCameraState == CameraState.Subway)
                 {
                     isSwiping = true;
                     cameraMovement.swipping = true;
@@ -201,7 +221,7 @@ public class TouchController : MonoBehaviour
                             //Debug.Log("Right Swipe");
                             leftSwipe = false;
                             myInputState = InputState.RightSwipe;
-                            if (FinalCameraController.enableScroll && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
+                            if (FinalCameraController.enableScroll && FinalCameraController.myCameraState == CameraState.Subway)
                             {
                                 cameraMovement.Go2Page(cameraMovement.currentPage - 1);
                             }
@@ -213,7 +233,7 @@ public class TouchController : MonoBehaviour
 
                             myInputState = InputState.LeftSwipe;
 
-                            if (FinalCameraController.enableScroll && FinalCameraController.myCameraState == FinalCameraController.CameraState.Subway)
+                            if (FinalCameraController.enableScroll && FinalCameraController.myCameraState == CameraState.Subway)
                             {
                                 cameraMovement.Go2Page(cameraMovement.currentPage + 1);
                                 //cameraMovement.currentPage += 1;
@@ -265,34 +285,27 @@ public class TouchController : MonoBehaviour
             {
 
                 case "FishBoss":
-                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                    UIResponder.ClickButton(hit.transform.gameObject);
                     FinalCameraController.BossTalk();
                     break;
 
                 case "PlayerBodySubway":
-                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                    UIResponder.ClickButton(hit.transform.gameObject);
                     FinalCameraController.ChangeToCloth();
                     break;
                 case "PlayerHeadSubway":
-                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                    UIResponder.ClickButton(hit.transform.gameObject);
                     FinalCameraController.ChangeToCloth();
                     break;
 
                 case "SettingButton":
-                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                    UIResponder.ClickButton(hit.transform.gameObject);
                     FinalCameraController.clickSetting();
                     break;
 
-                // case "subwayMap":
-                //     AudioManager.PlayAudio(AudioType.UI_Dialogue);
-                //     FinalCameraController.ChangeToMap();
-                //     break;
-                // case "subwayMap_Top":
-                //     AudioManager.PlayAudio(AudioType.UI_Dialogue);
-                //     FinalCameraController.ChangeToMap();
-                //     break;
+
                 case "Lost&Found_basket":
-                    AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                    UIResponder.ClickButton(hit.transform.gameObject);
                     LostAndFound.clickLostFound();
                     break;
 
@@ -302,13 +315,14 @@ public class TouchController : MonoBehaviour
             Regex mRegular = new Regex(@"subwayMap.*", RegexOptions.None);
             if (mRegular.IsMatch(hit.transform.gameObject.name))
             {
-                AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                UIResponder.ClickButton(hit.transform.gameObject);
                 FinalCameraController.ChangeToMap();
             }
 
             mRegular = new Regex(@"Poster\d+", RegexOptions.None);
             if (mRegular.IsMatch(hit.transform.gameObject.name))
             {
+                UIResponder.ClickButton(hit.transform.gameObject);
                 AdsController.ClickBackground(hit.transform.GetComponent<SpriteRenderer>().sprite.name);
             }
 
@@ -339,17 +353,18 @@ public class TouchController : MonoBehaviour
             if (doIvt != null)
             {
 
-                // AudioManager.PlayAudio(AudioType.UI_Dialogue);
+                // UIResponder.ClickButton(hit.transform.gameObject);
                 RaycastHitResult[0] = doIvt.GetComponentInParent<WasherController>().number.ToString();
                 RaycastHitResult[1] = doIvt.slotNum.ToString();
                 //Debug.Log("do inventory!");
                 return RaycastHitResult;
             }
 
-           
+
             if (name == "WasherTapSpace")
             {
                 WasherController wc = hit.transform.gameObject.GetComponentInParent<WasherController>();
+                UIResponder.ClickButton(hit.transform.gameObject);
                 RaycastHitResult[0] = "washer";
                 RaycastHitResult[1] = wc.number.ToString();
                 return RaycastHitResult;
@@ -360,6 +375,7 @@ public class TouchController : MonoBehaviour
             HandleAnimation ha = hit.transform.gameObject.GetComponent<HandleAnimation>();
             if (ha != null)
             {
+                UIResponder.ClickButton(hit.transform.gameObject);
                 RaycastHitResult[0] = "handle";
                 RaycastHitResult[1] = ha.handleNum.ToString();
             }

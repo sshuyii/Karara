@@ -6,14 +6,7 @@ public class TutorialCameraController : MonoBehaviour
 {
     CameraMovement CameraMovement;
     // TutorialManagerNew TutorialManagerNew;
-    public enum CameraState
-    {
-        Subway,
-        Closet,
-        Map,
-        App,
-        Ad
-    }
+
 
     public bool allowScroll = false;
     public bool reachTarget = false;

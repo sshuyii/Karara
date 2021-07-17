@@ -1868,7 +1868,7 @@ Transform:
   - {fileID: 1009233243}
   - {fileID: 1768529106}
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &89705173
 GameObject:
@@ -2550,7 +2550,7 @@ RectTransform:
   - {fileID: 1002407364}
   - {fileID: 354719319}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -6080,7 +6080,7 @@ Transform:
   - {fileID: 703883276}
   - {fileID: 1098194547}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &397108249
 GameObject:
@@ -8620,7 +8620,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &657545126
 GameObject:
@@ -8771,7 +8771,7 @@ Transform:
   - {fileID: 804579200}
   - {fileID: 886753683}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &665344260
 PrefabInstance:
@@ -13345,6 +13345,14 @@ MonoBehaviour:
     - "\u70B9\u51FB\u786E\u8BA4\u8FD8\u5305"
     isPlaying: 0
     playingIdx: 0
+  - key: ClothFish
+    content: []
+    contentENG:
+    - Long tap to return all the clothes!
+    contentCHN:
+    - "\u957F\u6309\u53EF\u4EE5\u6362\u6389\u8863\u670D\uFF01"
+    isPlaying: 0
+    playingIdx: 0
 --- !u!4 &957381868
 Transform:
   m_ObjectHideFlags: 0
@@ -14826,7 +14834,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1087385104
 GameObject:
@@ -17502,7 +17510,7 @@ Transform:
   - {fileID: 1618709462}
   - {fileID: 2075176296}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1289597027
 GameObject:
@@ -18711,6 +18719,56 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2031356703745767016}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1389826885
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1389826886}
+  - component: {fileID: 1389826887}
+  m_Layer: 0
+  m_Name: ---FishBoss
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1389826886
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1389826885}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1389826887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1389826885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a411a8578b1f468a9d86105a9a63c80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTutorial: 1
+  Fish2D: {fileID: 1109823852}
+  FishUI: {fileID: 799113816}
+  FishTalkButton: {fileID: 1613725187}
+  fishText2D: {fileID: 0}
+  fishTextUI: {fileID: 1885249070}
+  isFishTalking: 0
 --- !u!1 &1390809398
 GameObject:
   m_ObjectHideFlags: 0
@@ -21028,7 +21086,6 @@ MonoBehaviour:
   BlackBlocks: {fileID: 1112627675}
   ProceedCG: {fileID: 1341622075}
   deactiveButtons: 0
-  fishText: {fileID: 1613725189}
   washTotalTime: 5
   ClothUI: {fileID: 1871497027}
   liquid: {fileID: 1938333542}
@@ -21044,11 +21101,9 @@ MonoBehaviour:
   phoneAnimation: {fileID: 1835628510}
   changePostureButton: {fileID: 1856414053}
   machineOccupied: {fileID: 980274695}
-  ClothFish: {fileID: 405817000}
   EmojiBubble: {fileID: 0}
   InventoryBackButton: {fileID: 1206815974}
   Shutter: {fileID: 1805502132}
-  FishTalkButton: {fileID: 1661224276}
   sweet: {fileID: 226004730}
   HintScreen: {fileID: 1231978606}
   CameraBackground: {fileID: 2024295195}
@@ -21136,10 +21191,6 @@ MonoBehaviour:
   - {fileID: 51894402}
   - {fileID: 1760619722}
   - {fileID: 1315521657}
-  fishTextObjList:
-  - {fileID: 1109823852}
-  fishTextUIList:
-  - {fileID: 1885249070}
   hint: {fileID: 1231978606}
   hintScreenPos: {fileID: 520197385}
   hintList: []
@@ -22041,7 +22092,7 @@ Transform:
   - {fileID: 1726656656}
   - {fileID: 270643602}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1566559904
 MonoBehaviour:
@@ -22260,7 +22311,7 @@ RectTransform:
   - {fileID: 859400902}
   - {fileID: 2109595364}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -23373,7 +23424,7 @@ Transform:
   - {fileID: 2035922082}
   - {fileID: 1766605552}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1648779693
 GameObject:
@@ -24566,7 +24617,7 @@ PrefabInstance:
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
@@ -24576,7 +24627,7 @@ PrefabInstance:
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
@@ -24626,12 +24677,12 @@ PrefabInstance:
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -500
       objectReference: {fileID: 0}
     - target: {fileID: 7166129510037862393, guid: fe36b8f018e5b497f89c51fa4ded04f4,
         type: 3}
@@ -25717,7 +25768,7 @@ RectTransform:
   - {fileID: 483157006}
   - {fileID: 1871497026}
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -26103,7 +26154,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1835628510
 GameObject:
@@ -27307,7 +27358,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1896821341
 GameObject:
@@ -29127,7 +29178,7 @@ RectTransform:
   - {fileID: 1534148014}
   - {fileID: 1112627676}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

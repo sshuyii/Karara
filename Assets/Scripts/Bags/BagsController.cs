@@ -14,7 +14,7 @@ public class BagsController : MonoBehaviour
     LevelManager LevelManager;
     public int timeUpBagNum;
     public int unfinishedBagNum;
-    public FishBossNotification FishBossNotification;
+    public FishBoss FishBoss;
     // Start is called before the first frame update
 
     float timer; //for check bag status periodicly 
@@ -28,7 +28,7 @@ public class BagsController : MonoBehaviour
         LevelManager = GameObject.Find("---LevelManager").GetComponent<LevelManager>();
         ValueEditor = GameObject.Find("---ValueEditor").GetComponent<ValueEditor>();
         washers = FinalCameraController.AllMachines;
-
+        
         stationBagOwners.Add(new List<string>());
         stationBagOwners.Add(new List<string>());
         stationBagOwners.Add(new List<string>());

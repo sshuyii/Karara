@@ -45,12 +45,8 @@ public class TutorialManagerNew : MonoBehaviour
     private TutorialCameraController TutorialCameraController;
     private CameraMovement CameraMovement;
     private CanvasGroup bottomDotsCG;
-    private FishTextManager FishTextManager;
+    private FishBoss FishBoss;
 
-
-    [SerializeField] TextMeshPro fishText;
-    TextMeshProUGUI fishTextUI;
-    bool ftUI = false;
 
     [Header("Machine Related")]
     [SerializeField] private float washTotalTime;
@@ -61,7 +57,7 @@ public class TutorialManagerNew : MonoBehaviour
 
     [SerializeField]
     private GameObject Posture, Phone, ScrollHint, clothBag, machineFull, machineEmpty, phoneAnimation, changePostureButton,
-        machineOccupied, ClothFish, EmojiBubble, InventoryBackButton, Shutter, FishTalkButton, sweet;
+        machineOccupied,  EmojiBubble, InventoryBackButton, Shutter, sweet;
 
     public GameObject HintScreen;
     [SerializeField] private CanvasGroup CameraBackground, scream, Inventory, Flashlight, Comic;
@@ -157,12 +153,6 @@ public class TutorialManagerNew : MonoBehaviour
     [SerializeField]
     List<GameObject> KararaList = new List<GameObject>();
 
-    [SerializeField]
-    List<GameObject> fishTextObjList = new List<GameObject>();
-    List<TextMeshPro> fishTextList = new List<TextMeshPro>();
-
-    [SerializeField] List<TextMeshProUGUI> fishTextUIList = new List<TextMeshProUGUI>();
-    
 
     [SerializeField] GameObject hint;
     [SerializeField] GameObject hintScreenPos;
@@ -188,8 +178,7 @@ public class TutorialManagerNew : MonoBehaviour
             k.SetActive(false);
         }
 
-        ShowFishText(true, 99);
-        ShowFishText(false, 99);
+        FishBoss.DeactiveFishes();
 
         foreach (GameObject h in hintList)
         {
@@ -231,10 +220,7 @@ public class TutorialManagerNew : MonoBehaviour
     {
         deactiveButtons = true;
 
-        for(int i = 0; i < fishTextObjList.Count; i++ )
-        {
-            fishTextList.Add(fishTextObjList[i].GetComponentInChildren<TextMeshPro>());
-        }
+        
 
         // List<Transform> worldHintTransformList = hint.GetComponentsInChildren<Transform>;
         foreach (Transform child in hintScreenPos.transform)
@@ -273,8 +259,7 @@ public class TutorialManagerNew : MonoBehaviour
         bottomDotsCG = CameraMovement.Dots.GetComponent<CanvasGroup>();
 
         AudioManager = GameObject.Find("---AudioManager").GetComponent<AudioManager>();
-        FishTextManager = GameObject.Find("---FishTextManager").GetComponent<FishTextManager>();
-        
+        FishBoss = GameObject.Find("---FishBoss").GetComponent<FishBoss>();
 
         //step1
         bagClick = 0;
@@ -311,7 +296,7 @@ public class TutorialManagerNew : MonoBehaviour
         //出现鱼教学长按还衣服
         yield return new WaitForSeconds(0.5f);
 
-        FishTalk("ReturnCloth", true, 0, true, false);
+        FishBoss.FishTalk("ReturnCloth",true,false);
         
         // int bubbleCount = 10;
         // for(int i = 0; i < bubbleCount; i ++)
@@ -395,9 +380,10 @@ public class TutorialManagerNew : MonoBehaviour
             Clickable(new String[] {"Poster"});
         }
 
-        if(putBack && TutorialCameraController.myCameraState == TutorialCameraController.CameraState.Closet)
+        if(putBack && TutorialCameraController.myCameraState == CameraState.Closet)
         {
-            ShowFishText(true, 99);
+            FishBoss.DeactiveFishes();
+            // ShowFishText(true, 99);
         }
 
 
@@ -449,8 +435,9 @@ public class TutorialManagerNew : MonoBehaviour
                
                 TutorialCameraController.targetPage = 2;
 
-                if (machineOpen) FishTalk("CloseDoor",true, 0, false, false);
-                else FishTalk("Right",true, 0, false, false);
+                if (machineOpen) FishBoss.FishTalk("CloseDoor",true, false);
+                else FishBoss.FishTalk("Right",true,  false);
+
             }
             else if(inLoop && TutorialCameraController.currentPage == 3)
             {
@@ -461,7 +448,8 @@ public class TutorialManagerNew : MonoBehaviour
             {
                 //鱼说话，要玩家脱衣服or还包？
                 Hide(scream);
-                FishTalk("ReturnBagPre", true, 0, true, true);
+                // FishTalk("ReturnBagPre", true, 0, true, true);
+                FishBoss.FishTalk("ReturnBagPre", true, true);
                 TutorialStep("Machine");             
             }
             
@@ -499,7 +487,8 @@ public class TutorialManagerNew : MonoBehaviour
 
                 case 6:
                     scrollTeaching = false;
-                    FishTalk("Late", true, 0, false, true);
+                    // FishTalk("Late", true, 0, false, true);
+                    FishBoss.FishTalk("Late", true,  true);
                     break;
 
                 case 7:
@@ -543,7 +532,8 @@ public class TutorialManagerNew : MonoBehaviour
             if(clothReturned)
             {
                 TutorialCameraController.GotoPage(1);
-                FishTalk("TutorialEnd", true, 0, false, false);
+                // FishTalk("TutorialEnd", true, 0, false, false);
+                FishBoss.FishTalk("TutorialEnd", true,  false);
             }
         }
     }
@@ -568,7 +558,8 @@ public class TutorialManagerNew : MonoBehaviour
 
     IEnumerator KararaAnswer()
     {
-        FishTalk("Come", true, 0, true, false);
+        // FishTalk("Come", true, 0, true, false);
+        FishBoss.FishTalk("come", true,false);
         ShowKararaBubble(99, "", false);
         yield return new WaitForSeconds(1.5f);
 
@@ -579,7 +570,8 @@ public class TutorialManagerNew : MonoBehaviour
     private void PlayerControl()
     {
         Hide(ProceedCG);
-        ShowFishText(true, 99);
+        // ShowFishText(true, 99);
+        FishBoss.DeactiveFishes();
 
         StartCoroutine(ScrollTeaching(1));
 
@@ -637,37 +629,37 @@ public class TutorialManagerNew : MonoBehaviour
 
     }
     
-    private void ShowFishText(bool isUI, int i)
-    {   
-        if(!isUI)
-        {
-            foreach (TextMeshPro ft in fishTextList)
-            {
-                ft.gameObject.transform.parent.gameObject.SetActive(false);
-                Debug.Log(ft.gameObject.transform.parent.gameObject.name + "is deactivated");
-            }
+    // private void ShowFishText(bool isUI, int i)
+    // {   
+    //     if(!isUI)
+    //     {
+    //         foreach (TextMeshPro ft in fishTextList)
+    //         {
+    //             ft.gameObject.transform.parent.gameObject.SetActive(false);
+    //             Debug.Log(ft.gameObject.transform.parent.gameObject.name + "is deactivated");
+    //         }
 
-            if(i > fishTextList.Count) return;
+    //         if(i > fishTextList.Count) return;
             
-            fishTextList[i].gameObject.transform.parent.gameObject.SetActive(true);
+    //         fishTextList[i].gameObject.transform.parent.gameObject.SetActive(true);
 
-        }
-        else
-        {
-            foreach (TextMeshProUGUI ft in fishTextUIList)
-            {
-                ft.gameObject.transform.parent.gameObject.SetActive(false);
-                Debug.Log(ft.gameObject.transform.parent.gameObject.name + "is deactivated");
+    //     }
+    //     else
+    //     {
+    //         foreach (TextMeshProUGUI ft in fishTextUIList)
+    //         {
+    //             ft.gameObject.transform.parent.gameObject.SetActive(false);
+    //             Debug.Log(ft.gameObject.transform.parent.gameObject.name + "is deactivated");
 
-            }
+    //         }
 
-            if(i > fishTextUIList.Count) return;
+    //         if(i > fishTextUIList.Count) return;
 
-            fishTextUIList[i].gameObject.transform.parent.gameObject.SetActive(true);
+    //         fishTextUIList[i].gameObject.transform.parent.gameObject.SetActive(true);
 
-        }
+    //     }
 
-    }
+    // }
 
     private void ShowAnimation(string animatorName)
     {
@@ -823,115 +815,115 @@ public class TutorialManagerNew : MonoBehaviour
         deactiveButtons = false;
     }
 
-    private void FishTalk(string keyWord, bool animateOrNot, int screen, bool isUI, bool forward)
-    {
-        ShowFishText(isUI, screen);
+    // private void FishTalk(string keyWord, bool animateOrNot, int screen, bool isUI, bool forward)
+    // {
+    //     ShowFishText(isUI, screen);
 
-        FishTalkButton.SetActive(true);
-        currentFT = FishTextManager.GetText(keyWord);
-        print("fish talk keyword = " + keyWord);
-        fishForward = forward;
-        currentFS = screen;
-        ftUI = isUI;
+    //     FishTalkButton.SetActive(true);
+    //     currentFT = FishTextManager.GetText(keyWord);
+    //     print("fish talk keyword = " + keyWord);
+    //     fishForward = forward;
+    //     currentFS = screen;
+    //     ftUI = isUI;
 
-        FishTalk(animateOrNot);
-    }
+    //     FishTalk(animateOrNot);
+    // }
 
-    private void FishTalk(bool animateOrNot)
-    {
-        if(ftUI) fishTextUI = fishTextUIList[currentFS];
-        else fishText = fishTextList[currentFS];
+    // private void FishTalk(bool animateOrNot)
+    // {
+    //     if(ftUI) fishTextUI = fishTextUIList[currentFS];
+    //     else fishText = fishTextList[currentFS];
 
-        int idx = currentFT.playingIdx;
-        if (animateOrNot) 
-        {
-            lastRoutine = StartCoroutine(AnimateText(fishText, fishTextUI, currentFT.content[idx]));
-        }
-        else
-        {
-            //when last sentence
-            if (currentFT.playingIdx > currentFT.content.Count - 2)
-            {
-                FishTalkButton.SetActive(false);
-                currentFT.isPlaying = false;
-                forwardOneStep = fishForward;
-            }
+    //     int idx = currentFT.playingIdx;
+    //     if (animateOrNot) 
+    //     {
+    //         lastRoutine = StartCoroutine(AnimateText(fishText, fishTextUI, currentFT.content[idx]));
+    //     }
+    //     else
+    //     {
+    //         //when last sentence
+    //         if (currentFT.playingIdx > currentFT.content.Count - 2)
+    //         {
+    //             FishTalkButton.SetActive(false);
+    //             currentFT.isPlaying = false;
+    //             forwardOneStep = fishForward;
+    //         }
 
-            //直接显示所有内容
-            if(ftUI) 
-            {
-                fishTextUI.text = currentFT.content[idx];
-            }
-            else {
-                fishText.text = currentFT.content[idx];   
-            }
-        }
+    //         //直接显示所有内容
+    //         if(ftUI) 
+    //         {
+    //             fishTextUI.text = currentFT.content[idx];
+    //         }
+    //         else {
+    //             fishText.text = currentFT.content[idx];   
+    //         }
+    //     }
 
-        Debug.Log("idx " + idx);
-        Debug.Log("fishTalking " + currentFT.content[idx]);
-    }
+    //     Debug.Log("idx " + idx);
+    //     Debug.Log("fishTalking " + currentFT.content[idx]);
+    // }
 
-    private List<AudioType> fishBubbles = new List<AudioType> {AudioType.FishBubble2,
-        AudioType.FishBubble3, AudioType.FishBubble4,AudioType.FishBubble5, AudioType.FishBubble6, AudioType.FishBubble7};
+    // private List<AudioType> fishBubbles = new List<AudioType> {AudioType.FishBubble2,
+    //     AudioType.FishBubble3, AudioType.FishBubble4,AudioType.FishBubble5, AudioType.FishBubble6, AudioType.FishBubble7};
 
-    IEnumerator AnimateText(TextMeshPro text, TextMeshProUGUI textUI, string textContent)
-    {
-        currentFT.isPlaying = true;
-        for (int i = 0; i < (textContent.Length + 1); i++)
-        {
-            if (!currentFT.isPlaying) break;
+    // IEnumerator AnimateText(TextMeshPro text, TextMeshProUGUI textUI, string textContent)
+    // {
+    //     currentFT.isPlaying = true;
+    //     for (int i = 0; i < (textContent.Length + 1); i++)
+    //     {
+    //         if (!currentFT.isPlaying) break;
 
-            int random = UnityEngine.Random.Range(0,5);
-            AudioManager.PlayAudio(fishBubbles[random]);
-            if(ftUI) textUI.text = textContent.Substring(0, i);
-            else text.text = textContent.Substring(0, i);
-            yield return new WaitForSeconds(.05f);
+    //         int random = UnityEngine.Random.Range(0,5);
+    //         AudioManager.PlayAudio(fishBubbles[random]);
+    //         // if(ftUI) textUI.text = textContent.Substring(0, i);
+    //         else text.text = textContent.Substring(0, i);
+    //         yield return new WaitForSeconds(.05f);
 
-            //如果进行到最后一句话的最后一个字母，FishTalkButton可以被拿掉
-            if(i == textContent.Length && currentFT.playingIdx > currentFT.content.Count - 2) 
-            {
-                FishTalkButton.SetActive(false);
-                forwardOneStep = fishForward;
-            }
-        }
-    }
+    //         //如果进行到最后一句话的最后一个字母，FishTalkButton可以被拿掉
+    //         if(i == textContent.Length && currentFT.playingIdx > currentFT.content.Count - 2) 
+    //         {
+    //             FishTalkButton.SetActive(false);
+    //             forwardOneStep = fishForward;
+    //         }
+    //     }
+    // }
 
 
-    public void ClickWhileFishTalking()
-    {
-        Debug.Log("Click While Fish Talking");
-        if(currentFT.isPlaying)
-        {
-            ShowWholeSentence();
-        }
-        else if (!currentFT.isPlaying)
-        {
-            FishTalkNextSentence();
-        }
-    }
+    // public void ClickWhileFishTalking()
+    // {
+    //     Debug.Log("Click While Fish Talking");
+    //     if(currentFT.isPlaying)
+    //     {
+    //         ShowWholeSentence();
+    //     }
+    //     else if (!currentFT.isPlaying)
+    //     {
+    //         FishTalkNextSentence();
+    //     }
+    // }
 
-     void ShowWholeSentence()
-    {
-        currentFT.isPlaying = false;
-        StopCoroutine(lastRoutine);
-        FishTalk(false);
-    }
+    //  void ShowWholeSentence()
+    // {
+    //     currentFT.isPlaying = false;
+    //     StopCoroutine(lastRoutine);
+    //     FishTalk(false);
+    // }
 
-    private void FishTalkNextSentence()
-    {
-        Debug.Log("reset " + currentFT.playingIdx);
-        currentFT.playingIdx = currentFT.playingIdx+1;
-        Debug.Log("reset " + currentFT.playingIdx);
+    // private void FishTalkNextSentence()
+    // {
+    //     Debug.Log("reset " + currentFT.playingIdx);
+    //     currentFT.playingIdx = currentFT.playingIdx+1;
+    //     Debug.Log("reset " + currentFT.playingIdx);
 
-        if (currentFT.playingIdx < currentFT.content.Count) FishTalk(true);
-        else
-        {
-            Debug.Log("reset 0 ");
-            currentFT.playingIdx = currentFT.playingIdx - 1;
-            FishTalk(false);
-            currentFT.playingIdx = 0;
-        }
-    }
+    //     if (currentFT.playingIdx < currentFT.content.Count) FishTalk(true);
+    //     else
+    //     {
+    //         Debug.Log("reset 0 ");
+    //         currentFT.playingIdx = currentFT.playingIdx - 1;
+    //         FishTalk(false);
+    //         currentFT.playingIdx = 0;
+    //     }
+    // }
 
 
 
@@ -989,7 +981,8 @@ public class TutorialManagerNew : MonoBehaviour
     {
         Show(ReturnNotice);
         Hide(ReturnButton);
-        FishTalk("ClickReturnYes", true, 0, true, false);
+        FishBoss.FishTalk("ClickReturnYes", true, false);
+        
     }
 
     private IEnumerator BeforeWash()
@@ -1003,7 +996,8 @@ public class TutorialManagerNew : MonoBehaviour
         
         yield return new WaitForSeconds(0.1f);
 
-        FishTalk("ClickBag", true, 0, true, false);
+        // FishTalk("ClickBag", true, 0, true, false);
+        FishBoss.FishTalk("ClickBag", true,false);
                 
         TutorialStep("ClothBag");
         ShowHint("ClothBag1");
@@ -1040,7 +1034,8 @@ public class TutorialManagerNew : MonoBehaviour
         MachineDoor.sprite = closeDoor;
         AudioManager.PlayAudio(AudioType.Machine_CloseDoor);
 
-        FishTalk("StartWashing", true, 0, true, false);
+        // FishTalk("StartWashing", true, 0, true, false);
+        FishBoss.FishTalk("StartWashing", true, false);
 
         yield return new WaitForSeconds(0.2f);//等一会儿再出现提示ui
 
@@ -1060,7 +1055,8 @@ public class TutorialManagerNew : MonoBehaviour
                 AudioManager.PlayAudio(AudioType.Machine_Washing);
                 Debug.Log("start washing");
 
-                ShowFishText(true, 99);
+                // ShowFishText(true, 99);
+                FishBoss.DeactiveFishes();
 
                 machineFull.SetActive(true);
                 machineEmpty.SetActive(false);
@@ -1102,7 +1098,8 @@ public class TutorialManagerNew : MonoBehaviour
         timerStop = true;
 
         //鱼说话：谁丢手机了？
-        FishTalk("LostPhone", true, 0, true, false);
+        // FishTalk("LostPhone", true, 0, true, false);
+        FishBoss.FishTalk("LostPhone", true, false);
         // forwardOneStep = true;
     }
 
@@ -1164,7 +1161,8 @@ public class TutorialManagerNew : MonoBehaviour
         //切换到screen1
         TutorialCameraController.ChangeCameraSpeed(5f);
         TutorialCameraController.GotoPage(1);
-        FishTalk("CloseDoor",true, 0, false, false);
+        // FishTalk("CloseDoor",true, 0, false, false);
+        FishBoss.FishTalk("CloseDoor",true, false);
 
         //reset screen2
         Hide(scream);
@@ -1234,7 +1232,8 @@ public class TutorialManagerNew : MonoBehaviour
         Debug.Log("PickChargingPhone");
         Phone.SetActive(false);
 
-        ShowFishText(true, 99);//close fish text on screen2
+FishBoss.DeactiveFishes();
+        // ShowFishText(true, 99);//close fish text on screen2
 
         Show(mobile);
         ShowKarara(1, false, "", false);
@@ -1301,7 +1300,9 @@ public class TutorialManagerNew : MonoBehaviour
                 ClothOutline(clothSlotTable[slotNum].GetComponent<Image>(), true);
 
                 //接下来可以教还包了
-                FishTalk("ReturnBag", true, 0, true, false);
+                // FishTalk("ReturnBag", true, 0, true, false);
+                FishBoss.FishTalk("ReturnBag", true, false);
+                
                 Show(ReturnButton);
                 putBack = true;
             }
@@ -1376,7 +1377,9 @@ public class TutorialManagerNew : MonoBehaviour
         TutorialCameraController.GotoPage(1);
         Hide(scream);
 
-        FishTalk("CloseDoor",true, 0, false, false);
+        // FishTalk("CloseDoor",true, 0, false, false);
+        FishBoss.FishTalk("CloseDoor",true, false);
+
 
         deactiveButtons = false;
 
@@ -1392,7 +1395,8 @@ public class TutorialManagerNew : MonoBehaviour
 
         //disable a lot of things
         Hide(scream);
-        ShowFishText(true, 99);
+        // ShowFishText(true, 99);
+        FishBoss.DeactiveFishes();
         ShowInventory();
     }
 
@@ -1400,7 +1404,7 @@ public class TutorialManagerNew : MonoBehaviour
     private void ShowInventory()
     {
         TutorialCameraController.GoToCloset();
-        TutorialCameraController.myCameraState = TutorialCameraController.CameraState.Closet;
+        TutorialCameraController.myCameraState = CameraState.Closet;
         Show(Inventory);
         
         ResetFloatingUI();
@@ -1425,14 +1429,16 @@ public class TutorialManagerNew : MonoBehaviour
 
         //真正回到地铁
         TutorialCameraController.ReturnToApp();
-        TutorialCameraController.myCameraState = TutorialCameraController.CameraState.Subway;
+        TutorialCameraController.myCameraState = CameraState.Subway;
 
         Hide(Inventory);
 
         //当karara照完相回来开始还衣服
         if(putBack)//目前用不到这一步，不在inventory里教学还衣服
         {
-            FishTalk("ReturnBag", true, 0, true, false);
+            // FishTalk("ReturnBag", true, 0, true, false);
+            FishBoss.FishTalk("ReturnBag", true, false);
+            
             ShowAnimation("ClothBag");
         }
         else
@@ -1480,7 +1486,7 @@ public class TutorialManagerNew : MonoBehaviour
         Show(phone_background);
         phone_background.blocksRaycasts = false;
         Posture.SetActive(false);
-        TutorialCameraController.myCameraState = TutorialCameraController.CameraState.App;
+        TutorialCameraController.myCameraState = CameraState.App;
 
         //照完相后展示tutorial post
         TutorialPost.SetActive(true);
@@ -1526,7 +1532,7 @@ public class TutorialManagerNew : MonoBehaviour
         Show(mobile);
 
 
-        TutorialCameraController.myCameraState = TutorialCameraController.CameraState.Subway;
+        TutorialCameraController.myCameraState = CameraState.Subway;
 
         //第一次发完照片从ins回到地铁，滑到screen2
         if(stepCounter == 7)
@@ -1579,7 +1585,8 @@ public class TutorialManagerNew : MonoBehaviour
         //包消失
         clothBag.SetActive(false);
         AudioManager.PlayAudio(AudioType.Bag_Vanish);
-        ShowFishText(true, 99);
+        // ShowFishText(true, 99);
+        FishBoss.DeactiveFishes();
         clothReturned = true;
 
         yield return new WaitForSeconds(0.4f);
@@ -1593,7 +1600,9 @@ public class TutorialManagerNew : MonoBehaviour
         if(!putBack)
         {
             OpenMachine();
-            FishTalk("ReturnCloth", true, 0, true, false);
+            // FishTalk("ReturnCloth", true, 0, true, false);
+            FishBoss.FishTalk("ReturnCloth", true,false);
+        
         }
         else{
             StartCoroutine(PreReturn());
@@ -1604,7 +1613,8 @@ public class TutorialManagerNew : MonoBehaviour
     {
         //ui消失
         Hide(ReturnNotice);
-        ShowFishText(false, 99);
+        // ShowFishText(false, 99);
+        FishBoss.DeactiveFishes();
         bagClick = 2;
     }
 
@@ -1614,7 +1624,10 @@ public class TutorialManagerNew : MonoBehaviour
 
         TutorialCameraController.GotoPage(1);
 
-        FishTalk("MultipleSentence", true, 0, false, true);
+        // FishTalk("MultipleSentence", true, 0, false, true);
+        
+        FishBoss.FishTalk("MultipleSentence", true, true);
+    
     }
 
     IEnumerator AddFans()
@@ -1709,7 +1722,8 @@ public class TutorialManagerNew : MonoBehaviour
     public void ClickSweet()
     {
         sweet.SetActive(false);
-        ClothFish.SetActive(true);
+        // ClothFish.SetActive(true);
+        FishBoss.FishTalk("ClothFish",false,false);
         isWearingClothNum ++;
         // StartCoroutine(KararaEatSweet());
     }

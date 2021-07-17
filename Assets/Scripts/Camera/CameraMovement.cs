@@ -44,6 +44,8 @@ public class CameraMovement : MonoBehaviour
 
     public GameObject Dots;
     private Color gray,white;
+
+    
     void Start()
     {
         // positions = new Vector3[4];

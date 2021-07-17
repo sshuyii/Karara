@@ -14,6 +14,9 @@ public class ClothToMachine : MonoBehaviour
     private GameObject ClothInMachineController;
 
     private AllMachines AllMachines;
+
+    public FishBoss FishBoss { get; private set; }
+
     private SubwayMovement SubwayMovement;
 
     private AudioSource myAudio;
@@ -99,7 +102,8 @@ public class ClothToMachine : MonoBehaviour
         BagsController = GameObject.Find("---BagsController").GetComponent<BagsController>();
         ValueEditor = GameObject.Find("---ValueEditor").GetComponent<ValueEditor>();
         AllMachines = ClothInMachineController.GetComponent<AllMachines>();
-
+        FishBoss = GameObject.Find("---FishBoss").GetComponent<FishBoss>();
+        
         myAnimator = this.transform.gameObject.GetComponent<Animator>();
         //todo: generate clothes
         //Debug.Log(this.transform.gameObject.tag);
@@ -226,7 +230,8 @@ public class ClothToMachine : MonoBehaviour
             yield return new WaitForSeconds(1.5f);
             RatingSys.ChangeRating(star);
             FinalCameraController.LevelManager.stage2UIRateFirst = false;
-            FinalCameraController.FishTalkAccessFromScript("B",true);
+            FishBoss.ResetFish();
+            FishBoss.FishTalk("B",false,false);
         }
 
         if(FinalCameraController.fishShouting) FinalCameraController.Hide(FinalCameraController.fishShoutCG);
@@ -287,7 +292,9 @@ public class ClothToMachine : MonoBehaviour
 
             underMachineNum = AllMachines.FindSuitableMachine(AllMachines.MachineState.empty);
             if (underMachineNum < 0) {
-                FinalCameraController.FishTalkAccessFromScript("ReturnFinishedBags",true);
+                // FinalCameraController.FishTalkAccessFromScript("ReturnFinishedBags",true);
+                FishBoss.ResetFish();
+                FishBoss.FishTalk("ReturnFinishedBags",false,false);
                 return;
             }
 
@@ -329,9 +336,7 @@ public class ClothToMachine : MonoBehaviour
             shiningImg2.sprite = openBag;
             shiningImg3.sprite = openBag;
             
-            if (timeUp) StartCoroutine(FinalCameraController.FishBossNotification.ShowFish());
-            //FinalCameraController.FishBossNotification.ShowFish(); //test
-
+        
             AllMachines.SetMachineAsFull(underMachineNum);
             hitTime++;
 
